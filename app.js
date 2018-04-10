@@ -8,6 +8,10 @@ var app = express();
 
 var port = normalizePort(process.env.PORT || "5000");
 
+function errorHandler(err, req, res, next) {
+  res.status(500).send({ error: "Something failed." });
+}
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -16,6 +20,11 @@ app.use(express.urlencoded({ extended: false }));
  * ROUTES
  */
 app.use("/guidegroup", guideGroupRouter);
+
+/**
+ * ERROR handler
+ */
+app.use(errorHandler);
 
 /**
  * Start server

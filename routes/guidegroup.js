@@ -6,13 +6,12 @@ router.get("/", function(req, res, next) {
   res.send("respond with a resource");
 });
 
-router.get("/property", (req, res) => {
-  //TODO make use of the ID param
+router.get("/property/:id", (req, res, next) => {
   const { id } = req.params;
 
-  fetchProperties(7986)
+  fetchProperties(id)
     .then(properties => res.send(properties))
-    .catch(err => console.log("Error:", err));
+    .catch(err => next(err));
 });
 
 module.exports = router;
