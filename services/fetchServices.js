@@ -8,6 +8,7 @@ module.exports = {
     const response = await fetch(`${_API_BASE}/property?post=${id}`);
     if (response.status !== 200) throw new Error("Malformed request");
     const json = await response.json();
+    //TODO parse and repackage structure to fit app
     return json;
   }
 };
