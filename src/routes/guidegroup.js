@@ -1,5 +1,5 @@
 const express = require('express');
-const { fetchProperties } = require('../services/fetchServices');
+const { fetchProperties } = require('../utils/fetchUtils');
 
 const router = express.Router();
 

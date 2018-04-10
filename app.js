@@ -1,13 +1,15 @@
 const express = require('express');
 const logger = require('morgan');
 const debug = require('debug')('app');
-const guideGroupRouter = require('./src/routes/guidegroup');
 const http = require('http');
+const guideGroupRouter = require('./src/routes/guidegroup');
+const { normalizePort } = require('./src/utils/serverUtils');
 
 const app = express();
 
 const port = normalizePort(process.env.PORT || '5000');
 
+// eslint-disable-next-line no-unused-vars
 function errorHandler(err, req, res, next) {
   res.status(500).send({ error: 'Something failed.' });
 }
@@ -30,10 +32,6 @@ app.use(errorHandler);
  * Start server
  */
 const server = http.createServer(app);
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
 function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
@@ -44,10 +42,12 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
+      // eslint-disable-next-line no-console
       console.error(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
     case 'EADDRINUSE':
+      // eslint-disable-next-line no-console
       console.error(`${bind} is already in use`);
       process.exit(1);
       break;
@@ -59,23 +59,9 @@ function onError(error) {
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
-  console.log(`Listening on ${bind}`);
-
   debug(`Listening on ${bind}`);
 }
 
-function normalizePort(val) {
-  const port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
