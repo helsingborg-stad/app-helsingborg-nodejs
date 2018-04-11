@@ -1,34 +1,3 @@
-/*
-{
-    "id": 638,
-"description": "...”,
-    "name": "#artstreethbg",
-    "slug": "artstreethbg",
-    "images": {
-                "thumbnail": x.png",
-              "medium": "x.png",
-            “large”: “x.jpg”
-       }
-"active": true,
-    "location": {
-                            "id": 47590,
-           "street_address": "Södergatan 60",
-                        "latitude": "56.039192",
-                        "longitude": "12.7026167",
-                        "open_hours": null,
-                        "open_hour_exceptions": null,
-"links": [
-                    {
-                        "service": "instagram",
-                        "url": "https://www.instagram.com/artstreethbg/"
-                    }
-                    ],
-}
-
-
-}
-*/
-
 function parseLocation(item) {
   const {
     // eslint-disable-next-line camelcase
