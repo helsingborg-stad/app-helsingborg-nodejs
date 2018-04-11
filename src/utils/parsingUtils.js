@@ -35,12 +35,24 @@ function parseLocation(item) {
     id, street_address, latitude, longitude, open_hours, open_hour_exceptions, links,
   } = item;
 
+  let openHours;
+  // eslint-disable-next-line camelcase
+  if (open_hours) {
+    openHours = open_hours.map((oh) => {
+      // eslint-disable-next-line no-param-reassign
+      oh.dayNumber = oh.day_number;
+      // eslint-disable-next-line no-param-reassign
+      delete oh.day_number;
+      return oh;
+    });
+  }
+
   return {
     id,
     streetAddress: street_address,
     latitude,
     longitude,
-    openHours: open_hours,
+    openHours,
     openHoursException: open_hour_exceptions,
     links,
   };
