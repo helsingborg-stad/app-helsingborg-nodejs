@@ -4,7 +4,9 @@ const { fetchAllGuideGroups, fetchProperties } = require('../utils/fetchUtils');
 const router = express.Router();
 
 router.get('', (req, res, next) => {
-  fetchAllGuideGroups()
+  const { lang } = req.query;
+
+  fetchAllGuideGroups(lang)
     .then(guideGroups => res.send(guideGroups))
     .catch(err => next(err));
 });

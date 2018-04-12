@@ -6,7 +6,7 @@
     "node": "8.9.0"
   },
   "scripts": {
-    "start": "DEBUG=app node ./app.js",
+    "start": "DEBUG=app,warn node ./app.js",
     "eslint":
       "eslint app.js src/** --ext .js --report-unused-disable-directives"
   },
