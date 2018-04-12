@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const parsingUtils = require('./parsingUtils');
-const debug = require('debug')('warn');
+const logApp = require('debug')('app');
+const logWarn = require('debug')('warn');
 
 // TODO move to .env
 const API_HOST_URL = 'https://api.helsingborg.se/event/json/wp/v2';
@@ -17,7 +18,7 @@ module.exports = {
   async fetchAllGuideGroups(lang) {
     let url = `${API_HOST_URL}/guidegroup?_embed`;
     if (lang) url += `&lang=${lang}`;
-    debug(`fetching from:${url}`);
+    logApp(`fetching from:${url}`);
 
     const response = await fetch(url);
     if (!response.ok) throw new Error('Malformed request');
@@ -31,10 +32,35 @@ module.exports = {
         resultArray.push(parsingUtils.parseGuideGroup(item));
       } catch (err) {
         // Discard item
-        debug('Failed to parse item:', err);
+        logWarn('Failed to parse item:', err);
       }
     });
 
     return resultArray;
+  },
+
+  async fetchAllGuides(lang) {
+    let url = `${API_HOST_URL}/guide?_embed`;
+    if (lang) url += `&lang=${lang}`;
+    logApp(`sent fetching request to:${url}`);
+
+    const response = await fetch(url);
+    logApp(`received fetching response from:${url}`);
+    if (!response.ok) throw new Error('Malformed request');
+
+    const guidesJson = await response.json();
+
+    const guides = [];
+    guidesJson.forEach((item) => {
+      try {
+        guides.push(parsingUtils.parseGuide(item));
+      } catch (err) {
+        // Discard item
+        logWarn('Failed to parse item:', err);
+      }
+    });
+    logApp('Guides parsing complete');
+
+    return guides;
   },
 };

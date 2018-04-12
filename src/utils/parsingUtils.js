@@ -56,6 +56,12 @@ function parseGuideGroup(item) {
   };
 }
 
+function parseGuide(item) {
+  // TODO filter and repackage object keys
+  return item;
+}
+
 module.exports = {
   parseGuideGroup,
+  parseGuide,
 };

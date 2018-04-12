@@ -3,6 +3,7 @@ const logger = require('morgan');
 const debug = require('debug')('app');
 const http = require('http');
 const guideGroupRouter = require('./src/routes/guidegroup');
+const guidesRouter = require('./src/routes/guides');
 const { normalizePort } = require('./src/utils/serverUtils');
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: false }));
  * ROUTES
  */
 app.use('/guidegroup', guideGroupRouter);
+app.use('/guide', guidesRouter);
 
 /**
  * ERROR handler
