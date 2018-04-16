@@ -1,4 +1,5 @@
 {
+  "$schema": "http://json-schema.org/draft-04/schema",
   "title": "GuideGroup",
 
   "definitions": {
@@ -17,7 +18,7 @@
     "name": { "type": "string" },
     "slug": { "type": "string" },
     "active": { "type": "boolean" },
-    "location": { "$ref": "#/definitions/location" }
+    "location": { "$ref": "location" }
   },
 
   "required": ["id", "description", "name", "slug", "active", "location"]

@@ -1,5 +1,9 @@
 const tv4 = require('tv4');
-const schemaGuideGroup = require('../../json-schemas/guideGroup');
+const schemaGuideGroup = require('../json-schemas/guideGroup');
+const locationSchema = require('../json-schemas/location');
+
+tv4.addSchema('guideGroup', schemaGuideGroup);
+tv4.addSchema('location', locationSchema);
 
 function parseLocation(item) {
   const {
@@ -59,10 +63,14 @@ function parseGuideGroup(item) {
   };
 
   // TODO Validate object
+  // const result = tv4.validate(guideGroup, schemaGuideGroup, true);
+  // const result = tv4.validate(guideGroup, '/location');
   const result = tv4.validate(guideGroup, schemaGuideGroup);
-  console.log('GuideGroup validated: ', result);
+  console.log(`Missing schema: ${tv4.missing}`);
+
   if (!result) {
-    console.log(tv4.error);
+    // console.log('GuideGroup validated: ', result);
+    console.log(tv4.error.message);
     // throw new Error(tv4.error);
   }
 
