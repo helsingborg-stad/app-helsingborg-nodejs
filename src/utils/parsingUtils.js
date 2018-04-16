@@ -1,9 +1,5 @@
 const tv4 = require('tv4');
-const schemaGuideGroup = require('../json-schemas/guideGroup');
-const locationSchema = require('../json-schemas/location');
-
-tv4.addSchema('guideGroup', schemaGuideGroup);
-tv4.addSchema('location', locationSchema);
+const logWarn = require('debug')('warn');
 
 function parseLocation(item) {
   const {
@@ -51,7 +47,6 @@ function parseGuideGroup(item) {
   const locationArray = _embedded.location;
   const location = parseLocation(locationArray[0]);
 
-  // TODO throw exception if any REQUIRED props are missing
   const guideGroup = {
     id,
     description,
@@ -62,16 +57,12 @@ function parseGuideGroup(item) {
     location,
   };
 
-  // TODO Validate object
-  // const result = tv4.validate(guideGroup, schemaGuideGroup, true);
-  // const result = tv4.validate(guideGroup, '/location');
-  const result = tv4.validate(guideGroup, schemaGuideGroup);
-  console.log(`Missing schema: ${tv4.missing}`);
+  // validating output against JSON schema
+  const result = tv4.validate(guideGroup, 'guideGroup');
+  if (tv4.missing.length > 0) logWarn(`Missing schema: ${tv4.missing}`);
 
   if (!result) {
-    // console.log('GuideGroup validated: ', result);
-    console.log(tv4.error.message);
-    // throw new Error(tv4.error);
+    throw new Error(tv4.error);
   }
 
   return guideGroup;
