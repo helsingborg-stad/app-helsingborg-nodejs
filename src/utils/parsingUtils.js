@@ -3,13 +3,18 @@ const jsonValidator = require('../utils/jsonValidator');
 function parseLocation(item) {
   const {
     // eslint-disable-next-line camelcase
-    id, street_address, latitude, longitude, open_hours, open_hour_exceptions, links,
+    id,
+    street_address: streetAddress,
+    latitude,
+    longitude,
+    open_hours: openHours,
+    open_hour_exceptions: openHoursException,
+    links,
   } = item;
 
-  let openHours;
   // eslint-disable-next-line camelcase
-  if (open_hours) {
-    openHours = open_hours.map((oh) => {
+  if (openHours) {
+    openHours.map((oh) => {
       // eslint-disable-next-line no-param-reassign
       oh.dayNumber = oh.day_number;
       // eslint-disable-next-line no-param-reassign
@@ -18,22 +23,24 @@ function parseLocation(item) {
     });
   }
 
-  return {
+  const location = {
     id,
-    streetAddress: street_address,
-    latitude,
-    longitude,
+    streetAddress,
+    latitude: Number(latitude),
+    longitude: Number(longitude),
     openHours,
-    openHoursException: open_hour_exceptions,
     links,
   };
+
+  if (openHoursException) location.openHoursException = openHoursException;
+
+  return location;
 }
 
 function parseGuideGroup(item) {
   const {
     id, description, name, slug, apperance, settings, _embedded,
   } = item;
-
 
   const { image } = apperance;
   const { sizes } = image;

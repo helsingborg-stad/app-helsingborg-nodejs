@@ -4,7 +4,10 @@
   "type": "object",
 
   "properties": {
-    "id": { "type": "integer" }
+    "id": { "type": "integer" },
+    "streetAddress": { "type": "string" },
+    "latitude": { "type": "number" },
+    "longitude": { "type": "number" }
   },
-  "required": []
+  "required": ["id", "streetAddress", "latitude", "longitude"]
 }
