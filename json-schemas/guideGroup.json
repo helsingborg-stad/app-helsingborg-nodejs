@@ -1,0 +1,24 @@
+{
+  "title": "GuideGroup",
+
+  "definitions": {
+    "location": {
+      "title": "Location",
+      "type": "object",
+      "required": ["horse"]
+    }
+  },
+
+  "type": "object",
+
+  "properties": {
+    "id": { "type": "integer" },
+    "description": { "type": "string" },
+    "name": { "type": "string" },
+    "slug": { "type": "string" },
+    "active": { "type": "boolean" },
+    "location": { "$ref": "#/definitions/location" }
+  },
+
+  "required": ["id", "description", "name", "slug", "active", "location"]
+}

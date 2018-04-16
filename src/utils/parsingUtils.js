@@ -1,3 +1,6 @@
+const tv4 = require('tv4');
+const schemaGuideGroup = require('../../json-schemas/guideGroup');
+
 function parseLocation(item) {
   const {
     // eslint-disable-next-line camelcase
@@ -45,7 +48,7 @@ function parseGuideGroup(item) {
   const location = parseLocation(locationArray[0]);
 
   // TODO throw exception if any REQUIRED props are missing
-  return {
+  const guideGroup = {
     id,
     description,
     name,
@@ -54,6 +57,16 @@ function parseGuideGroup(item) {
     active: settings.active,
     location,
   };
+
+  // TODO Validate object
+  const result = tv4.validate(guideGroup, schemaGuideGroup);
+  console.log('GuideGroup validated: ', result);
+  if (!result) {
+    console.log(tv4.error);
+    // throw new Error(tv4.error);
+  }
+
+  return guideGroup;
 }
 
 function parseGuide(item) {
