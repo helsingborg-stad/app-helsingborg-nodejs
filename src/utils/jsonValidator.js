@@ -1,21 +1,18 @@
-const tv4 = require('tv4');
-const giudeGroup = require('../json-schemas/guideGroup');
+const { Validator } = require('jsonschema');
+
+const v = new Validator();
+
+const guideGroup = require('../json-schemas/guideGroup');
 const location = require('../json-schemas/location');
 const images = require('../json-schemas/images');
 
-tv4.addSchema('guideGroup', giudeGroup);
-tv4.addSchema('location', location);
-tv4.addSchema('images', images);
+v.addSchema(guideGroup, '/guideGroup');
+v.addSchema(location, '/location');
+v.addSchema(images, '/images');
 
 module.exports = {
   validate: (data, schema) => {
-    const result = tv4.validate(data, schema);
-    if (tv4.missing.length > 0) {
-      throw new Error(`Missing schema for ${tv4.missing}`);
-    }
-
-    if (!result) throw new Error(tv4.error);
-
-    return result;
+    const result = v.validate(data, schema, { throwError: true });
+    return result.valid;
   },
 };

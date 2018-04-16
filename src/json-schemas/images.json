@@ -4,6 +4,18 @@
   "type": "object",
 
   "properties": {
+    "thumbnail": {
+      "type": "string",
+      "format": "uri"
+    },
+    "medium": {
+      "type": "string",
+      "format": "uri"
+    },
+    "large": {
+      "type": "string",
+      "format": "uri"
+    }
   },
   "required": []
 }
