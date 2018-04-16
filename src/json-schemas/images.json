@@ -4,7 +4,6 @@
   "type": "object",
 
   "properties": {
-    "horse": { "type": "string" }
   },
   "required": []
 }

@@ -18,7 +18,8 @@
     "name": { "type": "string" },
     "slug": { "type": "string" },
     "active": { "type": "boolean" },
-    "location": { "$ref": "location" }
+    "location": { "$ref": "location" },
+    "images" : { "$ref" : "images"}
   },
 
   "required": ["id", "description", "name", "slug", "active", "location"]
