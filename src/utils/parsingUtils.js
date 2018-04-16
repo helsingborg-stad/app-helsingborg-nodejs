@@ -1,5 +1,4 @@
-const tv4 = require('tv4');
-const logWarn = require('debug')('warn');
+const jsonValidator = require('../utils/jsonValidator');
 
 function parseLocation(item) {
   const {
@@ -58,12 +57,7 @@ function parseGuideGroup(item) {
   };
 
   // validating output against JSON schema
-  const result = tv4.validate(guideGroup, 'guideGroup');
-  if (tv4.missing.length > 0) logWarn(`Missing schema: ${tv4.missing}`);
-
-  if (!result) {
-    throw new Error(tv4.error);
-  }
+  jsonValidator.validate(guideGroup, 'guideGroup');
 
   return guideGroup;
 }

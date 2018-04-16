@@ -5,7 +5,6 @@ const http = require('http');
 const guideGroupRouter = require('./src/routes/guidegroup');
 const guidesRouter = require('./src/routes/guides');
 const { normalizePort } = require('./src/utils/serverUtils');
-require('./src/initValidator')();
 
 const app = express();
 
