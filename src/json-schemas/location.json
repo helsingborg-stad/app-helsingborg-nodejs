@@ -3,31 +3,6 @@
 
   "type": "object",
 
-  "definitions": {
-    "openingHour": {
-      "type": "object",
-      "properties": {
-        "weekday": {
-          "type": "string",
-          "enum": [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday"
-          ]
-        },
-        "closed": { "type": "boolean" },
-        "opening": { "type": ["string", "null"], "format": "partial-time" },
-        "closing": { "type": ["string", "null"], "format": "partial-time" },
-        "dayNumber": { "type": "integer", "minimum": 1, "maximum": 7 }
-      },
-      "required": ["weekday", "closed"]
-    }
-  },
-
   "properties": {
     "id": { "type": "integer" },
     "streetAddress": { "type": "string" },
@@ -35,7 +10,7 @@
     "longitude": { "type": "number" },
     "openHours": {
       "type": "array",
-      "items": { "$ref": "#/definitions/openingHour" }
+      "items": { "$ref": "openingHour" }
     }
   },
   "required": ["id", "streetAddress", "latitude", "longitude"]
