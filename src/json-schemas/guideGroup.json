@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+
+  "type": "object",
+
+  "properties": {
+    "id": { "type": "integer" },
+    "description": { "type": "string" },
+    "name": { "type": "string" },
+    "slug": { "type": "string" },
+    "active": { "type": "boolean" },
+    "location": { "$ref": "location" },
+    "images" : { "$ref" : "images"}
+  },
+
+  "required": ["id", "description", "name", "slug", "active", "location"]
+}
