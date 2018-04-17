@@ -12,25 +12,25 @@ function parseLocation(item) {
     links,
   } = item;
 
-  // eslint-disable-next-line camelcase
-  if (openHours) {
-    openHours.map((oh) => {
-      // eslint-disable-next-line no-param-reassign
-      oh.dayNumber = oh.day_number;
-      // eslint-disable-next-line no-param-reassign
-      delete oh.day_number;
-      return oh;
-    });
-  }
-
   const location = {
     id,
     streetAddress,
     latitude: Number(latitude),
     longitude: Number(longitude),
-    openHours,
     links,
   };
+
+  // eslint-disable-next-line camelcase
+  if (openHours) {
+    openHours.map((oh) => {
+      // eslint-disable-next-line no-param-reassign
+      oh.dayNumber = Number(oh.day_number);
+      // eslint-disable-next-line no-param-reassign
+      delete oh.day_number;
+      return oh;
+    });
+    location.openHours = openHours;
+  }
 
   if (openHoursException) location.openHoursException = openHoursException;
 
