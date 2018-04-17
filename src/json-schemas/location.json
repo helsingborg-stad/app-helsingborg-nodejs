@@ -13,5 +13,5 @@
       "items": { "$ref": "openingHour" }
     }
   },
-  "required": ["id", "streetAddress", "latitude", "longitude"]
+  "required": ["id", "streetAddress", "latitude", "longitude", "openHours"]
 }
