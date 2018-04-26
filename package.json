@@ -7,14 +7,14 @@
   },
   "scripts": {
     "start": "DEBUG=app,warn node ./app.js",
-    "eslint":
-      "eslint app.js src/** --ext .js --report-unused-disable-directives"
+    "eslint": "eslint app.js src/** --ext .js --report-unused-disable-directives"
   },
   "dependencies": {
     "debug": "2.6.9",
     "express": "4.16.0",
     "jsonschema": "1.2.4",
     "morgan": "1.9.0",
+    "newrelic": "^4.1.0",
     "node-fetch": "2.1.2"
   },
   "devDependencies": {

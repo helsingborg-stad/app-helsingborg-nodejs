@@ -1,3 +1,4 @@
+require('newrelic');
 const express = require('express');
 const logger = require('morgan');
 const debug = require('debug')('app');
