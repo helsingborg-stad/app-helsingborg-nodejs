@@ -1,7 +1,8 @@
-const logWarn = require('debug')('warn');
+import debug from 'debug';
+const logWarn = debug('warn');
 const jsonValidator = require('../utils/jsonValidator');
 
-function parseOpeningHour(item) {
+function parseOpeningHour(item:any) {
   const {
     weekday, closed, opening, closing, day_number: dayNumber,
   } = item;
@@ -17,7 +18,7 @@ function parseOpeningHour(item) {
   return oh;
 }
 
-function parseLocation(item) {
+function parseLocation(item: any) {
   const {
     id,
     street_address: streetAddress,
@@ -28,19 +29,19 @@ function parseLocation(item) {
     links,
   } = item;
 
-  const location = {
-    id,
+  const location: any = {
+    id: Number(id),
     streetAddress,
     latitude: Number(latitude),
     longitude: Number(longitude),
     links,
   };
 
-  const openHours = [];
+  const openHours: any[] = [];
   location.openHours = openHours;
 
   if (openingHoursInput) {
-    openingHoursInput.forEach((oh) => {
+    openingHoursInput.forEach((oh:any) => {
       try {
         const parsedOh = parseOpeningHour(oh);
         openHours.push(parsedOh);
@@ -55,7 +56,7 @@ function parseLocation(item) {
   return location;
 }
 
-function parseGuideGroup(item) {
+function parseGuideGroup(item:any) {
   const {
     id, description, name, slug, apperance, settings, _embedded,
   } = item;
@@ -87,7 +88,7 @@ function parseGuideGroup(item) {
   return guideGroup;
 }
 
-function parseGuide(item) {
+function parseGuide(item:any) {
   // TODO filter and repackage object keys
   return item;
 }

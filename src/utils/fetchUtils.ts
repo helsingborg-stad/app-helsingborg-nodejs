@@ -26,9 +26,9 @@ module.exports = {
 
     const guideGroupArray = await response.json();
 
-    const resultArray = [];
+    const resultArray : any[] = [];
 
-    guideGroupArray.forEach((item) => {
+    guideGroupArray.forEach((item : any) => {
       try {
         resultArray.push(parsingUtils.parseGuideGroup(item));
       } catch (err) {
@@ -51,8 +51,8 @@ module.exports = {
 
     const guidesJson = await response.json();
 
-    const guides = [];
-    guidesJson.forEach((item) => {
+    const guides : any = [];
+    guidesJson.forEach((item : any) => {
       try {
         guides.push(parsingUtils.parseGuide(item));
       } catch (err) {
