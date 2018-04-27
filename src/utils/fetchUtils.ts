@@ -1,13 +1,14 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
+import debug from 'debug';
 const parsingUtils = require('./parsingUtils');
-const logApp = require('debug')('app');
-const logWarn = require('debug')('warn');
+const logApp = debug('app');
+const logWarn = debug('warn');
 
 // TODO move to .env
 const API_HOST_URL = 'https://api.helsingborg.se/event/json/wp/v2';
 
 module.exports = {
-  async fetchProperties(id) {
+  async fetchProperties(id : number) {
     const response = await fetch(`${API_HOST_URL}/property?post=${id}`);
     if (!response.ok) throw new Error('Malformed request');
     const json = await response.json();
@@ -15,7 +16,7 @@ module.exports = {
     return json;
   },
 
-  async fetchAllGuideGroups(lang) {
+  async fetchAllGuideGroups(lang : string) {
     let url = `${API_HOST_URL}/guidegroup?_embed`;
     if (lang) url += `&lang=${lang}`;
     logApp(`fetching from:${url}`);
@@ -39,7 +40,7 @@ module.exports = {
     return resultArray;
   },
 
-  async fetchAllGuides(lang) {
+  async fetchAllGuides(lang : string) {
     let url = `${API_HOST_URL}/guide?_embed`;
     if (lang) url += `&lang=${lang}`;
     logApp(`sent fetching request to:${url}`);

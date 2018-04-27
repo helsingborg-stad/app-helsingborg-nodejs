@@ -1,4 +1,8 @@
-import 'newrelic';
+if(process.env.NODE_ENV === "production")
+{
+  require('newrelic');
+}
+
 import express from 'express';
 import logger from 'morgan';
 import debug from 'debug';

@@ -5,6 +5,7 @@ const logApp = require('debug')('app');
 const router = express.Router();
 
 router.get('', (req, res, next) => {
+  //TODO add express-validator
   logApp('Router received request');
   const { lang } = req.query;
 
