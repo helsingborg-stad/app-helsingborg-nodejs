@@ -10,6 +10,7 @@
     "tsc": "tsc",
     "build": "npm run tsc",
     "postinstall": "npm run build",
+    "tslint": "tslint src/**",
     "eslint": "eslint app.js src/** --ext .js --report-unused-disable-directives"
   },
   "dependencies": {
@@ -29,6 +30,7 @@
     "@types/node-fetch": "^1.6.9",
     "eslint": "4.19.1",
     "eslint-config-airbnb-base": "12.1.0",
-    "eslint-plugin-import": "2.10.0"
+    "eslint-plugin-import": "2.10.0",
+    "tslint": "^5.9.1"
   }
 }

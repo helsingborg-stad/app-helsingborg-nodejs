@@ -1,13 +1,14 @@
-import express, { ErrorRequestHandler } from "express";
-import logger from "morgan";
+
 import debug from "debug";
+import express, { ErrorRequestHandler } from "express";
 import http from "http";
+import logger from "morgan";
 import guideGroupRouter from "./routes/guidegroup";
 import guidesRouter from "./routes/guides";
 import { normalizePort } from "./utils/serverUtils";
-import { RequestHandlerParams } from "express-serve-static-core";
 
 if (process.env.NODE_ENV === "production") {
+  // tslint:disable-next-line no-var-requires
   require("newrelic");
 }
 
@@ -49,12 +50,12 @@ function onError(error: NodeJS.ErrnoException) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case "EACCES":
-      // eslint-disable-next-line no-console
+      // tslint:disable-next-line no-console
       console.error(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
     case "EADDRINUSE":
-      // eslint-disable-next-line no-console
+      // tslint:disable-next-line no-console
       console.error(`${bind} is already in use`);
       process.exit(1);
       break;
