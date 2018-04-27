@@ -2,15 +2,14 @@ import express from 'express';
 import logger from 'morgan';
 import debug from 'debug';
 import http from 'http';
-const guideGroupRouter = require('./routes/guidegroup');
-const guidesRouter = require('./routes/guides');
+import guideGroupRouter from './routes/guidegroup';
+import guidesRouter from './routes/guides';
 const { normalizePort } = require('./utils/serverUtils');
 
 if(process.env.NODE_ENV === "production")
 {
   require('newrelic');
 }
-
 
 const app = express();
 const logApp = debug('app');
