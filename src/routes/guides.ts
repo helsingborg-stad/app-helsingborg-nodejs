@@ -1,5 +1,4 @@
-
-const express = require('express');
+import express from 'express';
 const { fetchAllGuides } = require('../utils/fetchUtils');
 const logApp = require('debug')('app');
 

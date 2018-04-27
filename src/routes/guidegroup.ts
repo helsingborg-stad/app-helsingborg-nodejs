@@ -1,4 +1,4 @@
-const express = require('express');
+import express from 'express';
 const { fetchAllGuideGroups, fetchProperties } = require('../utils/fetchUtils');
 
 const router = express.Router();

@@ -1,13 +1,14 @@
-require('newrelic');
-const express = require('express');
-const logger = require('morgan');
-const debug = require('debug')('app');
-const http = require('http');
-const guideGroupRouter = require('./src/routes/guidegroup');
-const guidesRouter = require('./src/routes/guides');
-const { normalizePort } = require('./src/utils/serverUtils');
+import 'newrelic';
+import express from 'express';
+import logger from 'morgan';
+import debug from 'debug';
+import http from 'http';
+const guideGroupRouter = require('./routes/guidegroup');
+const guidesRouter = require('./routes/guides');
+const { normalizePort } = require('./utils/serverUtils');
 
 const app = express();
+const logApp = debug('app');
 
 const port = normalizePort(process.env.PORT || '5000');
 
@@ -35,7 +36,7 @@ app.use(errorHandler);
  * Start server
  */
 const server = http.createServer(app);
-function onError(error) {
+function onError(error: NodeJS.ErrnoException) {
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -62,7 +63,7 @@ function onError(error) {
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
-  debug(`Listening on ${bind}`);
+  logApp(`Listening on ${bind}`);
 }
 
 server.listen(port);
