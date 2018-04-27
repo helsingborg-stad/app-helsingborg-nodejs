@@ -4,7 +4,7 @@ import debug from 'debug';
 import http from 'http';
 import guideGroupRouter from './routes/guidegroup';
 import guidesRouter from './routes/guides';
-const { normalizePort } = require('./utils/serverUtils');
+import { normalizePort } from './utils/serverUtils';
 
 if(process.env.NODE_ENV === "production")
 {
