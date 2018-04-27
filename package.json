@@ -10,7 +10,7 @@
     "tsc": "tsc",
     "build": "npm run tsc",
     "postinstall": "npm run build",
-    "tslint": "tslint src/**",
+    "tslint": "tslint --project .",
     "eslint": "eslint app.js src/** --ext .js --report-unused-disable-directives"
   },
   "dependencies": {

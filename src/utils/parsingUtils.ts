@@ -10,7 +10,7 @@ function parseOpeningHour(item: any) {
     closed,
     opening,
     closing,
-    dayNumber: Number(dayNumber)
+    dayNumber: Number(dayNumber),
   };
   jsonValidator.validate(oh, "/openingHour");
   return oh;
@@ -24,7 +24,7 @@ function parseLocation(item: any) {
     longitude,
     open_hours: openingHoursInput,
     open_hour_exceptions: openHoursException,
-    links
+    links,
   } = item;
 
   const location: any = {
@@ -32,7 +32,7 @@ function parseLocation(item: any) {
     streetAddress,
     latitude: Number(latitude),
     longitude: Number(longitude),
-    links
+    links,
   };
 
   const openHours: any[] = [];
@@ -49,7 +49,7 @@ function parseLocation(item: any) {
     });
   }
 
-  if (openHoursException) location.openHoursException = openHoursException;
+  if (openHoursException) { location.openHoursException = openHoursException; }
 
   return location;
 }
@@ -62,7 +62,7 @@ function parseGuideGroup(item: any) {
   const images = {
     thumbnail: sizes.thumbnail,
     medium: sizes.medium,
-    large: sizes.medium_large
+    large: sizes.medium_large,
   };
 
   const locationArray = _embedded.location;
@@ -75,7 +75,7 @@ function parseGuideGroup(item: any) {
     slug,
     images,
     active: settings.active,
-    location
+    location,
   };
 
   // validating output against JSON schema
