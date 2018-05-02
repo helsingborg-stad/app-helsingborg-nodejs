@@ -1,12 +1,16 @@
 {
   "name": "app-helsingborg-nodejs",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "engines": {
     "node": "8.9.0"
   },
   "scripts": {
-    "start": "DEBUG=app,warn node ./app.js",
+    "start": "DEBUG=app,warn node dist/app.js",
+    "tsc": "tsc",
+    "build": "npm run tsc",
+    "postinstall": "npm run build",
+    "tslint": "tslint --project .",
     "eslint": "eslint app.js src/** --ext .js --report-unused-disable-directives"
   },
   "dependencies": {
@@ -14,12 +18,19 @@
     "express": "4.16.0",
     "jsonschema": "1.2.4",
     "morgan": "1.9.0",
-    "newrelic": "^4.1.0",
-    "node-fetch": "2.1.2"
+    "newrelic": "4.1.0",
+    "node-fetch": "2.1.2",
+    "typescript": "2.8.3"
   },
   "devDependencies": {
+    "@types/debug": "0.0.30",
+    "@types/express": "4.11.1",
+    "@types/morgan": "1.7.35",
+    "@types/node": "8.9.0",
+    "@types/node-fetch": "^1.6.9",
     "eslint": "4.19.1",
     "eslint-config-airbnb-base": "12.1.0",
-    "eslint-plugin-import": "2.10.0"
+    "eslint-plugin-import": "2.10.0",
+    "tslint": "^5.9.1"
   }
 }
