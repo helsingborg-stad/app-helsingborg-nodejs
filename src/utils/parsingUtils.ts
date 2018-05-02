@@ -1,6 +1,7 @@
 import debug from "debug";
+import jsonValidator from "../utils/jsonValidator";
+
 const logWarn = debug("warn");
-const jsonValidator = require("../utils/jsonValidator");
 
 function parseOpeningHour(item: any) {
   const { weekday, closed, opening, closing, day_number: dayNumber } = item;

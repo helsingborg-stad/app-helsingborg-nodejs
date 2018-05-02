@@ -17,7 +17,7 @@ const logApp = debug("app");
 
 const port = normalizePort(process.env.PORT || "5000");
 
-const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+const errorHandler: ErrorRequestHandler = ({}, {}, res, {}) => {
   res.status(500).send({ error: "Something failed." });
 };
 
