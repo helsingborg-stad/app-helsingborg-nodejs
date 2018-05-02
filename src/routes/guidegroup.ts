@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import { check, validationResult } from "express-validator/check";
 import { fetchAllGuideGroups, fetchProperties } from "../utils/fetchUtils";
+import { validateLanguageParam } from "../utils/validateParamsUtils";
 
 const router = express.Router();
 
@@ -8,11 +9,7 @@ router.get(
   "",
   [
     /* Validate input */
-    check("lang")
-      .isString()
-      .not()
-      .isInt()
-      .optional(),
+    validateLanguageParam(),
   ],
   (req: Request, res: Response, next: NextFunction) => {
     validationResult(req).throw();
@@ -29,6 +26,7 @@ router.get(
   "/property/:id",
   [
     /* Validate input */
+    validateLanguageParam(),
     check("id").isInt(),
   ],
   (req: Request, res: Response, next: NextFunction) => {
