@@ -1,18 +1,22 @@
-import debug from "debug";
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
+import { validationResult } from "express-validator/check";
 import { fetchAllGuides } from "../utils/fetchUtils";
-const logApp = debug("app");
+import { validateLanguageParam } from "../utils/validateParamsUtils";
 
 const router = express.Router();
 
-router.get("", (req, res, next) => {
-  // TODO add express-validator
-  logApp("Router received request");
-  const { lang } = req.query;
+router.get(
+  "",
+  [validateLanguageParam()],
+  (req: Request, res: Response, next: NextFunction) => {
+    validationResult(req).throw();
 
-  fetchAllGuides(lang)
-    .then((guideGroups) => res.send(guideGroups))
-    .catch((err) => next(err));
-});
+    const { lang } = req.query;
+
+    fetchAllGuides(lang)
+      .then((guideGroups) => res.send(guideGroups))
+      .catch((err) => next(err));
+  },
+);
 
 export default router;
