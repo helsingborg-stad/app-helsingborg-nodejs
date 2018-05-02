@@ -14,10 +14,7 @@ router.get(
       .isInt(),
   ],
   (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.mapped() });
-    }
+    validationResult(req).throw();
 
     const lang: string = req.query.lang;
 
@@ -34,10 +31,7 @@ router.get(
     check("id").isInt(),
   ],
   (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.mapped() });
-    }
+    validationResult(req).throw();
 
     const { id } = req.params;
 

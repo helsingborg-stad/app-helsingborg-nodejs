@@ -1,5 +1,6 @@
 import debug from "debug";
-import express, { ErrorRequestHandler } from "express";
+import express, { ErrorRequestHandler, Response } from "express";
+import { Result } from "express-validator/check";
 import http from "http";
 import logger from "morgan";
 import guideGroupRouter from "./routes/guidegroup";
@@ -16,8 +17,21 @@ const logApp = debug("app");
 
 const port = normalizePort(process.env.PORT || "5000");
 
-const errorHandler: ErrorRequestHandler = ({}, {}, res, {}) => {
-  res.status(500).send({ error: "Something failed." });
+function instanceOfResult(object: any): object is Result {
+  return "mapped" in object;
+}
+
+const errorHandler: ErrorRequestHandler = (
+  err: Error,
+  {},
+  res: Response,
+  {},
+) => {
+  if (instanceOfResult(err)) {
+    res.status(422).send({ errors: (err as Result).mapped() });
+  } else {
+    res.status(500).send({ error: "Something failed." });
+  }
 };
 
 app.use(logger("dev"));
@@ -31,7 +45,7 @@ app.use("/guidegroup", guideGroupRouter);
 app.use("/guide", guidesRouter);
 
 /**
- * ERROR handler
+ * ERROR handlers
  */
 app.use(errorHandler);
 
