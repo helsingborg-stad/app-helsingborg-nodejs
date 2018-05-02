@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "8.9.0"
+    "node": "8.9.0",
+    "npm": "5.5.1"
   },
   "scripts": {
     "start": "DEBUG=app,warn node dist/app.js",
@@ -11,7 +12,8 @@
     "build": "npm run tsc",
     "postinstall": "npm run build",
     "tslint": "tslint --project .",
-    "eslint": "eslint app.js src/** --ext .js --report-unused-disable-directives"
+    "eslint":
+      "eslint app.js src/** --ext .js --report-unused-disable-directives"
   },
   "dependencies": {
     "debug": "2.6.9",
