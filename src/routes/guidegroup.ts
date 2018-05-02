@@ -1,17 +1,30 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
+import { check, query, validationResult } from "express-validator/check";
 import { fetchAllGuideGroups, fetchProperties } from "../utils/fetchUtils";
 
 const router = express.Router();
 
-router.get("", (req, res, next) => {
-  // TODO add express-validator
-  // const { lang } = req.query;
-  const lang: string = req.query.lang;
+router.get(
+  "",
+  [
+    /* Validate input */
+    query("lang")
+    .isString()
+    .not().isInt(),
+  ],
+(req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.mapped() });
+    }
 
-  fetchAllGuideGroups(lang)
-    .then((guideGroups) => res.send(guideGroups))
-    .catch((err) => next(err));
-});
+    const lang: string = req.query.lang;
+
+    fetchAllGuideGroups(lang)
+      .then((guideGroups) => res.send(guideGroups))
+      .catch((err) => next(err));
+  };
+)
 
 router.get("/property/:id", (req, res, next) => {
   // TODO add express-validator

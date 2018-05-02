@@ -10,6 +10,7 @@
     "start": "DEBUG=app,warn node dist/app.js",
     "tsc": "tsc",
     "build": "npm run tsc",
+    "clean": "rm -rf dist",
     "postinstall": "npm run build",
     "tslint": "tslint --project .",
     "eslint":
@@ -18,6 +19,7 @@
   "dependencies": {
     "debug": "2.6.9",
     "express": "4.16.0",
+    "express-validator": "5.1.2",
     "jsonschema": "1.2.4",
     "morgan": "1.9.0",
     "newrelic": "4.1.0",
