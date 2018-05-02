@@ -11,7 +11,8 @@ router.get(
     check("lang")
       .isString()
       .not()
-      .isInt(),
+      .isInt()
+      .optional(),
   ],
   (req: Request, res: Response, next: NextFunction) => {
     validationResult(req).throw();
