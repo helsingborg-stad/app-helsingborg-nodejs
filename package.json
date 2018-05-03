@@ -10,18 +10,19 @@
     "start": "DEBUG=app,warn node dist/app.js",
     "tsc": "tsc",
     "watch-ts": "tsc -w",
-    "watch-node": "nodemon --inspect dist/app.js",
-    "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"blue.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
+    "watch-node": "DEBUG=app,warn nodemon --inspect dist/app.js",
+    "watch-debug":
+      "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"blue.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "build": "npm run tsc",
     "clean": "rm -rf dist",
     "postinstall": "npm run build",
     "tslint": "tslint --project ."
   },
   "dependencies": {
+    "ajv": "6.4.0",
     "debug": "2.6.9",
     "express": "4.16.0",
     "express-validator": "5.1.2",
-    "jsonschema": "1.2.4",
     "morgan": "1.9.0",
     "newrelic": "4.1.0",
     "node-fetch": "2.1.2",

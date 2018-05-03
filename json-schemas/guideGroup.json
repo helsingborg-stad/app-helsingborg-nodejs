@@ -1,7 +1,8 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema",
-
+  "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
+
+  "required": ["id", "description", "name", "slug", "active", "location"],
 
   "properties": {
     "id": { "type": "integer" },
@@ -9,9 +10,66 @@
     "name": { "type": "string" },
     "slug": { "type": "string" },
     "active": { "type": "boolean" },
-    "location": { "$ref": "location" },
-    "images" : { "$ref" : "images"}
+    "location": { "$ref": "#/definitions/location" },
+    "images": { "$ref": "#/definitions/image" }
   },
 
-  "required": ["id", "description", "name", "slug", "active", "location"]
+  "definitions": {
+    "image": {
+      "type": "object",
+
+      "properties": {
+        "thumbnail": {
+          "type": "string",
+          "format": "uri"
+        },
+        "medium": {
+          "type": "string",
+          "format": "uri"
+        },
+        "large": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "openingHour": {
+      "type": "object",
+
+      "properties": {
+        "weekday": {
+          "type": "string",
+          "enum": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ]
+        },
+        "closed": { "type": "boolean" },
+        "opening": { "type": ["string", "null"] },
+        "closing": { "type": ["string", "null"] },
+        "dayNumber": { "type": "integer", "minimum": 1, "maximum": 7 }
+      },
+      "required": ["weekday", "closed", "opening", "closing", "dayNumber"]
+    },
+    "location": {
+      "type": "object",
+
+      "properties": {
+        "id": { "type": "integer" },
+        "streetAddress": { "type": "string" },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "openHours": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/openingHour" }
+        }
+      },
+      "required": ["id", "streetAddress", "latitude", "longitude", "openHours"]
+    }
+  }
 }

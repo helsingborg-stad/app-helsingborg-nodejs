@@ -1,20 +1,21 @@
-// tslint:disable-next-line no-var-requires
-const { Validator } = require("jsonschema");
+import Ajv from "ajv";
 
 import guideGroup from "../../json-schemas/guideGroup.json";
-import images from "../../json-schemas/images.json";
-import location from "../../json-schemas/location.json";
-import openingHour from "../../json-schemas/openingHour.json";
 
-const v = new Validator();
-v.addSchema(guideGroup, "/guideGroup");
-v.addSchema(location, "/location");
-v.addSchema(images, "/images");
-v.addSchema(openingHour, "/openingHour");
+const options: Ajv.Options = { verbose: true };
+const ajv = new Ajv(options);
 
-export function validate(data: any, schema: any): boolean {
-  const result = v.validate(data, schema, { throwError: true });
-  return result.valid;
+ajv.addSchema(guideGroup, "guideGroup");
+
+export function validate(data: any, schema: string): boolean {
+  const result = ajv.validate(schema, data);
+  if (typeof result === "boolean") {
+    if (!result) {
+      throw ajv.errors;
+    }
+    return result;
+  }
+  return false;
 }
 
 export default { validate };

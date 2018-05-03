@@ -13,7 +13,6 @@ function parseOpeningHour(item: any) {
     opening,
     weekday,
   };
-  jsonValidator.validate(oh, "/openingHour");
   return oh;
 }
 
