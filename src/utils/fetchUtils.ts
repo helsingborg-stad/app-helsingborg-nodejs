@@ -1,6 +1,6 @@
 import debug from "debug";
 import fetch from "node-fetch";
-import { PointProperty, Property } from "../types/typings";
+import { PointProperty } from "../types/typings";
 import { validate } from "./jsonValidator";
 import { parseGuide, parseGuideGroup } from "./parsingUtils";
 const logApp = debug("app");

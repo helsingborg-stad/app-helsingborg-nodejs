@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
-import { check, validationResult } from "express-validator/check";
-import { fetchAllGuideGroups, fetchProperties } from "../utils/fetchUtils";
+import { validationResult } from "express-validator/check";
+import { fetchAllGuideGroups } from "../utils/fetchUtils";
 import { validateLanguageParam } from "../utils/validateParamsUtils";
 
 const router = express.Router();

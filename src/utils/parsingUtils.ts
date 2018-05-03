@@ -1,5 +1,4 @@
 import debug from "debug";
-import jsonValidator from "../utils/jsonValidator";
 
 const logWarn = debug("warn");
 
