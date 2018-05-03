@@ -56,8 +56,7 @@ async function fetchAllGuideGroups(lang?: string) {
 
   const resultArray: any[] = [];
 
-  for (let index = 0; index < guideGroupArray.length; index++) {
-    const item = guideGroupArray[index];
+  for (const item of guideGroupArray) {
     try {
       const locationId = item._embedded.location[0].id;
       let props: PointProperty[] = [];
