@@ -14,28 +14,10 @@ router.get(
   (req: Request, res: Response, next: NextFunction) => {
     validationResult(req).throw();
 
-    const lang: string = req.query.lang;
+    const lang: string | undefined = req.query.lang;
 
     fetchAllGuideGroups(lang)
       .then((guideGroups) => res.send(guideGroups))
-      .catch((err) => next(err));
-  },
-);
-
-router.get(
-  "/property/:id",
-  [
-    /* Validate input */
-    validateLanguageParam(),
-    check("id").isInt(),
-  ],
-  (req: Request, res: Response, next: NextFunction) => {
-    validationResult(req).throw();
-
-    const { id } = req.params;
-
-    fetchProperties(id)
-      .then((properties) => res.send(properties))
       .catch((err) => next(err));
   },
 );
