@@ -80,9 +80,6 @@ function parseGuideGroup(item: any) {
     slug,
   };
 
-  // validating output against JSON schema
-  jsonValidator.validate(guideGroup, "guideGroup");
-
   return guideGroup;
 }
 
