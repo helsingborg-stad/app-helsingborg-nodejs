@@ -9,12 +9,13 @@
   "scripts": {
     "start": "DEBUG=app,warn node dist/app.js",
     "tsc": "tsc",
+    "watch-ts": "tsc -w",
+    "watch-node": "nodemon --inspect dist/app.js",
+    "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"blue.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "build": "npm run tsc",
     "clean": "rm -rf dist",
     "postinstall": "npm run build",
-    "tslint": "tslint --project .",
-    "eslint":
-      "eslint app.js src/** --ext .js --report-unused-disable-directives"
+    "tslint": "tslint --project ."
   },
   "dependencies": {
     "debug": "2.6.9",
@@ -31,10 +32,12 @@
     "@types/express": "4.11.1",
     "@types/morgan": "1.7.35",
     "@types/node": "8.9.0",
-    "@types/node-fetch": "^1.6.9",
+    "@types/node-fetch": "1.6.9",
+    "concurrently": "3.5.1",
     "eslint": "4.19.1",
     "eslint-config-airbnb-base": "12.1.0",
     "eslint-plugin-import": "2.10.0",
-    "tslint": "^5.9.1"
+    "nodemon": "1.17.3",
+    "tslint": "5.9.1"
   }
 }
