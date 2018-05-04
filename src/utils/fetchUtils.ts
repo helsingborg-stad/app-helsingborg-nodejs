@@ -4,22 +4,20 @@ import { URL } from "url";
 import { Guide, PointProperty } from "../types/typings";
 import { validate } from "./jsonValidator";
 import { parseGuide, parseGuideGroup } from "./parsingUtils";
+import {
+  buildGuideGroupUrl,
+  buildGuideUrl,
+  buildPropertyUrl,
+} from "./urlUtils";
 
 const logApp = debug("app");
 const logWarn = debug("warn");
-
-// TODO move to .env
-const API_HOST_URL = "https://api.helsingborg.se/event/json/wp/v2";
 
 async function fetchProperties(
   id: number,
   lang?: string,
 ): Promise<PointProperty[]> {
-  let url = `${API_HOST_URL}/property?post=${id}`;
-  if (lang) {
-    url += `&lang=${lang}`;
-  }
-
+  const url = buildPropertyUrl(lang, id);
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error("Malformed request");
@@ -55,10 +53,7 @@ async function fetchProperties(
 }
 
 export async function fetchAllGuideGroups(lang?: string) {
-  let url = `${API_HOST_URL}/guidegroup?_embed`;
-  if (lang) {
-    url += `&lang=${lang}`;
-  }
+  const url = buildGuideGroupUrl(lang);
   logApp(`fetching from:${url}`);
 
   const response = await fetch(url);
@@ -96,21 +91,6 @@ export async function fetchAllGuideGroups(lang?: string) {
   }
 
   return resultArray;
-}
-
-function buildGuideUrl(lang: string, id?: string): string {
-  let url = `${API_HOST_URL}/guide`;
-  if (id) {
-    url += `/${id}`;
-  }
-  url += "?";
-
-  /* query params */
-  if (lang) {
-    url += `&lang=${lang}`;
-  }
-  url += `&_embed`;
-  return url;
 }
 
 export async function fetchGuide(lang: string, id: string): Promise<Guide> {
