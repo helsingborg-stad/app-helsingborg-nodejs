@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
-import { validationResult } from "express-validator/check";
-import { fetchAllGuides } from "../utils/fetchUtils";
+import { param, validationResult } from "express-validator/check";
+import { fetchAllGuides, fetchGuide } from "../utils/fetchUtils";
 import { validateLanguageParam } from "../utils/validateParamsUtils";
 
 const router = express.Router();
@@ -15,6 +15,21 @@ router.get(
 
     fetchAllGuides(lang)
       .then((guideGroups) => res.send(guideGroups))
+      .catch((err) => next(err));
+  },
+);
+
+router.get(
+  "/:id",
+  [validateLanguageParam(), param("id")],
+  (req: Request, res: Response, next: NextFunction) => {
+    validationResult(req).throw();
+
+    const { lang } = req.query;
+    const { id } = req.params;
+
+    fetchGuide(lang, id)
+      .then((guide) => res.send(guide))
       .catch((err) => next(err));
   },
 );

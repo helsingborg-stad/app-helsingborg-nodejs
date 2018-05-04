@@ -1,25 +1,23 @@
 import debug from "debug";
 import fetch from "node-fetch";
 import { URL } from "url";
-import { PointProperty } from "../types/typings";
+import { Guide, PointProperty } from "../types/typings";
 import { validate } from "./jsonValidator";
 import { parseGuide, parseGuideGroup } from "./parsingUtils";
+import {
+  buildGuideGroupUrl,
+  buildGuideUrl,
+  buildPropertyUrl,
+} from "./urlUtils";
 
 const logApp = debug("app");
 const logWarn = debug("warn");
-
-// TODO move to .env
-const API_HOST_URL = "https://api.helsingborg.se/event/json/wp/v2";
 
 async function fetchProperties(
   id: number,
   lang?: string,
 ): Promise<PointProperty[]> {
-  let url = `${API_HOST_URL}/property?post=${id}`;
-  if (lang) {
-    url += `&lang=${lang}`;
-  }
-
+  const url = buildPropertyUrl(id, lang);
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error("Malformed request");
@@ -54,11 +52,8 @@ async function fetchProperties(
   return props;
 }
 
-async function fetchAllGuideGroups(lang?: string) {
-  let url = `${API_HOST_URL}/guidegroup?_embed`;
-  if (lang) {
-    url += `&lang=${lang}`;
-  }
+export async function fetchAllGuideGroups(lang?: string) {
+  const url = buildGuideGroupUrl(lang);
   logApp(`fetching from:${url}`);
 
   const response = await fetch(url);
@@ -98,12 +93,24 @@ async function fetchAllGuideGroups(lang?: string) {
   return resultArray;
 }
 
-async function fetchAllGuides(lang: string) {
-  let url = `${API_HOST_URL}/guide?_embed`;
-  if (lang) {
-    url += `&lang=${lang}`;
+export async function fetchGuide(lang: string, id: string): Promise<Guide> {
+  const url = buildGuideUrl(lang, id);
+  logApp(`sent fetching request to: ${url}`);
+
+  const response = await fetch(url);
+  logApp(`received fetching response from:${url}`);
+  if (!response.ok) {
+    throw new Error("Malformed request");
   }
-  logApp(`sent fetching request to:${url}`);
+
+  const guideJson = await response.json();
+
+  return parseGuide(guideJson);
+}
+
+export async function fetchAllGuides(lang: string): Promise<Guide[]> {
+  const url = buildGuideUrl(lang);
+  logApp(`sent fetching request to: ${url}`);
 
   const response = await fetch(url);
   logApp(`received fetching response from:${url}`);
@@ -113,7 +120,7 @@ async function fetchAllGuides(lang: string) {
 
   const guidesJson = await response.json();
 
-  const guides: any = [];
+  const guides: Guide[] = [];
   guidesJson.forEach((item: any) => {
     try {
       const guide = parseGuide(item);
@@ -129,5 +136,3 @@ async function fetchAllGuides(lang: string) {
 
   return guides;
 }
-
-export { fetchAllGuideGroups, fetchAllGuides, fetchProperties };
