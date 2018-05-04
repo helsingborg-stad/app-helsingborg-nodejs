@@ -35,20 +35,44 @@ export interface Location {
   openingHourExceptions?: OpeningHourException[];
 }
 
+export interface ImageUrls {
+  /** @nullable */
+  large?: Url;
+  /** @nullable */
+  medium?: Url;
+  /** @nullable */
+  thumbnail?: Url;
+}
+
 export interface GuideGroup {
   active: boolean;
   description: string;
   id: number;
-  images: {
-    /** @nullable */
-    large?: Url;
-    /** @nullable */
-    medium?: Url;
-    /** @nullable */
-    thumbnail?: Url;
-  };
+  images: ImageUrls;
   location: Location;
   name: string;
   slug: string;
   pointProperties: PointProperty[];
+}
+
+export interface ContentObject {
+  //TODO To be done
+}
+
+export interface Guide {
+  id: number;
+  slug: string;
+  name: string;
+  tagline: string;
+  status: "publish" | "draft";
+  guidegroupId: number;
+  /** @format date-time*/
+  dateStart?: string;
+  /** @format date-time*/
+  dateEnd?: string;
+  type: "guide" | "trail";
+  childFriendly: boolean;
+  images: ImageUrls;
+  description: string;
+  contentObjects: ContentObject[];
 }

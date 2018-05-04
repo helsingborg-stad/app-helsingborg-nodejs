@@ -1,0 +1,176 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "ContentObject": {
+            "type": "object"
+        },
+        "ImageUrls": {
+            "properties": {
+                "large": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "medium": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "thumbnail": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }
+            },
+            "type": "object"
+        },
+        "ParsedUrlQuery": {
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    {
+                        "type": "string"
+                    }
+                ]
+            },
+            "type": "object"
+        },
+        "Url": {
+            "properties": {
+                "auth": {
+                    "type": "string"
+                },
+                "hash": {
+                    "type": "string"
+                },
+                "host": {
+                    "type": "string"
+                },
+                "hostname": {
+                    "type": "string"
+                },
+                "href": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "pathname": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "string"
+                },
+                "protocol": {
+                    "type": "string"
+                },
+                "query": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/ParsedUrlQuery"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "search": {
+                    "type": "string"
+                },
+                "slashes": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "properties": {
+        "childFriendly": {
+            "type": "boolean"
+        },
+        "contentObjects": {
+            "items": {
+                "$ref": "#/definitions/ContentObject"
+            },
+            "type": "array"
+        },
+        "dateEnd": {
+            "format": "date-time",
+            "type": "string"
+        },
+        "dateStart": {
+            "format": "date-time",
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "guidegroupId": {
+            "type": "number"
+        },
+        "id": {
+            "type": "number"
+        },
+        "images": {
+            "$ref": "#/definitions/ImageUrls"
+        },
+        "slug": {
+            "type": "string"
+        },
+        "status": {
+            "enum": [
+                "draft",
+                "publish"
+            ],
+            "type": "string"
+        },
+        "tagline": {
+            "type": "string"
+        },
+        "title": {
+            "type": "string"
+        },
+        "type": {
+            "enum": [
+                "guide",
+                "trail"
+            ],
+            "type": "string"
+        }
+    },
+    "required": [
+        "childFriendly",
+        "contentObjects",
+        "description",
+        "guidegroupId",
+        "id",
+        "images",
+        "slug",
+        "status",
+        "tagline",
+        "title",
+        "type"
+    ],
+    "type": "object"
+}
+

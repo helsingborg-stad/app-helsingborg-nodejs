@@ -1,6 +1,41 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "definitions": {
+    "ImageUrls": {
+      "properties": {
+        "large": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Url"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "medium": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Url"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "thumbnail": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Url"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "type": "object"
+    },
     "Location": {
       "properties": {
         "id": {
@@ -180,39 +215,7 @@
       "type": "number"
     },
     "images": {
-      "properties": {
-        "large": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Url"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "medium": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Url"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "thumbnail": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Url"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "type": "object"
+      "$ref": "#/definitions/ImageUrls"
     },
     "location": {
       "$ref": "#/definitions/Location"
