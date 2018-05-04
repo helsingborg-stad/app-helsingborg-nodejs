@@ -1,75 +1,212 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema",
-  "type": "object",
-
-  "required": ["id", "description", "name", "slug", "active", "location"],
-
-  "properties": {
-    "id": { "type": "integer" },
-    "description": { "type": "string" },
-    "name": { "type": "string" },
-    "slug": { "type": "string" },
-    "active": { "type": "boolean" },
-    "location": { "$ref": "#/definitions/location" },
-    "images": { "$ref": "#/definitions/image" }
-  },
-
+  "$schema": "http://json-schema.org/draft-06/schema#",
   "definitions": {
-    "image": {
-      "type": "object",
-
+    "Location": {
       "properties": {
-        "thumbnail": {
-          "type": "string",
-          "format": "uri"
+        "id": {
+          "type": "number"
         },
-        "medium": {
-          "type": "string",
-          "format": "uri"
+        "latitude": {
+          "type": "number"
         },
-        "large": {
-          "type": "string",
-          "format": "uri"
-        }
-      }
-    },
-    "openingHour": {
-      "type": "object",
-
-      "properties": {
-        "weekday": {
-          "type": "string",
-          "enum": [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday"
+        "links": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/definitions/Url"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
-        "closed": { "type": "boolean" },
-        "opening": { "type": ["string", "null"] },
-        "closing": { "type": ["string", "null"] },
-        "dayNumber": { "type": "integer", "minimum": 1, "maximum": 7 }
-      },
-      "required": ["weekday", "closed", "opening", "closing", "dayNumber"]
-    },
-    "location": {
-      "type": "object",
-
-      "properties": {
-        "id": { "type": "integer" },
-        "streetAddress": { "type": "string" },
-        "latitude": { "type": "number" },
-        "longitude": { "type": "number" },
+        "longitude": {
+          "type": "number"
+        },
         "openHours": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/openingHour" }
+          "items": {
+            "$ref": "#/definitions/OpeningHours"
+          },
+          "type": "array"
+        },
+        "streetAddress": {
+          "type": "string"
         }
       },
-      "required": ["id", "streetAddress", "latitude", "longitude", "openHours"]
+      "required": [
+        "id",
+        "latitude",
+        "links",
+        "longitude",
+        "openHours",
+        "streetAddress"
+      ],
+      "type": "object"
+    },
+    "OpeningHours": {
+      "properties": {
+        "closed": {
+          "type": "boolean"
+        },
+        "closing": {
+          "type": ["string", "null"]
+        },
+        "dayNumber": {
+          "enum": [1, 2, 3, 4, 5, 6, 7],
+          "type": "number"
+        },
+        "opening": {
+          "type": ["string", "null"]
+        },
+        "weekday": {
+          "type": "string"
+        }
+      },
+      "required": ["closed", "dayNumber", "opening", "weekday"],
+      "type": "object"
+    },
+    "ParsedUrlQuery": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          {
+            "type": "string"
+          }
+        ]
+      },
+      "type": "object"
+    },
+    "PointProperty": {
+      "properties": {
+        "icon": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Url"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        }
+      },
+      "required": ["id", "name", "slug"],
+      "type": "object"
+    },
+    "Url": {
+      "properties": {
+        "auth": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "hostname": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "pathname": {
+          "type": "string"
+        },
+        "port": {
+          "type": "string"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "query": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ParsedUrlQuery"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "search": {
+          "type": "string"
+        },
+        "slashes": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
     }
-  }
+  },
+  "properties": {
+    "active": {
+      "type": "boolean"
+    },
+    "description": {
+      "type": "string"
+    },
+    "id": {
+      "type": "number"
+    },
+    "images": {
+      "properties": {
+        "large": {
+          "$ref": "#/definitions/Url"
+        },
+        "medium": {
+          "$ref": "#/definitions/Url"
+        },
+        "thumbnail": {
+          "$ref": "#/definitions/Url"
+        }
+      },
+      "required": ["large", "medium", "thumbnail"],
+      "type": "object"
+    },
+    "location": {
+      "$ref": "#/definitions/Location"
+    },
+    "name": {
+      "type": "string"
+    },
+    "pointProperties": {
+      "items": {
+        "$ref": "#/definitions/PointProperty"
+      },
+      "type": "array"
+    },
+    "slug": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "active",
+    "description",
+    "id",
+    "images",
+    "location",
+    "name",
+    "pointProperties",
+    "slug"
+  ],
+  "type": "object"
 }

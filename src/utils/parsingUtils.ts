@@ -1,4 +1,5 @@
 import debug from "debug";
+import { URL } from "url";
 
 const logWarn = debug("warn");
 
@@ -60,15 +61,23 @@ function parseGuideGroup(item: any) {
 
   const { image } = apperance;
   const { sizes } = image;
-  const images = {
-    large: sizes.medium_large,
-    medium: sizes.medium,
-    thumbnail: sizes.thumbnail,
-  };
+
+  let images = null;
+  try {
+    images = {
+      // TODO extract ONE url at a time, please
+      large: new URL(sizes.medium_large),
+      medium: new URL(sizes.medium),
+      thumbnail: new URL(sizes.thumbnail),
+    };
+  } catch (e) {
+    logWarn("Not a well defined url", e);
+  }
 
   const locationArray = _embedded.location;
   const location = parseLocation(locationArray[0]);
 
+  // TODO return type GuideGroup
   const guideGroup = {
     active: settings.active,
     description,

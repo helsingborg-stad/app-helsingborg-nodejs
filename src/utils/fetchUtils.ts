@@ -71,6 +71,7 @@ async function fetchAllGuideGroups(lang?: string) {
   const resultArray: any[] = [];
 
   for (const item of guideGroupArray) {
+    let guideGroup = null;
     try {
       const locationId = item._embedded.location[0].id;
       let props: PointProperty[] = [];
@@ -80,7 +81,7 @@ async function fetchAllGuideGroups(lang?: string) {
         // discarding the properties
       }
 
-      const guideGroup = {
+      guideGroup = {
         ...parseGuideGroup(item),
         pointProperties: props,
       };
@@ -89,7 +90,8 @@ async function fetchAllGuideGroups(lang?: string) {
       resultArray.push(guideGroup);
     } catch (err) {
       // Discard item
-      logWarn("Failed to parse item:", err);
+      logWarn("Failed to parse item:", guideGroup);
+      logWarn("Validation error: ", err);
     }
   }
 
