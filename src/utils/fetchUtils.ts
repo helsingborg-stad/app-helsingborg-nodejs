@@ -116,10 +116,13 @@ async function fetchAllGuides(lang: string) {
   const guides: any = [];
   guidesJson.forEach((item: any) => {
     try {
-      guides.push(parseGuide(item));
+      const guide = parseGuide(item);
+      validate(guide, "guide");
+      guides.push(guide);
     } catch (err) {
       // Discard item
-      logWarn("Failed to parse item:", err);
+      logWarn("Failed to parse guide from: ", item);
+      logWarn("Validation error: ", err);
     }
   });
   logApp("Guides parsing complete");

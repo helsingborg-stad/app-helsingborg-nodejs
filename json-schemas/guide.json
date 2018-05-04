@@ -1,0 +1,189 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "definitions": {
+        "ContentObject": {
+            "type": "object"
+        },
+        "GuideType": {
+            "enum": [
+                "guide",
+                "trail"
+            ],
+            "type": "string"
+        },
+        "ImageUrls": {
+            "properties": {
+                "large": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "medium": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "thumbnail": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }
+            },
+            "type": "object"
+        },
+        "ParsedUrlQuery": {
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    {
+                        "type": "string"
+                    }
+                ]
+            },
+            "type": "object"
+        },
+        "PostStatus": {
+            "enum": [
+                "draft",
+                "publish"
+            ],
+            "type": "string"
+        },
+        "Url": {
+            "properties": {
+                "auth": {
+                    "type": "string"
+                },
+                "hash": {
+                    "type": "string"
+                },
+                "host": {
+                    "type": "string"
+                },
+                "hostname": {
+                    "type": "string"
+                },
+                "href": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "pathname": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "string"
+                },
+                "protocol": {
+                    "type": "string"
+                },
+                "query": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/ParsedUrlQuery"
+                        },
+                        {
+                            "type": [
+                                "null",
+                                "string"
+                            ]
+                        }
+                    ]
+                },
+                "search": {
+                    "type": "string"
+                },
+                "slashes": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "properties": {
+        "childFriendly": {
+            "type": "boolean"
+        },
+        "contentObjects": {
+            "items": {
+                "$ref": "#/definitions/ContentObject"
+            },
+            "type": "array"
+        },
+        "dateEnd": {
+            "format": "date-time",
+            "type": "string"
+        },
+        "dateStart": {
+            "format": "date-time",
+            "type": "string"
+        },
+        "description": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "guideGroupId": {
+            "type": "number"
+        },
+        "guideType": {
+            "$ref": "#/definitions/GuideType"
+        },
+        "id": {
+            "type": "number"
+        },
+        "images": {
+            "$ref": "#/definitions/ImageUrls"
+        },
+        "name": {
+            "type": "string"
+        },
+        "postStatus": {
+            "$ref": "#/definitions/PostStatus"
+        },
+        "slug": {
+            "type": "string"
+        },
+        "tagline": {
+            "type": [
+                "null",
+                "string"
+            ]
+        }
+    },
+    "required": [
+        "childFriendly",
+        "contentObjects",
+        "guideGroupId",
+        "guideType",
+        "id",
+        "images",
+        "name",
+        "postStatus",
+        "slug"
+    ],
+    "type": "object"
+}
+
