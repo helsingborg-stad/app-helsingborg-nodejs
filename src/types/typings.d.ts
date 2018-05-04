@@ -18,8 +18,9 @@ export interface OpeningHours {
   weekday: string;
 }
 
-export interface OpeningHourEception {
-  date: Date;
+export interface OpeningHourException {
+  /** @format date-time*/
+  date: string;
   description: string;
 }
 
@@ -30,8 +31,8 @@ export interface Location {
   links: Url[];
   longitude: number;
   streetAddress: string;
-  openHours: OpeningHours[];
-  //openHourExceptions: OpeningHourEception[];
+  openingHours?: OpeningHours[];
+  openingHourExceptions?: OpeningHourException[];
 }
 
 export interface GuideGroup {

@@ -25,7 +25,13 @@
         "longitude": {
           "type": "number"
         },
-        "openHours": {
+        "openingHourExceptions": {
+          "items": {
+            "$ref": "#/definitions/OpeningHourException"
+          },
+          "type": "array"
+        },
+        "openingHours": {
           "items": {
             "$ref": "#/definitions/OpeningHours"
           },
@@ -35,14 +41,20 @@
           "type": "string"
         }
       },
-      "required": [
-        "id",
-        "latitude",
-        "links",
-        "longitude",
-        "openHours",
-        "streetAddress"
-      ],
+      "required": ["id", "latitude", "links", "longitude", "streetAddress"],
+      "type": "object"
+    },
+    "OpeningHourException": {
+      "properties": {
+        "date": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": ["date", "description"],
       "type": "object"
     },
     "OpeningHours": {
