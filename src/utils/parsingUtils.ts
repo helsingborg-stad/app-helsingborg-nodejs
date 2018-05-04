@@ -161,10 +161,10 @@ export function parseGuide(item: any): Guide {
     guideType: parseGuideType(item.content_type),
     id: Number(item.id),
     images: parseImages(item.guide_images[0].sizes),
-    name: String(item.title.plain_text),
+    name: item.title.plain_text,
     postStatus: parsePublishStatus(item.status),
-    slug: String(item.slug),
-    tagline: String(item.guide_tagline),
+    slug: item.slug,
+    tagline: item.guide_tagline,
   };
 
   try {

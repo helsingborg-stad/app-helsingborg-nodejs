@@ -141,8 +141,8 @@
         },
         "description": {
             "type": [
-                "string",
-                "null"
+                "null",
+                "string"
             ]
         },
         "guideGroupId": {
@@ -168,8 +168,8 @@
         },
         "tagline": {
             "type": [
-                "string",
-                "null"
+                "null",
+                "string"
             ]
         }
     },

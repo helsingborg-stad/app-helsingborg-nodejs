@@ -4,17 +4,14 @@ export interface PointProperty {
   id: number;
   name: string;
   slug: string;
-  /** @nullable */
-  icon?: Url;
+  icon?: Url | null;
 }
 
 export interface OpeningHours {
   closed: boolean;
-  /** @nullable */
-  closing?: string;
+  closing?: string | null;
   dayNumber: 1 | 2 | 3 | 4 | 5 | 6 | 7;
-  /** @nullable */
-  opening: string;
+  opening: string | null;
   weekday: string;
 }
 
@@ -27,8 +24,7 @@ export interface OpeningHourException {
 export interface Location {
   id: number;
   latitude: number;
-  /** @nullable */
-  links: Url[];
+  links: Url[] | null;
   longitude: number;
   streetAddress: string;
   openingHours?: OpeningHours[];
@@ -70,10 +66,8 @@ export interface Guide {
   id: number;
   slug: string;
   name: string;
-  /** @nullable */
-  tagline?: string;
-  /** @nullable */
-  description?: string;
+  tagline?: string | null;
+  description?: string | null;
   postStatus: PostStatus;
   guideGroupId: number;
   /** @format date-time*/
