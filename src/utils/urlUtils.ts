@@ -16,7 +16,7 @@ export function buildGuideUrl(lang?: string, id?: string): string {
   return url;
 }
 
-export function buildPropertyUrl(lang?: string, id: number): string {
+export function buildPropertyUrl(id: number, lang?: string): string {
   let url = `${API_HOST_URL}/property?post=${id}`;
   if (lang) {
     url += `&lang=${lang}`;

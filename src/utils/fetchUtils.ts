@@ -17,7 +17,7 @@ async function fetchProperties(
   id: number,
   lang?: string,
 ): Promise<PointProperty[]> {
-  const url = buildPropertyUrl(lang, id);
+  const url = buildPropertyUrl(id, lang);
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error("Malformed request");
