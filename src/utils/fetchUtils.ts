@@ -1,8 +1,10 @@
 import debug from "debug";
 import fetch from "node-fetch";
+import { URL } from "url";
 import { PointProperty } from "../types/typings";
 import { validate } from "./jsonValidator";
 import { parseGuide, parseGuideGroup } from "./parsingUtils";
+
 const logApp = debug("app");
 const logWarn = debug("warn");
 
@@ -27,14 +29,26 @@ async function fetchProperties(
 
   jsonArray.forEach((json) => {
     const prop: PointProperty = {
-      icon: json.icon,
       id: json.id,
       name: json.name,
       slug: json.slug,
     };
 
-    // TODO validate input
-    props.push(prop);
+    if (json.icon !== null) {
+      try {
+        prop.icon = new URL(json.icon);
+      } catch (e) {
+        // not a well formatted url, discarding
+        logWarn("Not a well formatted url", e);
+      }
+    }
+
+    try {
+      validate(prop, "pointProperty");
+      props.push(prop);
+    } catch (err) {
+      logWarn("Invalid property, discarding", err);
+    }
   });
 
   return props;
@@ -56,8 +70,8 @@ async function fetchAllGuideGroups(lang?: string) {
 
   const resultArray: any[] = [];
 
-  for (let index = 0; index < guideGroupArray.length; index++) {
-    const item = guideGroupArray[index];
+  for (const item of guideGroupArray) {
+    let guideGroup = null;
     try {
       const locationId = item._embedded.location[0].id;
       let props: PointProperty[] = [];
@@ -67,7 +81,7 @@ async function fetchAllGuideGroups(lang?: string) {
         // discarding the properties
       }
 
-      const guideGroup = {
+      guideGroup = {
         ...parseGuideGroup(item),
         pointProperties: props,
       };
@@ -76,7 +90,8 @@ async function fetchAllGuideGroups(lang?: string) {
       resultArray.push(guideGroup);
     } catch (err) {
       // Discard item
-      logWarn("Failed to parse item:", err);
+      logWarn("Failed to parse item:", guideGroup);
+      logWarn("Validation error: ", err);
     }
   }
 

@@ -1,4 +1,6 @@
 import debug from "debug";
+import { URL } from "url";
+import { OpeningHourException } from "../types/typings";
 
 const logWarn = debug("warn");
 
@@ -35,8 +37,6 @@ function parseLocation(item: any) {
   };
 
   const openHours: any[] = [];
-  location.openHours = openHours;
-
   if (openingHoursInput) {
     openingHoursInput.forEach((oh: any) => {
       try {
@@ -48,11 +48,52 @@ function parseLocation(item: any) {
     });
   }
 
+  if (openHours.length > 0) {
+    location.openingHours = openHours;
+  }
+
   if (openHoursException) {
-    location.openHoursException = openHoursException;
+    const openingHourExceptions: OpeningHourException[] = [];
+    openHoursException.forEach((element: any) => {
+      try {
+        const exc: OpeningHourException = {
+          date: new Date(element.exception_date).toISOString(),
+          description: element.exeption_information,
+        };
+        openingHourExceptions.push(exc);
+      } catch (error) {
+        // discarding exception
+        logWarn("Error parsing opening hour exception from: " + element);
+      }
+    });
+
+    if (openingHourExceptions.length > 0) {
+      location.openingHourExceptions = openingHourExceptions;
+    }
   }
 
   return location;
+}
+
+function parseUrl(urlString?: string): URL {
+  try {
+    return new URL(urlString);
+  } catch (error) {
+    logWarn("Not a well formatted url, discarding: " + urlString);
+  }
+
+  return null;
+}
+
+function parseImages(
+  item: any,
+): { large?: URL; medium?: URL; thumbnail?: URL } {
+  const images = {
+    large: parseUrl(item.large),
+    medium: parseUrl(item.medium),
+    thumbnail: parseUrl(item.thumbnail),
+  };
+  return images;
 }
 
 function parseGuideGroup(item: any) {
@@ -60,15 +101,13 @@ function parseGuideGroup(item: any) {
 
   const { image } = apperance;
   const { sizes } = image;
-  const images = {
-    large: sizes.medium_large,
-    medium: sizes.medium,
-    thumbnail: sizes.thumbnail,
-  };
+
+  const images = parseImages(sizes);
 
   const locationArray = _embedded.location;
   const location = parseLocation(locationArray[0]);
 
+  // TODO return type GuideGroup
   const guideGroup = {
     active: settings.active,
     description,
