@@ -36,12 +36,9 @@ export interface Location {
 }
 
 export interface ImageUrls {
-  /** @nullable */
-  large?: Url;
-  /** @nullable */
-  medium?: Url;
-  /** @nullable */
-  thumbnail?: Url;
+  large?: Url | null;
+  medium?: Url | null;
+  thumbnail?: Url | null;
 }
 
 export interface GuideGroup {

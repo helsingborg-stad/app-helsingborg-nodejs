@@ -4,6 +4,7 @@ import {
   ContentObject,
   Guide,
   GuideType,
+  ImageUrls,
   OpeningHourException,
   PostStatus,
 } from "../types/typings";
@@ -81,7 +82,11 @@ function parseLocation(item: any) {
   return location;
 }
 
-function parseUrl(urlString?: string): URL {
+function parseUrl(urlString?: string): URL | null {
+  if (urlString === null || urlString === undefined) {
+    return null;
+  }
+
   try {
     return new URL(urlString);
   } catch (error) {
@@ -91,9 +96,7 @@ function parseUrl(urlString?: string): URL {
   return null;
 }
 
-function parseImages(
-  item: any,
-): { large?: URL; medium?: URL; thumbnail?: URL } {
+function parseImages(item: any): ImageUrls {
   const images = {
     large: parseUrl(item.large),
     medium: parseUrl(item.medium),
@@ -129,6 +132,7 @@ export function parseGuideGroup(item: any) {
 
 function parseContentObjects(contentObjects: any[]): ContentObject[] {
   console.log(contentObjects.length);
+
   // TODO implement
   return [];
 }
@@ -139,6 +143,13 @@ function parsePublishStatus(data: any): PostStatus {
 
 function parseGuideType(data: any): GuideType {
   return data as GuideType;
+}
+
+function parseDate(data: any): string {
+  if (data === null || data === undefined) {
+    throw new Error("Can not parse null/undefined to a date.");
+  }
+  return new Date(data).toISOString();
 }
 
 export function parseGuide(item: any): Guide {
@@ -155,5 +166,20 @@ export function parseGuide(item: any): Guide {
     slug: String(item.slug),
     tagline: String(item.guide_tagline),
   };
+
+  try {
+    const dateStart = parseDate(item.guide_date_start);
+    guide.dateStart = dateStart;
+  } catch (error) {
+    // no valid start time
+  }
+
+  try {
+    const dateEnd = parseDate(item.guide_date_end);
+    guide.dateEnd = dateEnd;
+  } catch (error) {
+    // no valid end time
+  }
+
   return guide;
 }
