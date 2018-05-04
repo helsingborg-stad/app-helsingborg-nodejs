@@ -59,20 +59,32 @@ export interface ContentObject {
   //TODO To be done
 }
 
+export enum PostStatus {
+  PUBLISH = "publish",
+  DRAFT = "draft"
+}
+
+export enum GuideType {
+  GUIDE = "guide",
+  TRAIL = "trail"
+}
+
 export interface Guide {
   id: number;
   slug: string;
   name: string;
-  tagline: string;
-  status: "publish" | "draft";
-  guidegroupId: number;
+  /** @nullable */
+  tagline?: string;
+  /** @nullable */
+  description?: string;
+  postStatus: PostStatus;
+  guideGroupId: number;
   /** @format date-time*/
   dateStart?: string;
   /** @format date-time*/
   dateEnd?: string;
-  type: "guide" | "trail";
+  guideType: GuideType;
   childFriendly: boolean;
   images: ImageUrls;
-  description: string;
   contentObjects: ContentObject[];
 }

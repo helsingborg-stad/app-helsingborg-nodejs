@@ -4,6 +4,13 @@
         "ContentObject": {
             "type": "object"
         },
+        "GuideType": {
+            "enum": [
+                "guide",
+                "trail"
+            ],
+            "type": "string"
+        },
         "ImageUrls": {
             "properties": {
                 "large": {
@@ -54,6 +61,13 @@
                 ]
             },
             "type": "object"
+        },
+        "PostStatus": {
+            "enum": [
+                "draft",
+                "publish"
+            ],
+            "type": "string"
         },
         "Url": {
             "properties": {
@@ -123,10 +137,16 @@
             "type": "string"
         },
         "description": {
-            "type": "string"
+            "type": [
+                "string",
+                "null"
+            ]
         },
-        "guidegroupId": {
+        "guideGroupId": {
             "type": "number"
+        },
+        "guideType": {
+            "$ref": "#/definitions/GuideType"
         },
         "id": {
             "type": "number"
@@ -134,42 +154,32 @@
         "images": {
             "$ref": "#/definitions/ImageUrls"
         },
+        "name": {
+            "type": "string"
+        },
+        "postStatus": {
+            "$ref": "#/definitions/PostStatus"
+        },
         "slug": {
             "type": "string"
         },
-        "status": {
-            "enum": [
-                "draft",
-                "publish"
-            ],
-            "type": "string"
-        },
         "tagline": {
-            "type": "string"
-        },
-        "title": {
-            "type": "string"
-        },
-        "type": {
-            "enum": [
-                "guide",
-                "trail"
-            ],
-            "type": "string"
+            "type": [
+                "string",
+                "null"
+            ]
         }
     },
     "required": [
         "childFriendly",
         "contentObjects",
-        "description",
-        "guidegroupId",
+        "guideGroupId",
+        "guideType",
         "id",
         "images",
-        "slug",
-        "status",
-        "tagline",
-        "title",
-        "type"
+        "name",
+        "postStatus",
+        "slug"
     ],
     "type": "object"
 }

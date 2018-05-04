@@ -1,6 +1,12 @@
 import debug from "debug";
 import { URL } from "url";
-import { OpeningHourException } from "../types/typings";
+import {
+  ContentObject,
+  Guide,
+  GuideType,
+  OpeningHourException,
+  PostStatus,
+} from "../types/typings";
 
 const logWarn = debug("warn");
 
@@ -96,7 +102,7 @@ function parseImages(
   return images;
 }
 
-function parseGuideGroup(item: any) {
+export function parseGuideGroup(item: any) {
   const { id, description, name, slug, apperance, settings, _embedded } = item;
 
   const { image } = apperance;
@@ -121,9 +127,33 @@ function parseGuideGroup(item: any) {
   return guideGroup;
 }
 
-function parseGuide(item: any) {
-  // TODO filter and repackage object keys
-  return item;
+function parseContentObjects(contentObjects: any[]): ContentObject[] {
+  console.log(contentObjects.length);
+  // TODO implement
+  return [];
 }
 
-export { parseGuideGroup, parseGuide };
+function parsePublishStatus(data: any): PostStatus {
+  return data as PostStatus;
+}
+
+function parseGuideType(data: any): GuideType {
+  return data as GuideType;
+}
+
+export function parseGuide(item: any): Guide {
+  const guide: Guide = {
+    childFriendly: Boolean(item.guide_kids),
+    contentObjects: parseContentObjects(item.contentObjects),
+    description: item.content.plain_text,
+    guideGroupId: Number(item.guidegroup[0].id),
+    guideType: parseGuideType(item.content_type),
+    id: Number(item.id),
+    images: parseImages(item.guide_images[0].sizes),
+    name: String(item.title.plain_text),
+    postStatus: parsePublishStatus(item.status),
+    slug: String(item.slug),
+    tagline: String(item.guide_tagline),
+  };
+  return guide;
+}
