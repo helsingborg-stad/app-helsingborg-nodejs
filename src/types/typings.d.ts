@@ -39,9 +39,12 @@ export interface GuideGroup {
   description: string;
   id: number;
   images: {
-    large: Url;
-    medium: Url;
-    thumbnail: Url;
+    /** @nullable */
+    large?: Url;
+    /** @nullable */
+    medium?: Url;
+    /** @nullable */
+    thumbnail?: Url;
   };
   location: Location;
   name: string;

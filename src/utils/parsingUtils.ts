@@ -56,23 +56,34 @@ function parseLocation(item: any) {
   return location;
 }
 
+function parseUrl(urlString?: string): URL {
+  try {
+    return new URL(urlString);
+  } catch (error) {
+    logWarn("Not a well formatted url, discarding: " + urlString);
+  }
+
+  return null;
+}
+
+function parseImages(
+  item: any,
+): { large?: URL; medium?: URL; thumbnail?: URL } {
+  const images = {
+    large: parseUrl(item.large),
+    medium: parseUrl(item.medium),
+    thumbnail: parseUrl(item.thumbnail),
+  };
+  return images;
+}
+
 function parseGuideGroup(item: any) {
   const { id, description, name, slug, apperance, settings, _embedded } = item;
 
   const { image } = apperance;
   const { sizes } = image;
 
-  let images = null;
-  try {
-    images = {
-      // TODO extract ONE url at a time, please
-      large: new URL(sizes.medium_large),
-      medium: new URL(sizes.medium),
-      thumbnail: new URL(sizes.thumbnail),
-    };
-  } catch (e) {
-    logWarn("Not a well defined url", e);
-  }
+  const images = parseImages(sizes);
 
   const locationArray = _embedded.location;
   const location = parseLocation(locationArray[0]);

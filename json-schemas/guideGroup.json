@@ -170,16 +170,36 @@
     "images": {
       "properties": {
         "large": {
-          "$ref": "#/definitions/Url"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Url"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "medium": {
-          "$ref": "#/definitions/Url"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Url"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "thumbnail": {
-          "$ref": "#/definitions/Url"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Url"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
-      "required": ["large", "medium", "thumbnail"],
       "type": "object"
     },
     "location": {
