@@ -1,7 +1,7 @@
 import debug from "debug";
 import fetch from "node-fetch";
 import { URL } from "url";
-import { PointProperty } from "../types/typings";
+import { Guide, PointProperty } from "../types/typings";
 import { validate } from "./jsonValidator";
 import { parseGuide, parseGuideGroup } from "./parsingUtils";
 
@@ -54,7 +54,7 @@ async function fetchProperties(
   return props;
 }
 
-async function fetchAllGuideGroups(lang?: string) {
+export async function fetchAllGuideGroups(lang?: string) {
   let url = `${API_HOST_URL}/guidegroup?_embed`;
   if (lang) {
     url += `&lang=${lang}`;
@@ -98,12 +98,39 @@ async function fetchAllGuideGroups(lang?: string) {
   return resultArray;
 }
 
-async function fetchAllGuides(lang: string) {
-  let url = `${API_HOST_URL}/guide?_embed`;
+function buildGuideUrl(lang: string, id?: string): string {
+  let url = `${API_HOST_URL}/guide`;
+  if (id) {
+    url += `/${id}`;
+  }
+  url += "?";
+
+  /* query params */
   if (lang) {
     url += `&lang=${lang}`;
   }
-  logApp(`sent fetching request to:${url}`);
+  url += `&_embed`;
+  return url;
+}
+
+export async function fetchGuide(lang: string, id: string): Promise<Guide> {
+  const url = buildGuideUrl(lang, id);
+  logApp(`sent fetching request to: ${url}`);
+
+  const response = await fetch(url);
+  logApp(`received fetching response from:${url}`);
+  if (!response.ok) {
+    throw new Error("Malformed request");
+  }
+
+  const guideJson = await response.json();
+
+  return parseGuide(guideJson);
+}
+
+export async function fetchAllGuides(lang: string): Promise<Guide[]> {
+  const url = buildGuideUrl(lang);
+  logApp(`sent fetching request to: ${url}`);
 
   const response = await fetch(url);
   logApp(`received fetching response from:${url}`);
@@ -113,7 +140,7 @@ async function fetchAllGuides(lang: string) {
 
   const guidesJson = await response.json();
 
-  const guides: any = [];
+  const guides: Guide[] = [];
   guidesJson.forEach((item: any) => {
     try {
       const guide = parseGuide(item);
@@ -129,5 +156,3 @@ async function fetchAllGuides(lang: string) {
 
   return guides;
 }
-
-export { fetchAllGuideGroups, fetchAllGuides, fetchProperties };
