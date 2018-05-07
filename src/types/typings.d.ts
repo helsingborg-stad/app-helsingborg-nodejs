@@ -24,11 +24,26 @@ export interface OpeningHourException {
 export interface Location {
   id: number;
   latitude: number;
-  links: Url[] | null;
+  links: Link[] | null;
   longitude: number;
   streetAddress: string;
   openingHours?: OpeningHours[];
   openingHourExceptions?: OpeningHourException[];
+}
+export enum LinkType {
+  WEB = "web",
+  INSTAGRAM = "instagram",
+  FACEBOOK = "facebook",
+  TWITTER = "twitter",
+  SPOTIFY = "spotify",
+  YOUTUBE = "youtube",
+  VIMEO = "vimeo"
+}
+
+export interface Link {
+  url: Url;
+  title?: string;
+  type?: LinkType;
 }
 
 export interface ImageUrls {
@@ -48,8 +63,34 @@ export interface GuideGroup {
   pointProperties: PointProperty[];
 }
 
+export enum ContentType {
+  AUDIO = "audio",
+  VIDEO = "video"
+}
+
+export interface MediaContent {
+  contentType: ContentType;
+  description: string;
+  id: number;
+  title: string;
+  /** @format date-time*/
+  created: string;
+  /** @format date-time*/
+  modified: string;
+  url: Url;
+}
+
 export interface ContentObject {
-  //TODO To be done
+  order: number;
+  postStatus: PostStatus;
+  id: number;
+  searchableId: string;
+  title: string;
+  description?: string;
+  images: ImageUrls[];
+  audio?: MediaContent;
+  video?: MediaContent;
+  links?: Link[];
 }
 
 export enum PostStatus {

@@ -131,9 +131,6 @@ export function parseGuideGroup(item: any) {
 }
 
 function parseContentObjects(contentObjects: any[]): ContentObject[] {
-  console.log(contentObjects.length);
-
-  // TODO implement
   return [];
 }
 
