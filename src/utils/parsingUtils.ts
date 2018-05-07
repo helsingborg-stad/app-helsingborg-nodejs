@@ -166,6 +166,11 @@ function parseContentObject(key: string, data: any): IContentObject {
     title: String(data.title),
   };
 
+  if (data.description_plain) {
+    const description = String(data.description_plain);
+    obj.description = description;
+  }
+
   return obj;
 }
 
