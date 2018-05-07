@@ -26,6 +26,7 @@ async function fetchProperties(
   const props: IPointProperty[] = [];
 
   jsonArray.forEach((json) => {
+    // TODO move into parsingUtils
     const prop: IPointProperty = {
       id: json.id,
       name: json.name,

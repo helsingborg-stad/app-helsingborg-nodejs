@@ -8,6 +8,7 @@ import {
   IOpeningHourException,
   PostStatus,
 } from "../types/typings";
+import { validate } from "./jsonValidator";
 
 const logWarn = debug("warn");
 
@@ -145,8 +146,27 @@ function parseImageUrls(data: any): IImageUrls[] {
     }
   } catch (error) {
     // something went wrong
+    logWarn("Failed to parse images data: ", data);
   }
   return images;
+}
+
+function parseMediaContent(data: any) {
+  if (!(data instanceof Object)) {
+    throw new Error("Failed to parse media content from data: " + data);
+  }
+
+  const media = {
+    contentType: data.type,
+    created: parseDate(data.date),
+    description: String(data.description),
+    id: Number(data.id),
+    modified: parseDate(data.modified),
+    title: String(data.title),
+    url: new URL(data.url),
+  };
+  validate(media, "mediaContent");
+  return media;
 }
 
 function parseContentObject(key: string, data: any): IContentObject {
@@ -169,6 +189,24 @@ function parseContentObject(key: string, data: any): IContentObject {
   if (data.description_plain) {
     const description = String(data.description_plain);
     obj.description = description;
+  }
+
+  try {
+    if (data.audio) {
+      obj.audio = parseMediaContent(data.audio);
+    }
+  } catch (error) {
+    // ignoring audio
+    logWarn("Trying to parse audio", error);
+  }
+
+  try {
+    if (data.video) {
+      obj.video = parseMediaContent(data.video);
+    }
+  } catch (error) {
+    // ignoring video
+    logWarn("Trying to parse video", error);
   }
 
   return obj;
