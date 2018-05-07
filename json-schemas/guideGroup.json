@@ -108,8 +108,8 @@
                 },
                 "closing": {
                     "type": [
-                        "string",
-                        "null"
+                        "null",
+                        "string"
                     ]
                 },
                 "dayNumber": {
@@ -126,8 +126,8 @@
                 },
                 "opening": {
                     "type": [
-                        "string",
-                        "null"
+                        "null",
+                        "string"
                     ]
                 },
                 "weekday": {

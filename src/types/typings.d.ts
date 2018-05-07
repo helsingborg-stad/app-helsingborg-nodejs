@@ -25,12 +25,14 @@ export interface Location {
   id: number;
   //TODO use Position interface
   latitude: number;
-  links: Link[] | null;
+  //TODO use Link interface
+  links: Url[] | null;
   longitude: number;
   streetAddress: string;
   openingHours?: OpeningHours[];
   openingHourExceptions?: OpeningHourException[];
 }
+
 export enum LinkType {
   WEB = "web",
   INSTAGRAM = "instagram",

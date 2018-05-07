@@ -1,8 +1,87 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "definitions": {
-        "ContentObject": {
+        "Beacon": {
+            "properties": {
+                "distance": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "location": {
+                    "$ref": "#/definitions/Position"
+                },
+                "nid": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "distance",
+                "id",
+                "location",
+                "nid"
+            ],
             "type": "object"
+        },
+        "ContentObject": {
+            "properties": {
+                "audio": {
+                    "$ref": "#/definitions/MediaContent"
+                },
+                "beacon": {
+                    "$ref": "#/definitions/Beacon"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "number"
+                },
+                "images": {
+                    "items": {
+                        "$ref": "#/definitions/ImageUrls"
+                    },
+                    "type": "array"
+                },
+                "links": {
+                    "items": {
+                        "$ref": "#/definitions/Link"
+                    },
+                    "type": "array"
+                },
+                "order": {
+                    "type": "number"
+                },
+                "postStatus": {
+                    "$ref": "#/definitions/PostStatus"
+                },
+                "searchableId": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "video": {
+                    "$ref": "#/definitions/MediaContent"
+                }
+            },
+            "required": [
+                "id",
+                "images",
+                "order",
+                "postStatus",
+                "searchableId",
+                "title"
+            ],
+            "type": "object"
+        },
+        "ContentType": {
+            "enum": [
+                "audio",
+                "video"
+            ],
+            "type": "string"
         },
         "GuideType": {
             "enum": [
@@ -46,6 +125,69 @@
             },
             "type": "object"
         },
+        "Link": {
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "enum": [
+                        "facebook",
+                        "instagram",
+                        "spotify",
+                        "twitter",
+                        "vimeo",
+                        "web",
+                        "youtube"
+                    ],
+                    "type": "string"
+                },
+                "url": {
+                    "$ref": "#/definitions/Url"
+                }
+            },
+            "required": [
+                "url"
+            ],
+            "type": "object"
+        },
+        "MediaContent": {
+            "properties": {
+                "contentType": {
+                    "$ref": "#/definitions/ContentType"
+                },
+                "created": {
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "number"
+                },
+                "modified": {
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "url": {
+                    "$ref": "#/definitions/Url"
+                }
+            },
+            "required": [
+                "contentType",
+                "created",
+                "description",
+                "id",
+                "modified",
+                "title",
+                "url"
+            ],
+            "type": "object"
+        },
         "ParsedUrlQuery": {
             "additionalProperties": {
                 "anyOf": [
@@ -60,6 +202,21 @@
                     }
                 ]
             },
+            "type": "object"
+        },
+        "Position": {
+            "properties": {
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "latitude",
+                "longitude"
+            ],
             "type": "object"
         },
         "PostStatus": {
