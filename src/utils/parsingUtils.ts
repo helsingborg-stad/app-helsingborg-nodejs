@@ -134,20 +134,39 @@ function getPostStatus(active: any): PostStatus {
   return active ? PostStatus.PUBLISH : PostStatus.DRAFT;
 }
 
+function parseImageUrls(data: any): IImageUrls[] {
+  const images: IImageUrls[] = [];
+  try {
+    if (data instanceof Array) {
+      for (const item of data) {
+        const image = parseImages(item.sizes);
+        images.push(image);
+      }
+    }
+  } catch (error) {
+    // something went wrong
+  }
+  return images;
+}
+
 function parseContentObject(key: string, data: any): IContentObject {
   if (typeof data.order !== "number") {
     throw new Error("Failed to parse order from " + data);
   }
 
   const postStatus: PostStatus = getPostStatus(data.active);
-  return {
+  const images: IImageUrls[] = parseImageUrls(data.image);
+
+  const obj: IContentObject = {
     id: key,
-    images: [],
+    images,
     order: Number(data.order),
     postStatus,
     searchableId: String(data.id),
     title: String(data.title),
   };
+
+  return obj;
 }
 
 function parseContentObjects(data: any): IContentObject[] {
