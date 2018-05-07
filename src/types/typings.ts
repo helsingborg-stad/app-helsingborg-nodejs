@@ -1,13 +1,13 @@
 import { Url } from "url";
 
-export interface PointProperty {
+export interface IPointProperty {
   id: number;
   name: string;
   slug: string;
   icon?: Url | null;
 }
 
-export interface OpeningHours {
+export interface IOpeningHours {
   closed: boolean;
   closing?: string | null;
   dayNumber: 1 | 2 | 3 | 4 | 5 | 6 | 7;
@@ -15,13 +15,13 @@ export interface OpeningHours {
   weekday: string;
 }
 
-export interface OpeningHourException {
+export interface IOpeningHourException {
   /** @format date-time*/
   date: string;
   description: string;
 }
 
-export interface Location {
+export interface ILocation {
   id: number;
   // TODO use Position interface
   latitude: number;
@@ -29,8 +29,8 @@ export interface Location {
   links: Url[] | null;
   longitude: number;
   streetAddress: string;
-  openingHours?: OpeningHours[];
-  openingHourExceptions?: OpeningHourException[];
+  openingHours?: IOpeningHours[];
+  openingHourExceptions?: IOpeningHourException[];
 }
 
 export enum LinkType {
@@ -43,7 +43,7 @@ export enum LinkType {
   VIMEO = "vimeo",
 }
 
-export interface Link {
+export interface ILink {
   url: Url;
   title?: string;
   type?: LinkType;
@@ -55,15 +55,15 @@ export interface ImageUrls {
   thumbnail?: Url | null;
 }
 
-export interface GuideGroup {
+export interface IGuideGroup {
   active: boolean;
   description: string;
   id: number;
   images: ImageUrls;
-  location: Location;
+  location: ILocation;
   name: string;
   slug: string;
-  pointProperties: PointProperty[];
+  pointProperties: IPointProperty[];
 }
 
 export enum ContentType {
@@ -71,7 +71,7 @@ export enum ContentType {
   VIDEO = "video",
 }
 
-export interface MediaContent {
+export interface IMediaContent {
   contentType: ContentType;
   description: string;
   id: number;
@@ -83,19 +83,19 @@ export interface MediaContent {
   url: Url;
 }
 
-export interface Position {
+export interface IPosition {
   longitude: number;
   latitude: number;
 }
 
-export interface Beacon {
+export interface IBeacon {
   id: string;
   nid: string;
-  location: Position;
+  location: IPosition;
   distance: number;
 }
 
-export interface ContentObject {
+export interface IContentObject {
   id: string;
   order: number;
   postStatus: PostStatus;
@@ -103,10 +103,10 @@ export interface ContentObject {
   title: string;
   description?: string;
   images: ImageUrls[];
-  audio?: MediaContent;
-  video?: MediaContent;
-  links?: Link[];
-  beacon?: Beacon;
+  audio?: IMediaContent;
+  video?: IMediaContent;
+  links?: ILink[];
+  beacon?: IBeacon;
 }
 
 export enum PostStatus {
@@ -119,7 +119,7 @@ export enum GuideType {
   TRAIL = "trail",
 }
 
-export interface Guide {
+export interface IGuide {
   id: number;
   slug: string;
   name: string;
@@ -134,5 +134,5 @@ export interface Guide {
   guideType: GuideType;
   childFriendly: boolean;
   images: ImageUrls;
-  contentObjects: ContentObject[];
+  contentObjects: IContentObject[];
 }

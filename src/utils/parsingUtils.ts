@@ -1,11 +1,11 @@
 import debug from "debug";
 import { URL } from "url";
 import {
-  ContentObject,
-  Guide,
   GuideType,
+  IContentObject,
+  IGuide,
   ImageUrls,
-  OpeningHourException,
+  IOpeningHourException,
   PostStatus,
 } from "../types/typings";
 
@@ -60,10 +60,10 @@ function parseLocation(item: any) {
   }
 
   if (openHoursException) {
-    const openingHourExceptions: OpeningHourException[] = [];
+    const openingHourExceptions: IOpeningHourException[] = [];
     openHoursException.forEach((element: any) => {
       try {
-        const exc: OpeningHourException = {
+        const exc: IOpeningHourException = {
           date: new Date(element.exception_date).toISOString(),
           description: element.exeption_information,
         };
@@ -134,7 +134,7 @@ function getPostStatus(active: any): PostStatus {
   return active ? PostStatus.PUBLISH : PostStatus.DRAFT;
 }
 
-function parseContentObject(key: string, data: any): ContentObject {
+function parseContentObject(key: string, data: any): IContentObject {
   if (typeof data.order !== "number") {
     throw new Error("Failed to parse order from " + data);
   }
@@ -150,10 +150,10 @@ function parseContentObject(key: string, data: any): ContentObject {
   };
 }
 
-function parseContentObjects(data: any): ContentObject[] {
+function parseContentObjects(data: any): IContentObject[] {
   const keys: string[] = Object.keys(data);
 
-  const result: ContentObject[] = [];
+  const result: IContentObject[] = [];
   for (const key of keys) {
     try {
       const obj = parseContentObject(key, data[key]);
@@ -180,8 +180,8 @@ function parseDate(data: any): string {
   return new Date(data).toISOString();
 }
 
-export function parseGuide(item: any): Guide {
-  const guide: Guide = {
+export function parseGuide(item: any): IGuide {
+  const guide: IGuide = {
     childFriendly: Boolean(item.guide_kids),
     contentObjects: [],
     description: item.content.plain_text,
