@@ -1,42 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "definitions": {
-        "ImageUrls": {
-            "properties": {
-                "large": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Url"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                },
-                "medium": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Url"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                },
-                "thumbnail": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Url"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                }
-            },
-            "type": "object"
-        },
-        "Location": {
+        "ILocation": {
             "properties": {
                 "id": {
                     "type": "number"
@@ -62,13 +27,13 @@
                 },
                 "openingHourExceptions": {
                     "items": {
-                        "$ref": "#/definitions/OpeningHourException"
+                        "$ref": "#/definitions/IOpeningHourException"
                     },
                     "type": "array"
                 },
                 "openingHours": {
                     "items": {
-                        "$ref": "#/definitions/OpeningHours"
+                        "$ref": "#/definitions/IOpeningHours"
                     },
                     "type": "array"
                 },
@@ -85,7 +50,7 @@
             ],
             "type": "object"
         },
-        "OpeningHourException": {
+        "IOpeningHourException": {
             "properties": {
                 "date": {
                     "format": "date-time",
@@ -101,7 +66,7 @@
             ],
             "type": "object"
         },
-        "OpeningHours": {
+        "IOpeningHours": {
             "properties": {
                 "closed": {
                     "type": "boolean"
@@ -142,23 +107,7 @@
             ],
             "type": "object"
         },
-        "ParsedUrlQuery": {
-            "additionalProperties": {
-                "anyOf": [
-                    {
-                        "items": {
-                            "type": "string"
-                        },
-                        "type": "array"
-                    },
-                    {
-                        "type": "string"
-                    }
-                ]
-            },
-            "type": "object"
-        },
-        "PointProperty": {
+        "IPointProperty": {
             "properties": {
                 "icon": {
                     "anyOf": [
@@ -185,6 +134,57 @@
                 "name",
                 "slug"
             ],
+            "type": "object"
+        },
+        "ImageUrls": {
+            "properties": {
+                "large": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "medium": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "thumbnail": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }
+            },
+            "type": "object"
+        },
+        "ParsedUrlQuery": {
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    {
+                        "type": "string"
+                    }
+                ]
+            },
             "type": "object"
         },
         "Url": {
@@ -253,14 +253,14 @@
             "$ref": "#/definitions/ImageUrls"
         },
         "location": {
-            "$ref": "#/definitions/Location"
+            "$ref": "#/definitions/ILocation"
         },
         "name": {
             "type": "string"
         },
         "pointProperties": {
             "items": {
-                "$ref": "#/definitions/PointProperty"
+                "$ref": "#/definitions/IPointProperty"
             },
             "type": "array"
         },

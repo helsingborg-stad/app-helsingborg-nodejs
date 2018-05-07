@@ -1,3 +1,4 @@
+/* tslint:disable jsdoc-format */
 import { Url } from "url";
 
 export interface IPointProperty {
