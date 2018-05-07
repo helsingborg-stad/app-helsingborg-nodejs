@@ -54,7 +54,7 @@
                 },
                 "images": {
                     "items": {
-                        "$ref": "#/definitions/ImageUrls"
+                        "$ref": "#/definitions/IImageUrls"
                     },
                     "type": "array"
                 },
@@ -88,6 +88,41 @@
                 "searchableId",
                 "title"
             ],
+            "type": "object"
+        },
+        "IImageUrls": {
+            "properties": {
+                "large": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "medium": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "thumbnail": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }
+            },
             "type": "object"
         },
         "ILink": {
@@ -166,41 +201,6 @@
                 "latitude",
                 "longitude"
             ],
-            "type": "object"
-        },
-        "ImageUrls": {
-            "properties": {
-                "large": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Url"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                },
-                "medium": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Url"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                },
-                "thumbnail": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Url"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                }
-            },
             "type": "object"
         },
         "ParsedUrlQuery": {
@@ -312,7 +312,7 @@
             "type": "number"
         },
         "images": {
-            "$ref": "#/definitions/ImageUrls"
+            "$ref": "#/definitions/IImageUrls"
         },
         "name": {
             "type": "string"

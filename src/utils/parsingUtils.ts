@@ -4,7 +4,7 @@ import {
   GuideType,
   IContentObject,
   IGuide,
-  ImageUrls,
+  IImageUrls,
   IOpeningHourException,
   PostStatus,
 } from "../types/typings";
@@ -96,7 +96,7 @@ function parseUrl(urlString?: string): URL | null {
   return null;
 }
 
-function parseImages(item: any): ImageUrls {
+function parseImages(item: any): IImageUrls {
   const images = {
     large: parseUrl(item.large),
     medium: parseUrl(item.medium),

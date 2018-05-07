@@ -1,6 +1,41 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "definitions": {
+        "IImageUrls": {
+            "properties": {
+                "large": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "medium": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "thumbnail": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Url"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }
+            },
+            "type": "object"
+        },
         "ILocation": {
             "properties": {
                 "id": {
@@ -136,41 +171,6 @@
             ],
             "type": "object"
         },
-        "ImageUrls": {
-            "properties": {
-                "large": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Url"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                },
-                "medium": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Url"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                },
-                "thumbnail": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Url"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                }
-            },
-            "type": "object"
-        },
         "ParsedUrlQuery": {
             "additionalProperties": {
                 "anyOf": [
@@ -250,7 +250,7 @@
             "type": "number"
         },
         "images": {
-            "$ref": "#/definitions/ImageUrls"
+            "$ref": "#/definitions/IImageUrls"
         },
         "location": {
             "$ref": "#/definitions/ILocation"

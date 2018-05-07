@@ -50,7 +50,7 @@ export interface ILink {
   type?: LinkType;
 }
 
-export interface ImageUrls {
+export interface IImageUrls {
   large?: Url | null;
   medium?: Url | null;
   thumbnail?: Url | null;
@@ -60,7 +60,7 @@ export interface IGuideGroup {
   active: boolean;
   description: string;
   id: number;
-  images: ImageUrls;
+  images: IImageUrls;
   location: ILocation;
   name: string;
   slug: string;
@@ -103,7 +103,7 @@ export interface IContentObject {
   searchableId: string;
   title: string;
   description?: string;
-  images: ImageUrls[];
+  images: IImageUrls[];
   audio?: IMediaContent;
   video?: IMediaContent;
   links?: ILink[];
@@ -134,6 +134,6 @@ export interface IGuide {
   dateEnd?: string;
   guideType: GuideType;
   childFriendly: boolean;
-  images: ImageUrls;
+  images: IImageUrls;
   contentObjects: IContentObject[];
 }
