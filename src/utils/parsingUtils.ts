@@ -169,7 +169,7 @@ function parseMediaContent(data: any) {
   return media;
 }
 
-function parseContentObject(key: string, data: any): IContentObject {
+function parseContentObject(key: string, data: any) {
   if (typeof data.order !== "number") {
     throw new Error("Failed to parse order from " + data);
   }
@@ -182,13 +182,12 @@ function parseContentObject(key: string, data: any): IContentObject {
     images,
     order: Number(data.order),
     postStatus,
-    searchableId: String(data.id),
-    title: String(data.title),
+    searchableId: data.id,
+    title: data.title,
   };
 
   if (data.description_plain) {
-    const description = String(data.description_plain);
-    obj.description = description;
+    obj.description = data.description_plain;
   }
 
   try {
@@ -209,6 +208,8 @@ function parseContentObject(key: string, data: any): IContentObject {
     logWarn("Trying to parse video", error);
   }
 
+  validate(obj, "contentObject");
+
   return obj;
 }
 
@@ -222,6 +223,7 @@ function parseContentObjects(data: any): IContentObject[] {
       result.push(obj);
     } catch (error) {
       logWarn("Failed to parse content object, discarding.");
+      logWarn("Validation error:" + error);
     }
   }
   return result;

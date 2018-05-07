@@ -1,6 +1,7 @@
 import Ajv from "ajv";
 
 import jsonSchema = require("ajv/lib/refs/json-schema-draft-06.json");
+import contentObject from "../../json-schemas/contentObject.json";
 import guide from "../../json-schemas/guide.json";
 import guideGroup from "../../json-schemas/guideGroup.json";
 import mediaContent from "../../json-schemas/mediaContent.json";
@@ -16,6 +17,7 @@ ajv.addSchema(guideGroup, "guideGroup");
 ajv.addSchema(pointProperty, "pointProperty");
 ajv.addSchema(guide, "guide");
 ajv.addSchema(mediaContent, "mediaContent");
+ajv.addSchema(contentObject, "contentObject");
 
 export function validate(data: any, schema: string): boolean {
   const result = ajv.validate(schema, data);
