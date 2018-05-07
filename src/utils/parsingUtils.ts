@@ -169,6 +169,31 @@ function parseMediaContent(data: any) {
   return media;
 }
 
+function parseLink(data: any): any {
+  return {
+    title: data.title,
+    type: data.service,
+    url: new URL(data.link),
+  };
+}
+
+function parseLinks(data: any[]) {
+  const links = [];
+  for (const item of data) {
+    try {
+      if (item) {
+        const link = parseLink(item);
+        validate(link, "link");
+        links.push(link);
+      }
+    } catch (error) {
+      // discarding link
+      console.log(error);
+    }
+  }
+  return links;
+}
+
 function parseContentObject(key: string, data: any) {
   if (typeof data.order !== "number") {
     throw new Error("Failed to parse order from " + data);
@@ -208,6 +233,10 @@ function parseContentObject(key: string, data: any) {
     logWarn("Trying to parse video", error);
   }
 
+  if (data.links && data.links instanceof Array) {
+    obj.links = parseLinks(data.links);
+  }
+
   validate(obj, "contentObject");
 
   return obj;
@@ -223,7 +252,6 @@ function parseContentObjects(data: any): IContentObject[] {
       result.push(obj);
     } catch (error) {
       logWarn("Failed to parse content object, discarding.");
-      logWarn("Validation error:" + error);
     }
   }
   return result;
