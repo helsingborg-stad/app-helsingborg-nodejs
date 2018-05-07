@@ -23,6 +23,7 @@ export interface OpeningHourException {
 
 export interface Location {
   id: number;
+  //TODO use Position interface
   latitude: number;
   links: Link[] | null;
   longitude: number;
@@ -80,6 +81,18 @@ export interface MediaContent {
   url: Url;
 }
 
+export interface Position {
+  longitude: number;
+  latitude: number;
+}
+
+export interface Beacon {
+  id: string;
+  nid: string;
+  location: Position;
+  distance: number;
+}
+
 export interface ContentObject {
   order: number;
   postStatus: PostStatus;
@@ -91,6 +104,7 @@ export interface ContentObject {
   audio?: MediaContent;
   video?: MediaContent;
   links?: Link[];
+  beacon?: Beacon;
 }
 
 export enum PostStatus {
