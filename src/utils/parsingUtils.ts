@@ -130,8 +130,39 @@ export function parseGuideGroup(item: any) {
   return guideGroup;
 }
 
-function parseContentObjects(contentObjects: any[]): ContentObject[] {
-  return [];
+function getPostStatus(active: any): PostStatus {
+  return active ? PostStatus.PUBLISH : PostStatus.DRAFT;
+}
+
+function parseContentObject(key: string, data: any): ContentObject {
+  if (typeof data.order !== "number") {
+    throw new Error("Failed to parse order from " + data);
+  }
+
+  const postStatus: PostStatus = getPostStatus(data.active);
+  return {
+    id: key,
+    images: [],
+    order: Number(data.order),
+    postStatus,
+    searchableId: String(data.id),
+    title: String(data.title),
+  };
+}
+
+function parseContentObjects(data: any): ContentObject[] {
+  const keys: string[] = Object.keys(data);
+
+  const result: ContentObject[] = [];
+  for (const key of keys) {
+    try {
+      const obj = parseContentObject(key, data[key]);
+      result.push(obj);
+    } catch (error) {
+      logWarn("Failed to parse content object, discarding.");
+    }
+  }
+  return result;
 }
 
 function parsePublishStatus(data: any): PostStatus {
@@ -152,7 +183,7 @@ function parseDate(data: any): string {
 export function parseGuide(item: any): Guide {
   const guide: Guide = {
     childFriendly: Boolean(item.guide_kids),
-    contentObjects: parseContentObjects(item.contentObjects),
+    contentObjects: [],
     description: item.content.plain_text,
     guideGroupId: Number(item.guidegroup[0].id),
     guideType: parseGuideType(item.content_type),
@@ -163,6 +194,12 @@ export function parseGuide(item: any): Guide {
     slug: item.slug,
     tagline: item.guide_tagline,
   };
+
+  const { contentObjects } = item;
+
+  if (contentObjects && contentObjects instanceof Object) {
+    guide.contentObjects = parseContentObjects(contentObjects);
+  }
 
   try {
     const dateStart = parseDate(item.guide_date_start);

@@ -23,9 +23,9 @@ export interface OpeningHourException {
 
 export interface Location {
   id: number;
-  //TODO use Position interface
+  // TODO use Position interface
   latitude: number;
-  //TODO use Link interface
+  // TODO use Link interface
   links: Url[] | null;
   longitude: number;
   streetAddress: string;
@@ -40,7 +40,7 @@ export enum LinkType {
   TWITTER = "twitter",
   SPOTIFY = "spotify",
   YOUTUBE = "youtube",
-  VIMEO = "vimeo"
+  VIMEO = "vimeo",
 }
 
 export interface Link {
@@ -68,7 +68,7 @@ export interface GuideGroup {
 
 export enum ContentType {
   AUDIO = "audio",
-  VIDEO = "video"
+  VIDEO = "video",
 }
 
 export interface MediaContent {
@@ -96,9 +96,9 @@ export interface Beacon {
 }
 
 export interface ContentObject {
+  id: string;
   order: number;
   postStatus: PostStatus;
-  id: number;
   searchableId: string;
   title: string;
   description?: string;
@@ -111,12 +111,12 @@ export interface ContentObject {
 
 export enum PostStatus {
   PUBLISH = "publish",
-  DRAFT = "draft"
+  DRAFT = "draft",
 }
 
 export enum GuideType {
   GUIDE = "guide",
-  TRAIL = "trail"
+  TRAIL = "trail",
 }
 
 export interface Guide {
