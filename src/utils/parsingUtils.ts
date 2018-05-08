@@ -214,6 +214,7 @@ function parseBeacon(id: string, beacons: any[], locations: any[]): any {
   });
 
   const beacon: any = {
+    distance: Number(bData.beacon_distance),
     id: bData.bid,
     nid: bData.nid,
   };
