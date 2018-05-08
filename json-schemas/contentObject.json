@@ -16,11 +16,11 @@
                 "id": {
                     "type": "string"
                 },
-                "location": {
-                    "$ref": "#/definitions/IPosition"
-                },
                 "nid": {
                     "type": "string"
+                },
+                "position": {
+                    "$ref": "#/definitions/IPosition"
                 }
             },
             "required": [

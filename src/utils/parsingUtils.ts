@@ -192,20 +192,51 @@ function parseLinks(data: any[]) {
   }
   return links;
 }
+function parsePosition(locationId: any, locations: any[]): any {
+  let location: any = {};
+  if (locationId && typeof locationId === "number") {
+    const locationData = locations.find((locData) => locData.id === locationId);
+    if (locationData) {
+      const { longitude, latitude } = locationData;
+      location = {
+        latitude: Number(latitude),
+        longitude: Number(longitude),
+      };
+    }
+  }
+  return location;
+}
 
-function parseBeacon(id: string, beacons: any[]): any {
+function parseBeacon(id: string, beacons: any[], locations: any[]): any {
   const bData = beacons.find((item) => {
     const { content } = item;
     return content instanceof Array && content.indexOf(id) > -1;
   });
-  return {
+
+  const beacon: any = {
     id: bData.bid,
     nid: bData.nid,
-    // TODO parse location
   };
+
+  try {
+    const { location: locationId } = bData;
+    const position = parsePosition(locationId, locations);
+    validate(position, "position");
+    beacon.position = position;
+  } catch (error) {
+    // discarding faulty location data
+    console.log("Position error: ", error);
+  }
+
+  return beacon;
 }
 
-function parseContentObject(key: string, data: any, beacons: any[]) {
+function parseContentObject(
+  key: string,
+  data: any,
+  beacons: any[],
+  locations: any[],
+) {
   if (typeof data.order !== "number") {
     throw new Error("Failed to parse order from " + data);
   }
@@ -249,7 +280,7 @@ function parseContentObject(key: string, data: any, beacons: any[]) {
   }
 
   try {
-    const beacon = parseBeacon(obj.id, beacons);
+    const beacon = parseBeacon(obj.id, beacons, locations);
     validate(beacon, "beacon");
     obj.beacon = beacon;
   } catch (error) {
@@ -264,6 +295,7 @@ function parseContentObject(key: string, data: any, beacons: any[]) {
 function parseContentObjects(
   contentData: any,
   beaconData: any,
+  locationsData: any,
 ): IContentObject[] {
   const keys: string[] = Object.keys(contentData);
 
@@ -271,11 +303,15 @@ function parseContentObjects(
   if (beaconData instanceof Array) {
     beacons = beaconData;
   }
+  let locations: any[] = [];
+  if (locationsData instanceof Array) {
+    locations = locationsData;
+  }
 
   const result: IContentObject[] = [];
   for (const key of keys) {
     try {
-      const obj = parseContentObject(key, contentData[key], beacons);
+      const obj = parseContentObject(key, contentData[key], beacons, locations);
       result.push(obj);
     } catch (error) {
       logWarn("Failed to parse content object, discarding.");
@@ -314,10 +350,22 @@ export function parseGuide(item: any): IGuide {
     tagline: item.guide_tagline,
   };
 
-  const { contentObjects, subAttractions: beacons } = item;
+  const {
+    contentObjects,
+    subAttractions: beacons,
+    _embedded: embeddedData,
+  } = item;
+  let locationData = null;
+  if (embeddedData) {
+    locationData = embeddedData.location;
+  }
 
   if (contentObjects && contentObjects instanceof Object) {
-    guide.contentObjects = parseContentObjects(contentObjects, beacons);
+    guide.contentObjects = parseContentObjects(
+      contentObjects,
+      beacons,
+      locationData,
+    );
   }
 
   try {

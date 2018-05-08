@@ -92,7 +92,7 @@ export interface IPosition {
 export interface IBeacon {
   id: string;
   nid: string;
-  location?: IPosition;
+  position?: IPosition;
   distance?: number;
 }
 
