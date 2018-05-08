@@ -1,6 +1,34 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "definitions": {
+        "ContentType": {
+            "enum": [
+                "audio",
+                "video"
+            ],
+            "type": "string"
+        },
+        "IBeacon": {
+            "properties": {
+                "distance": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "nid": {
+                    "type": "string"
+                },
+                "position": {
+                    "$ref": "#/definitions/IPosition"
+                }
+            },
+            "required": [
+                "id",
+                "nid"
+            ],
+            "type": "object"
+        },
         "IImageUrls": {
             "properties": {
                 "large": {
@@ -36,138 +64,81 @@
             },
             "type": "object"
         },
-        "ILocation": {
+        "ILink": {
             "properties": {
-                "id": {
-                    "type": "number"
-                },
-                "latitude": {
-                    "type": "number"
-                },
-                "links": {
-                    "anyOf": [
-                        {
-                            "items": {
-                                "$ref": "#/definitions/Url"
-                            },
-                            "type": "array"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
-                },
-                "longitude": {
-                    "type": "number"
-                },
-                "openingHourExceptions": {
-                    "items": {
-                        "$ref": "#/definitions/IOpeningHourException"
-                    },
-                    "type": "array"
-                },
-                "openingHours": {
-                    "items": {
-                        "$ref": "#/definitions/IOpeningHours"
-                    },
-                    "type": "array"
-                },
-                "streetAddress": {
+                "title": {
                     "type": "string"
+                },
+                "type": {
+                    "enum": [
+                        "facebook",
+                        "instagram",
+                        "spotify",
+                        "twitter",
+                        "vimeo",
+                        "web",
+                        "youtube"
+                    ],
+                    "type": "string"
+                },
+                "url": {
+                    "$ref": "#/definitions/Url"
                 }
             },
             "required": [
-                "id",
-                "latitude",
-                "links",
-                "longitude",
-                "streetAddress"
+                "url"
             ],
             "type": "object"
         },
-        "IOpeningHourException": {
+        "IMediaContent": {
             "properties": {
-                "date": {
+                "contentType": {
+                    "$ref": "#/definitions/ContentType"
+                },
+                "created": {
                     "format": "date-time",
                     "type": "string"
                 },
                 "description": {
                     "type": "string"
-                }
-            },
-            "required": [
-                "date",
-                "description"
-            ],
-            "type": "object"
-        },
-        "IOpeningHours": {
-            "properties": {
-                "closed": {
-                    "type": "boolean"
-                },
-                "closing": {
-                    "type": [
-                        "null",
-                        "string"
-                    ]
-                },
-                "dayNumber": {
-                    "enum": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5,
-                        6,
-                        7
-                    ],
-                    "type": "number"
-                },
-                "opening": {
-                    "type": [
-                        "null",
-                        "string"
-                    ]
-                },
-                "weekday": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "closed",
-                "dayNumber",
-                "opening",
-                "weekday"
-            ],
-            "type": "object"
-        },
-        "IPointProperty": {
-            "properties": {
-                "icon": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/definitions/Url"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ]
                 },
                 "id": {
                     "type": "number"
                 },
-                "name": {
+                "modified": {
+                    "format": "date-time",
                     "type": "string"
                 },
-                "slug": {
+                "title": {
                     "type": "string"
+                },
+                "url": {
+                    "$ref": "#/definitions/Url"
                 }
             },
             "required": [
+                "contentType",
+                "created",
+                "description",
                 "id",
-                "name",
-                "slug"
+                "modified",
+                "title",
+                "url"
+            ],
+            "type": "object"
+        },
+        "IPosition": {
+            "properties": {
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "latitude",
+                "longitude"
             ],
             "type": "object"
         },
@@ -186,6 +157,13 @@
                 ]
             },
             "type": "object"
+        },
+        "PostStatus": {
+            "enum": [
+                "draft",
+                "publish"
+            ],
+            "type": "string"
         },
         "Url": {
             "properties": {
@@ -240,43 +218,53 @@
         }
     },
     "properties": {
-        "active": {
-            "type": "boolean"
+        "audio": {
+            "$ref": "#/definitions/IMediaContent"
+        },
+        "beacon": {
+            "$ref": "#/definitions/IBeacon"
         },
         "description": {
             "type": "string"
         },
         "id": {
-            "type": "number"
-        },
-        "images": {
-            "$ref": "#/definitions/IImageUrls"
-        },
-        "location": {
-            "$ref": "#/definitions/ILocation"
-        },
-        "name": {
             "type": "string"
         },
-        "pointProperties": {
+        "images": {
             "items": {
-                "$ref": "#/definitions/IPointProperty"
+                "$ref": "#/definitions/IImageUrls"
             },
             "type": "array"
         },
-        "slug": {
+        "links": {
+            "items": {
+                "$ref": "#/definitions/ILink"
+            },
+            "type": "array"
+        },
+        "order": {
+            "type": "number"
+        },
+        "postStatus": {
+            "$ref": "#/definitions/PostStatus"
+        },
+        "searchableId": {
             "type": "string"
+        },
+        "title": {
+            "type": "string"
+        },
+        "video": {
+            "$ref": "#/definitions/IMediaContent"
         }
     },
     "required": [
-        "active",
-        "description",
         "id",
         "images",
-        "location",
-        "name",
-        "pointProperties",
-        "slug"
+        "order",
+        "postStatus",
+        "searchableId",
+        "title"
     ],
     "type": "object"
 }

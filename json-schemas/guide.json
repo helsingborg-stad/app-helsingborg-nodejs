@@ -1,8 +1,12 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "definitions": {
-        "ContentObject": {
-            "type": "object"
+        "ContentType": {
+            "enum": [
+                "audio",
+                "video"
+            ],
+            "type": "string"
         },
         "GuideType": {
             "enum": [
@@ -11,7 +15,80 @@
             ],
             "type": "string"
         },
-        "ImageUrls": {
+        "IBeacon": {
+            "properties": {
+                "distance": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "nid": {
+                    "type": "string"
+                },
+                "position": {
+                    "$ref": "#/definitions/IPosition"
+                }
+            },
+            "required": [
+                "id",
+                "nid"
+            ],
+            "type": "object"
+        },
+        "IContentObject": {
+            "properties": {
+                "audio": {
+                    "$ref": "#/definitions/IMediaContent"
+                },
+                "beacon": {
+                    "$ref": "#/definitions/IBeacon"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "images": {
+                    "items": {
+                        "$ref": "#/definitions/IImageUrls"
+                    },
+                    "type": "array"
+                },
+                "links": {
+                    "items": {
+                        "$ref": "#/definitions/ILink"
+                    },
+                    "type": "array"
+                },
+                "order": {
+                    "type": "number"
+                },
+                "postStatus": {
+                    "$ref": "#/definitions/PostStatus"
+                },
+                "searchableId": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "video": {
+                    "$ref": "#/definitions/IMediaContent"
+                }
+            },
+            "required": [
+                "id",
+                "images",
+                "order",
+                "postStatus",
+                "searchableId",
+                "title"
+            ],
+            "type": "object"
+        },
+        "IImageUrls": {
             "properties": {
                 "large": {
                     "anyOf": [
@@ -44,6 +121,84 @@
                     ]
                 }
             },
+            "type": "object"
+        },
+        "ILink": {
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "enum": [
+                        "facebook",
+                        "instagram",
+                        "spotify",
+                        "twitter",
+                        "vimeo",
+                        "web",
+                        "youtube"
+                    ],
+                    "type": "string"
+                },
+                "url": {
+                    "$ref": "#/definitions/Url"
+                }
+            },
+            "required": [
+                "url"
+            ],
+            "type": "object"
+        },
+        "IMediaContent": {
+            "properties": {
+                "contentType": {
+                    "$ref": "#/definitions/ContentType"
+                },
+                "created": {
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "number"
+                },
+                "modified": {
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "url": {
+                    "$ref": "#/definitions/Url"
+                }
+            },
+            "required": [
+                "contentType",
+                "created",
+                "description",
+                "id",
+                "modified",
+                "title",
+                "url"
+            ],
+            "type": "object"
+        },
+        "IPosition": {
+            "properties": {
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "latitude",
+                "longitude"
+            ],
             "type": "object"
         },
         "ParsedUrlQuery": {
@@ -127,7 +282,7 @@
         },
         "contentObjects": {
             "items": {
-                "$ref": "#/definitions/ContentObject"
+                "$ref": "#/definitions/IContentObject"
             },
             "type": "array"
         },
@@ -155,7 +310,7 @@
             "type": "number"
         },
         "images": {
-            "$ref": "#/definitions/ImageUrls"
+            "$ref": "#/definitions/IImageUrls"
         },
         "name": {
             "type": "string"

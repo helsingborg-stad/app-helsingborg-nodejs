@@ -1,6 +1,13 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "definitions": {
+        "ContentType": {
+            "enum": [
+                "audio",
+                "video"
+            ],
+            "type": "string"
+        },
         "ParsedUrlQuery": {
             "additionalProperties": {
                 "anyOf": [
@@ -70,30 +77,38 @@
         }
     },
     "properties": {
-        "icon": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Url"
-                },
-                {
-                    "type": "null"
-                }
-            ]
+        "contentType": {
+            "$ref": "#/definitions/ContentType"
+        },
+        "created": {
+            "format": "date-time",
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
         },
         "id": {
             "type": "number"
         },
-        "name": {
+        "modified": {
+            "format": "date-time",
             "type": "string"
         },
-        "slug": {
+        "title": {
             "type": "string"
+        },
+        "url": {
+            "$ref": "#/definitions/Url"
         }
     },
     "required": [
+        "contentType",
+        "created",
+        "description",
         "id",
-        "name",
-        "slug"
+        "modified",
+        "title",
+        "url"
     ],
     "type": "object"
 }

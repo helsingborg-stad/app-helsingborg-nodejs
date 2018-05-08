@@ -1,13 +1,14 @@
 import debug from "debug";
 import { URL } from "url";
 import {
-  ContentObject,
-  Guide,
   GuideType,
-  ImageUrls,
-  OpeningHourException,
+  IContentObject,
+  IGuide,
+  IImageUrls,
+  IOpeningHourException,
   PostStatus,
 } from "../types/typings";
+import { validate } from "./jsonValidator";
 
 const logWarn = debug("warn");
 
@@ -60,10 +61,10 @@ function parseLocation(item: any) {
   }
 
   if (openHoursException) {
-    const openingHourExceptions: OpeningHourException[] = [];
+    const openingHourExceptions: IOpeningHourException[] = [];
     openHoursException.forEach((element: any) => {
       try {
-        const exc: OpeningHourException = {
+        const exc: IOpeningHourException = {
           date: new Date(element.exception_date).toISOString(),
           description: element.exeption_information,
         };
@@ -96,7 +97,7 @@ function parseUrl(urlString?: string): URL | null {
   return null;
 }
 
-function parseImages(item: any): ImageUrls {
+function parseImages(item: any): IImageUrls {
   const images = {
     large: parseUrl(item.large),
     medium: parseUrl(item.medium),
@@ -130,11 +131,193 @@ export function parseGuideGroup(item: any) {
   return guideGroup;
 }
 
-function parseContentObjects(contentObjects: any[]): ContentObject[] {
-  console.log(contentObjects.length);
+function getPostStatus(active: any): PostStatus {
+  return active ? PostStatus.PUBLISH : PostStatus.DRAFT;
+}
 
-  // TODO implement
-  return [];
+function parseImageUrls(data: any): IImageUrls[] {
+  const images: IImageUrls[] = [];
+  try {
+    if (data instanceof Array) {
+      for (const item of data) {
+        const image = parseImages(item.sizes);
+        images.push(image);
+      }
+    }
+  } catch (error) {
+    // something went wrong
+    logWarn("Failed to parse images data: ", data);
+  }
+  return images;
+}
+
+function parseMediaContent(data: any) {
+  if (!(data instanceof Object)) {
+    throw new Error("Failed to parse media content from data: " + data);
+  }
+
+  const media = {
+    contentType: data.type,
+    created: parseDate(data.date),
+    description: String(data.description),
+    id: Number(data.id),
+    modified: parseDate(data.modified),
+    title: String(data.title),
+    url: new URL(data.url),
+  };
+  validate(media, "mediaContent");
+  return media;
+}
+
+function parseLink(data: any): any {
+  return {
+    title: data.title,
+    type: data.service,
+    url: new URL(data.link),
+  };
+}
+
+function parseLinks(data: any[]) {
+  const links = [];
+  for (const item of data) {
+    try {
+      if (item) {
+        const link = parseLink(item);
+        validate(link, "link");
+        links.push(link);
+      }
+    } catch (error) {
+      // discarding link
+    }
+  }
+  return links;
+}
+function parsePosition(locationId: any, locations: any[]): any {
+  let location: any = {};
+  if (locationId && typeof locationId === "number") {
+    const locationData = locations.find((locData) => locData.id === locationId);
+    if (locationData) {
+      const { longitude, latitude } = locationData;
+      location = {
+        latitude: Number(latitude),
+        longitude: Number(longitude),
+      };
+    }
+  }
+  return location;
+}
+
+function parseBeacon(id: string, beacons: any[], locations: any[]): any {
+  const bData = beacons.find((item) => {
+    const { content } = item;
+    return content instanceof Array && content.indexOf(id) > -1;
+  });
+
+  const beacon: any = {
+    distance: Number(bData.beacon_distance),
+    id: bData.bid,
+    nid: bData.nid,
+  };
+
+  try {
+    const { location: locationId } = bData;
+    const position = parsePosition(locationId, locations);
+    validate(position, "position");
+    beacon.position = position;
+  } catch (error) {
+    // discarding faulty location data
+  }
+
+  return beacon;
+}
+
+function parseContentObject(
+  key: string,
+  data: any,
+  beacons: any[],
+  locations: any[],
+) {
+  if (typeof data.order !== "number") {
+    throw new Error("Failed to parse order from " + data);
+  }
+
+  const postStatus: PostStatus = getPostStatus(data.active);
+  const images: IImageUrls[] = parseImageUrls(data.image);
+
+  const obj: IContentObject = {
+    id: key,
+    images,
+    order: Number(data.order),
+    postStatus,
+    searchableId: data.id,
+    title: data.title,
+  };
+
+  if (data.description_plain) {
+    obj.description = data.description_plain;
+  }
+
+  try {
+    if (data.audio) {
+      obj.audio = parseMediaContent(data.audio);
+    }
+  } catch (error) {
+    // ignoring audio
+    logWarn("Trying to parse audio", error);
+  }
+
+  try {
+    if (data.video) {
+      obj.video = parseMediaContent(data.video);
+    }
+  } catch (error) {
+    // ignoring video
+    logWarn("Trying to parse video", error);
+  }
+
+  if (data.links && data.links instanceof Array) {
+    obj.links = parseLinks(data.links);
+  }
+
+  try {
+    const beacon = parseBeacon(obj.id, beacons, locations);
+    validate(beacon, "beacon");
+    obj.beacon = beacon;
+  } catch (error) {
+    // discard faulty beacon data
+  }
+
+  validate(obj, "contentObject");
+
+  return obj;
+}
+
+function parseContentObjects(
+  contentData: any,
+  beaconData: any,
+  locationsData: any,
+): IContentObject[] {
+  const keys: string[] = Object.keys(contentData);
+
+  let beacons: any[] = [];
+  if (beaconData instanceof Array) {
+    beacons = beaconData;
+  }
+  let locations: any[] = [];
+  if (locationsData instanceof Array) {
+    locations = locationsData;
+  }
+
+  const result: IContentObject[] = [];
+  for (const key of keys) {
+    try {
+      const obj = parseContentObject(key, contentData[key], beacons, locations);
+      result.push(obj);
+    } catch (error) {
+      logWarn("Failed to parse content object, discarding.");
+    }
+  }
+  return result;
 }
 
 function parsePublishStatus(data: any): PostStatus {
@@ -152,10 +335,10 @@ function parseDate(data: any): string {
   return new Date(data).toISOString();
 }
 
-export function parseGuide(item: any): Guide {
-  const guide: Guide = {
+export function parseGuide(item: any): IGuide {
+  const guide: IGuide = {
     childFriendly: Boolean(item.guide_kids),
-    contentObjects: parseContentObjects(item.contentObjects),
+    contentObjects: [],
     description: item.content.plain_text,
     guideGroupId: Number(item.guidegroup[0].id),
     guideType: parseGuideType(item.content_type),
@@ -166,6 +349,24 @@ export function parseGuide(item: any): Guide {
     slug: item.slug,
     tagline: item.guide_tagline,
   };
+
+  const {
+    contentObjects,
+    subAttractions: beacons,
+    _embedded: embeddedData,
+  } = item;
+  let locationData = null;
+  if (embeddedData) {
+    locationData = embeddedData.location;
+  }
+
+  if (contentObjects && contentObjects instanceof Object) {
+    guide.contentObjects = parseContentObjects(
+      contentObjects,
+      beacons,
+      locationData,
+    );
+  }
 
   try {
     const dateStart = parseDate(item.guide_date_start);

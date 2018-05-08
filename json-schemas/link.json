@@ -70,30 +70,27 @@
         }
     },
     "properties": {
-        "icon": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/Url"
-                },
-                {
-                    "type": "null"
-                }
-            ]
-        },
-        "id": {
-            "type": "number"
-        },
-        "name": {
+        "title": {
             "type": "string"
         },
-        "slug": {
+        "type": {
+            "enum": [
+                "facebook",
+                "instagram",
+                "spotify",
+                "twitter",
+                "vimeo",
+                "web",
+                "youtube"
+            ],
             "type": "string"
+        },
+        "url": {
+            "$ref": "#/definitions/Url"
         }
     },
     "required": [
-        "id",
-        "name",
-        "slug"
+        "url"
     ],
     "type": "object"
 }

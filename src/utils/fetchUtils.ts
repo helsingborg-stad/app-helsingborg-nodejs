@@ -1,7 +1,7 @@
 import debug from "debug";
 import fetch from "node-fetch";
 import { URL } from "url";
-import { Guide, PointProperty } from "../types/typings";
+import { IGuide, IPointProperty } from "../types/typings";
 import { validate } from "./jsonValidator";
 import { parseGuide, parseGuideGroup } from "./parsingUtils";
 import {
@@ -16,17 +16,18 @@ const logWarn = debug("warn");
 async function fetchProperties(
   id: number,
   lang?: string,
-): Promise<PointProperty[]> {
+): Promise<IPointProperty[]> {
   const url = buildPropertyUrl(id, lang);
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error("Malformed request");
   }
   const jsonArray: any[] = await response.json();
-  const props: PointProperty[] = [];
+  const props: IPointProperty[] = [];
 
   jsonArray.forEach((json) => {
-    const prop: PointProperty = {
+    // TODO move into parsingUtils
+    const prop: IPointProperty = {
       id: json.id,
       name: json.name,
       slug: json.slug,
@@ -69,7 +70,7 @@ export async function fetchAllGuideGroups(lang?: string) {
     let guideGroup = null;
     try {
       const locationId = item._embedded.location[0].id;
-      let props: PointProperty[] = [];
+      let props: IPointProperty[] = [];
       try {
         props = await fetchProperties(locationId, lang);
       } catch (error) {
@@ -93,7 +94,7 @@ export async function fetchAllGuideGroups(lang?: string) {
   return resultArray;
 }
 
-export async function fetchGuide(lang: string, id: string): Promise<Guide> {
+export async function fetchGuide(lang: string, id: string): Promise<IGuide> {
   const url = buildGuideUrl(lang, id);
   logApp(`sent fetching request to: ${url}`);
 
@@ -108,7 +109,7 @@ export async function fetchGuide(lang: string, id: string): Promise<Guide> {
   return parseGuide(guideJson);
 }
 
-export async function fetchAllGuides(lang: string): Promise<Guide[]> {
+export async function fetchAllGuides(lang: string): Promise<IGuide[]> {
   const url = buildGuideUrl(lang);
   logApp(`sent fetching request to: ${url}`);
 
@@ -120,7 +121,7 @@ export async function fetchAllGuides(lang: string): Promise<Guide[]> {
 
   const guidesJson = await response.json();
 
-  const guides: Guide[] = [];
+  const guides: IGuide[] = [];
   guidesJson.forEach((item: any) => {
     try {
       const guide = parseGuide(item);
