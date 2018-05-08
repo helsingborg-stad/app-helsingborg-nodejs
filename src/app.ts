@@ -7,11 +7,6 @@ import guideGroupRouter from "./routes/guidegroup";
 import guidesRouter from "./routes/guides";
 import { normalizePort } from "./utils/serverUtils";
 
-if (process.env.NODE_ENV === "production") {
-  // tslint:disable-next-line no-var-requires
-  require("newrelic");
-}
-
 const app = express();
 const logApp = debug("app");
 
