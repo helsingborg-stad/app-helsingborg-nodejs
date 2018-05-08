@@ -24,9 +24,7 @@
                 }
             },
             "required": [
-                "distance",
                 "id",
-                "location",
                 "nid"
             ],
             "type": "object"

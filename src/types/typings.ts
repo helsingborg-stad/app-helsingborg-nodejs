@@ -92,8 +92,8 @@ export interface IPosition {
 export interface IBeacon {
   id: string;
   nid: string;
-  location: IPosition;
-  distance: number;
+  location?: IPosition;
+  distance?: number;
 }
 
 export interface IContentObject {

@@ -188,13 +188,24 @@ function parseLinks(data: any[]) {
       }
     } catch (error) {
       // discarding link
-      console.log(error);
     }
   }
   return links;
 }
 
-function parseContentObject(key: string, data: any) {
+function parseBeacon(id: string, beacons: any[]): any {
+  const bData = beacons.find((item) => {
+    const { content } = item;
+    return content instanceof Array && content.indexOf(id) > -1;
+  });
+  return {
+    id: bData.bid,
+    nid: bData.nid,
+    // TODO parse location
+  };
+}
+
+function parseContentObject(key: string, data: any, beacons: any[]) {
   if (typeof data.order !== "number") {
     throw new Error("Failed to parse order from " + data);
   }
@@ -237,18 +248,34 @@ function parseContentObject(key: string, data: any) {
     obj.links = parseLinks(data.links);
   }
 
+  try {
+    const beacon = parseBeacon(obj.id, beacons);
+    validate(beacon, "beacon");
+    obj.beacon = beacon;
+  } catch (error) {
+    // discard faulty beacon data
+  }
+
   validate(obj, "contentObject");
 
   return obj;
 }
 
-function parseContentObjects(data: any): IContentObject[] {
-  const keys: string[] = Object.keys(data);
+function parseContentObjects(
+  contentData: any,
+  beaconData: any,
+): IContentObject[] {
+  const keys: string[] = Object.keys(contentData);
+
+  let beacons: any[] = [];
+  if (beaconData instanceof Array) {
+    beacons = beaconData;
+  }
 
   const result: IContentObject[] = [];
   for (const key of keys) {
     try {
-      const obj = parseContentObject(key, data[key]);
+      const obj = parseContentObject(key, contentData[key], beacons);
       result.push(obj);
     } catch (error) {
       logWarn("Failed to parse content object, discarding.");
@@ -287,10 +314,10 @@ export function parseGuide(item: any): IGuide {
     tagline: item.guide_tagline,
   };
 
-  const { contentObjects } = item;
+  const { contentObjects, subAttractions: beacons } = item;
 
   if (contentObjects && contentObjects instanceof Object) {
-    guide.contentObjects = parseContentObjects(contentObjects);
+    guide.contentObjects = parseContentObjects(contentObjects, beacons);
   }
 
   try {
