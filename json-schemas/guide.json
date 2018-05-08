@@ -23,17 +23,15 @@
                 "id": {
                     "type": "string"
                 },
-                "location": {
-                    "$ref": "#/definitions/IPosition"
-                },
                 "nid": {
                     "type": "string"
+                },
+                "position": {
+                    "$ref": "#/definitions/IPosition"
                 }
             },
             "required": [
-                "distance",
                 "id",
-                "location",
                 "nid"
             ],
             "type": "object"
