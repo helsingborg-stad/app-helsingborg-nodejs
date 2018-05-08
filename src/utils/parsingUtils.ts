@@ -226,7 +226,6 @@ function parseBeacon(id: string, beacons: any[], locations: any[]): any {
     beacon.position = position;
   } catch (error) {
     // discarding faulty location data
-    console.log("Position error: ", error);
   }
 
   return beacon;
