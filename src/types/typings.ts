@@ -92,7 +92,6 @@ export interface IPosition {
 export interface IBeacon {
   id: string;
   nid: string;
-  position?: IPosition;
   distance?: number;
 }
 
@@ -108,6 +107,7 @@ export interface IContentObject {
   video?: IMediaContent;
   links?: ILink[];
   beacon?: IBeacon;
+  location?: ILocation;
 }
 
 export enum PostStatus {

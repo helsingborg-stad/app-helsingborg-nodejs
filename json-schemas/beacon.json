@@ -1,22 +1,5 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
-    "definitions": {
-        "IPosition": {
-            "properties": {
-                "latitude": {
-                    "type": "number"
-                },
-                "longitude": {
-                    "type": "number"
-                }
-            },
-            "required": [
-                "latitude",
-                "longitude"
-            ],
-            "type": "object"
-        }
-    },
     "properties": {
         "distance": {
             "type": "number"
@@ -26,9 +9,6 @@
         },
         "nid": {
             "type": "string"
-        },
-        "position": {
-            "$ref": "#/definitions/IPosition"
         }
     },
     "required": [
