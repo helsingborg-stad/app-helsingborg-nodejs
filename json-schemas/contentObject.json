@@ -18,9 +18,6 @@
                 },
                 "nid": {
                     "type": "string"
-                },
-                "position": {
-                    "$ref": "#/definitions/IPosition"
                 }
             },
             "required": [
@@ -90,6 +87,55 @@
             ],
             "type": "object"
         },
+        "ILocation": {
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "links": {
+                    "anyOf": [
+                        {
+                            "items": {
+                                "$ref": "#/definitions/Url"
+                            },
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "openingHourExceptions": {
+                    "items": {
+                        "$ref": "#/definitions/IOpeningHourException"
+                    },
+                    "type": "array"
+                },
+                "openingHours": {
+                    "items": {
+                        "$ref": "#/definitions/IOpeningHours"
+                    },
+                    "type": "array"
+                },
+                "streetAddress": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id",
+                "latitude",
+                "links",
+                "longitude",
+                "streetAddress"
+            ],
+            "type": "object"
+        },
         "IMediaContent": {
             "properties": {
                 "contentType": {
@@ -127,18 +173,60 @@
             ],
             "type": "object"
         },
-        "IPosition": {
+        "IOpeningHourException": {
             "properties": {
-                "latitude": {
-                    "type": "number"
+                "date": {
+                    "format": "date-time",
+                    "type": "string"
                 },
-                "longitude": {
-                    "type": "number"
+                "description": {
+                    "type": "string"
                 }
             },
             "required": [
-                "latitude",
-                "longitude"
+                "date",
+                "description"
+            ],
+            "type": "object"
+        },
+        "IOpeningHours": {
+            "properties": {
+                "closed": {
+                    "type": "boolean"
+                },
+                "closing": {
+                    "type": [
+                        "null",
+                        "string"
+                    ]
+                },
+                "dayNumber": {
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7
+                    ],
+                    "type": "number"
+                },
+                "opening": {
+                    "type": [
+                        "null",
+                        "string"
+                    ]
+                },
+                "weekday": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "closed",
+                "dayNumber",
+                "opening",
+                "weekday"
             ],
             "type": "object"
         },
@@ -241,6 +329,9 @@
                 "$ref": "#/definitions/ILink"
             },
             "type": "array"
+        },
+        "location": {
+            "$ref": "#/definitions/ILocation"
         },
         "order": {
             "type": "number"

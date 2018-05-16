@@ -192,22 +192,12 @@ function parseLinks(data: any[]) {
   }
   return links;
 }
-function parsePosition(locationId: any, locations: any[]): any {
-  let location: any = {};
-  if (locationId && typeof locationId === "number") {
-    const locationData = locations.find((locData) => locData.id === locationId);
-    if (locationData) {
-      const { longitude, latitude } = locationData;
-      location = {
-        latitude: Number(latitude),
-        longitude: Number(longitude),
-      };
-    }
-  }
-  return location;
-}
 
-function parseBeacon(id: string, beacons: any[], locations: any[]): any {
+function parseBeaconAndLocation(
+  id: string,
+  beacons: any[],
+  locations: any[],
+): { beacon: any; location: any } {
   const bData = beacons.find((item) => {
     const { content } = item;
     return content instanceof Array && content.indexOf(id) > -1;
@@ -219,16 +209,17 @@ function parseBeacon(id: string, beacons: any[], locations: any[]): any {
     nid: bData.nid,
   };
 
+  // Parse location data
+  let location;
   try {
     const { location: locationId } = bData;
-    const position = parsePosition(locationId, locations);
-    validate(position, "position");
-    beacon.position = position;
+    const locationData = locations.find((locData) => locData.id === locationId);
+    location = parseLocation(locationData);
   } catch (error) {
     // discarding faulty location data
   }
 
-  return beacon;
+  return { beacon, location };
 }
 
 function parseContentObject(
@@ -280,9 +271,11 @@ function parseContentObject(
   }
 
   try {
-    const beacon = parseBeacon(obj.id, beacons, locations);
-    validate(beacon, "beacon");
-    obj.beacon = beacon;
+    const beaconAndLocation = parseBeaconAndLocation(obj.id, beacons, locations);
+    validate(beaconAndLocation.beacon, "beacon");
+    validate(beaconAndLocation.location, "location");
+    obj.beacon = beaconAndLocation.beacon;
+    obj.location = beaconAndLocation.location;
   } catch (error) {
     // discard faulty beacon data
   }

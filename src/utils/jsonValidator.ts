@@ -6,6 +6,7 @@ import contentObject from "../../json-schemas/contentObject.json";
 import guide from "../../json-schemas/guide.json";
 import guideGroup from "../../json-schemas/guideGroup.json";
 import link from "../../json-schemas/link.json";
+import location from "../../json-schemas/location.json";
 import mediaContent from "../../json-schemas/mediaContent.json";
 import pointProperty from "../../json-schemas/pointProperty.json";
 import position from "../../json-schemas/position.json";
@@ -24,6 +25,7 @@ ajv.addSchema(contentObject, "contentObject");
 ajv.addSchema(link, "link");
 ajv.addSchema(beacon, "beacon");
 ajv.addSchema(position, "position");
+ajv.addSchema(location, "location");
 
 export function validate(data: any, schema: string): boolean {
   const result = ajv.validate(schema, data);
