@@ -270,28 +270,27 @@ function parseContentObject(
     obj.links = parseLinks(data.links);
   }
 
-  try{
+  try {
   const beaconAndLocation = parseBeaconAndLocation(obj.id, beacons, locations);
-  try{
+  try {
     validate(beaconAndLocation.beacon, "beacon");
     obj.beacon = beaconAndLocation.beacon;
-  } catch(error) {
-    //logWarn("validation failed for beacon in contentobject");
+  } catch (error) {
+    // logWarn("validation failed for beacon in contentobject");
   }
 
-  try{
+  try {
     validate(beaconAndLocation.location, "location");
     obj.location = beaconAndLocation.location;
-  } catch(error){
+  } catch (error) {
     logWarn("validation failed for location in contentobject");
   }
 
-
-    validate(obj, "contentObject");
-  } catch(error) {
-    //logWarn("validation failed for contentobject");
+  validate(obj, "contentObject");
+  } catch (error) {
+    // logWarn("validation failed for contentobject");
   }
-  
+
   return obj;
 }
 
