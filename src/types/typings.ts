@@ -91,7 +91,7 @@ export interface IPosition {
 
 export interface IBeacon {
   id: string;
-  nid?: string | null;
+  nid: string;
   distance?: number;
 }
 

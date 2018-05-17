@@ -272,8 +272,18 @@ function parseContentObject(
 
   try {
     const beaconAndLocation = parseBeaconAndLocation(obj.id, beacons, locations);
-    validate(beaconAndLocation.beacon, "beacon");
-    validate(beaconAndLocation.location, "location");
+    try{
+      validate(beaconAndLocation.beacon, "beacon");
+    }catch(error)
+    {
+      console.log(error);
+    }
+    try{
+      validate(beaconAndLocation.location, "location");
+    }catch(error)
+    {
+      console.log(error);
+    }
     obj.beacon = beaconAndLocation.beacon;
     obj.location = beaconAndLocation.location;
     console.log(obj.beacon);
