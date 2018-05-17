@@ -73,7 +73,10 @@
                     "type": "array"
                 },
                 "streetAddress": {
-                    "type": "string"
+                    "type": [
+                        "null",
+                        "string"
+                    ]
                 }
             },
             "required": [

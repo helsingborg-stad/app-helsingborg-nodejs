@@ -162,7 +162,10 @@
             "type": "array"
         },
         "streetAddress": {
-            "type": ["null","string"]
+            "type": [
+                "null",
+                "string"
+            ]
         }
     },
     "required": [
