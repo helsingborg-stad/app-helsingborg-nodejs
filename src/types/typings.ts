@@ -29,7 +29,7 @@ export interface ILocation {
   // TODO use Link interface
   links: Url[] | null;
   longitude: number;
-  streetAddress: string;
+  streetAddress: string|null;
   openingHours?: IOpeningHours[];
   openingHourExceptions?: IOpeningHourException[];
 }
