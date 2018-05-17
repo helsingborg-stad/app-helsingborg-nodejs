@@ -276,7 +276,10 @@ function parseContentObject(
     validate(beaconAndLocation.location, "location");
     obj.beacon = beaconAndLocation.beacon;
     obj.location = beaconAndLocation.location;
+    console.log(obj.beacon);
+    console.log(obj.location);
   } catch (error) {
+    console.log(error);
     // discard faulty beacon data
   }
 
@@ -307,6 +310,7 @@ function parseContentObjects(
       const obj = parseContentObject(key, contentData[key], beacons, locations);
       result.push(obj);
     } catch (error) {
+      console.log(error);
       logWarn("Failed to parse content object, discarding.");
     }
   }

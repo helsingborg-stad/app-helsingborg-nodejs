@@ -8,12 +8,11 @@
             "type": "string"
         },
         "nid": {
-            "type": "string"
+            "type": ["string","null"]
         }
     },
     "required": [
-        "id",
-        "nid"
+        "id"
     ],
     "type": "object"
 }
