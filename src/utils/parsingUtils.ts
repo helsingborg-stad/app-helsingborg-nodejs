@@ -10,7 +10,7 @@ import {
   IOpeningHourException,
   PostStatus,
 } from "../types/typings";
-import jsonValidator, { validate } from "./jsonValidator";
+import { validate } from "./jsonValidator";
 
 const logWarn = debug("warn");
 
