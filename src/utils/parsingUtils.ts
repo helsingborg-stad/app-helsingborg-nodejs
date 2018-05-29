@@ -5,6 +5,7 @@ import {
   IContentObject,
   IGuide,
   IImageUrls,
+  INavigationCategory,
   IOpeningHourException,
   PostStatus,
 } from "../types/typings";
@@ -385,4 +386,16 @@ export function parseGuide(item: any): IGuide {
   }
 
   return guide;
+}
+
+export function parseNavigationCategory(data: any): INavigationCategory {
+  const category: INavigationCategory = {
+    id: Number(data.id),
+    // TODO parse INavItems
+    items: [],
+    name: data.name,
+    slug: data.slug,
+  };
+
+  return category;
 }

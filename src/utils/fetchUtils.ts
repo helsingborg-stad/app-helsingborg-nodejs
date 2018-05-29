@@ -3,7 +3,7 @@ import fetch from "node-fetch";
 import { URL } from "url";
 import { IGuide, INavigationCategory, IPointProperty } from "../types/typings";
 import { validate } from "./jsonValidator";
-import { parseGuide, parseGuideGroup } from "./parsingUtils";
+import { parseGuide, parseGuideGroup, parseNavigationCategory } from "./parsingUtils";
 import {
   buildGuideGroupUrl,
   buildGuideUrl,
@@ -154,7 +154,19 @@ export async function fetchNavigationCategories(
 
   const navigationJson = await response.json();
 
-  // TODO parse and validate JSON
+  const navigationCategories: INavigationCategory[] = [];
+  navigationJson.forEach((item: any) => {
+    try {
+      const category = parseNavigationCategory(item);
+      validate(category, "INavigationCategory");
+      navigationCategories.push(category);
+    } catch (err) {
+      // Discard item
+      logWarn("Failed to parse navigation category from: ", item);
+      logWarn("Validation error: ", err);
+    }
+  });
+  logApp("Navigation parsing complete");
 
-  return navigationJson;
+  return navigationCategories;
 }
