@@ -5,6 +5,7 @@ import http from "http";
 import logger from "morgan";
 import guideGroupRouter from "./routes/guidegroup";
 import guidesRouter from "./routes/guides";
+import navigationRouter from "./routes/navigation";
 import { normalizePort } from "./utils/serverUtils";
 
 const app = express();
@@ -38,6 +39,7 @@ app.use(express.urlencoded({ extended: false }));
  */
 app.use("/guidegroup", guideGroupRouter);
 app.use("/guide", guidesRouter);
+app.use("/navigation", navigationRouter);
 
 /**
  * ERROR handlers

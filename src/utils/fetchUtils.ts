@@ -1,12 +1,13 @@
 import debug from "debug";
 import fetch from "node-fetch";
 import { URL } from "url";
-import { IGuide, IPointProperty } from "../types/typings";
+import { IGuide, INavigationCategory, IPointProperty } from "../types/typings";
 import { validate } from "./jsonValidator";
 import { parseGuide, parseGuideGroup } from "./parsingUtils";
 import {
   buildGuideGroupUrl,
   buildGuideUrl,
+  buildNavigationUrl,
   buildPropertyUrl,
 } from "./urlUtils";
 
@@ -136,4 +137,24 @@ export async function fetchAllGuides(lang: string): Promise<IGuide[]> {
   logApp("Guides parsing complete");
 
   return guides;
+}
+
+export async function fetchNavigationCategories(
+  lang?: string,
+): Promise<INavigationCategory[]> {
+
+  const url = buildNavigationUrl(lang);
+  logApp(`sending fetch request to: ${url}`);
+
+  const response = await fetch(url);
+  logApp(`received fetching response from:${url}`);
+  if (!response.ok) {
+    throw new Error("Malformed request");
+  }
+
+  const navigationJson = await response.json();
+
+  // TODO parse and validate JSON
+
+  return navigationJson;
 }

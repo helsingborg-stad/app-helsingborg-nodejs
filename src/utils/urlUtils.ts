@@ -31,3 +31,11 @@ export function buildGuideGroupUrl(lang?: string): string {
   }
   return url;
 }
+
+export function buildNavigationUrl(lang?: string): string {
+  let url = `${API_HOST_URL}/navigation`;
+  if (lang) {
+    url += `?lang=${lang}`;
+  }
+  return url;
+}
