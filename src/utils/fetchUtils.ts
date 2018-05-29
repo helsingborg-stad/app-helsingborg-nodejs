@@ -43,7 +43,7 @@ async function fetchProperties(
     }
 
     try {
-      validate(prop, "pointProperty");
+      validate(prop, "IPointProperty");
       props.push(prop);
     } catch (err) {
       logWarn("Invalid property, discarding", err);
@@ -81,7 +81,7 @@ export async function fetchAllGuideGroups(lang?: string) {
         ...parseGuideGroup(item),
         pointProperties: props,
       };
-      validate(guideGroup, "guideGroup");
+      validate(guideGroup, "IGuideGroup");
 
       resultArray.push(guideGroup);
     } catch (err) {
@@ -125,7 +125,7 @@ export async function fetchAllGuides(lang: string): Promise<IGuide[]> {
   guidesJson.forEach((item: any) => {
     try {
       const guide = parseGuide(item);
-      validate(guide, "guide");
+      validate(guide, "IGuide");
       guides.push(guide);
     } catch (err) {
       // Discard item

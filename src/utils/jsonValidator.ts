@@ -17,15 +17,15 @@ const ajv = new Ajv(options);
 ajv.addMetaSchema(jsonSchema);
 
 // Add schemas
-ajv.addSchema(guideGroup, "guideGroup");
-ajv.addSchema(pointProperty, "pointProperty");
-ajv.addSchema(guide, "guide");
-ajv.addSchema(mediaContent, "mediaContent");
-ajv.addSchema(contentObject, "contentObject");
-ajv.addSchema(link, "link");
-ajv.addSchema(beacon, "beacon");
-ajv.addSchema(position, "position");
-ajv.addSchema(location, "location");
+ajv.addSchema(guideGroup, "IGuideGroup");
+ajv.addSchema(pointProperty, "IPointProperty");
+ajv.addSchema(guide, "IGuide");
+ajv.addSchema(mediaContent, "IMediaContent");
+ajv.addSchema(contentObject, "IContentObject");
+ajv.addSchema(link, "ILink");
+ajv.addSchema(beacon, "IBeacon");
+ajv.addSchema(position, "IPosition");
+ajv.addSchema(location, "ILocation");
 
 export function validate(data: any, schema: string): boolean {
   const result = ajv.validate(schema, data);

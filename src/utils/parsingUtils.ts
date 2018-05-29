@@ -165,7 +165,7 @@ function parseMediaContent(data: any) {
     title: String(data.title),
     url: new URL(data.url),
   };
-  validate(media, "mediaContent");
+  validate(media, "IMediaContent");
   return media;
 }
 
@@ -183,7 +183,7 @@ function parseLinks(data: any[]) {
     try {
       if (item) {
         const link = parseLink(item);
-        validate(link, "link");
+        validate(link, "ILink");
         links.push(link);
       }
     } catch (error) {
@@ -273,20 +273,20 @@ function parseContentObject(
   try {
   const beaconAndLocation = parseBeaconAndLocation(obj.id, beacons, locations);
   try {
-    validate(beaconAndLocation.beacon, "beacon");
+    validate(beaconAndLocation.beacon, "IBeacon");
     obj.beacon = beaconAndLocation.beacon;
   } catch (error) {
     // logWarn("validation failed for beacon in contentobject");
   }
 
   try {
-    validate(beaconAndLocation.location, "location");
+    validate(beaconAndLocation.location, "ILocation");
     obj.location = beaconAndLocation.location;
   } catch (error) {
     logWarn("validation failed for location in contentobject");
   }
 
-  validate(obj, "contentObject");
+  validate(obj, "IContentObject");
   } catch (error) {
     // logWarn("validation failed for contentobject");
   }
