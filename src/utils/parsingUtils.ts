@@ -10,7 +10,7 @@ import {
   IOpeningHourException,
   PostStatus,
 } from "../types/typings";
-import { validate } from "./jsonValidator";
+import jsonValidator, { validate } from "./jsonValidator";
 
 const logWarn = debug("warn");
 
@@ -406,6 +406,7 @@ export function parseNavigationCategory(data: any): INavigationCategory {
           type: element.type,
         };
         // TODO validate
+        validate(item, "INavigationItem");
         items.push(item);
       } catch (err1) {
         console.log(err1);
@@ -422,6 +423,8 @@ export function parseNavigationCategory(data: any): INavigationCategory {
     name: data.name,
     slug: data.slug,
   };
+
+  validate(category, "INavigationCategory");
 
   return category;
 }
