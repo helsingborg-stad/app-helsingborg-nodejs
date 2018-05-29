@@ -6,6 +6,7 @@ import {
   IGuide,
   IImageUrls,
   INavigationCategory,
+  INavigationItem,
   IOpeningHourException,
   PostStatus,
 } from "../types/typings";
@@ -272,22 +273,26 @@ function parseContentObject(
   }
 
   try {
-  const beaconAndLocation = parseBeaconAndLocation(obj.id, beacons, locations);
-  try {
-    validate(beaconAndLocation.beacon, "IBeacon");
-    obj.beacon = beaconAndLocation.beacon;
-  } catch (error) {
-    // logWarn("validation failed for beacon in contentobject");
-  }
+    const beaconAndLocation = parseBeaconAndLocation(
+      obj.id,
+      beacons,
+      locations,
+    );
+    try {
+      validate(beaconAndLocation.beacon, "IBeacon");
+      obj.beacon = beaconAndLocation.beacon;
+    } catch (error) {
+      // logWarn("validation failed for beacon in contentobject");
+    }
 
-  try {
-    validate(beaconAndLocation.location, "ILocation");
-    obj.location = beaconAndLocation.location;
-  } catch (error) {
-    logWarn("validation failed for location in contentobject");
-  }
+    try {
+      validate(beaconAndLocation.location, "ILocation");
+      obj.location = beaconAndLocation.location;
+    } catch (error) {
+      logWarn("validation failed for location in contentobject");
+    }
 
-  validate(obj, "IContentObject");
+    validate(obj, "IContentObject");
   } catch (error) {
     // logWarn("validation failed for contentobject");
   }
@@ -389,10 +394,31 @@ export function parseGuide(item: any): IGuide {
 }
 
 export function parseNavigationCategory(data: any): INavigationCategory {
+  // parse navigation items
+  const items: INavigationItem[] = [];
+  try {
+    const itemsData = data.object_list;
+    itemsData.forEach((element) => {
+      try {
+        console.log("Iterating... ", element);
+        const item: INavigationItem = {
+          id: element.id,
+          type: element.type,
+        };
+        // TODO validate
+        items.push(item);
+      } catch (err1) {
+        console.log(err1);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  // parse navigation category
   const category: INavigationCategory = {
     id: Number(data.id),
-    // TODO parse INavItems
-    items: [],
+    items,
     name: data.name,
     slug: data.slug,
   };
