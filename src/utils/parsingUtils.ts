@@ -398,9 +398,8 @@ export function parseNavigationCategory(data: any): INavigationCategory {
   const items: INavigationItem[] = [];
   try {
     const itemsData = data.object_list;
-    itemsData.forEach((element) => {
+    itemsData.forEach((element: any) => {
       try {
-        console.log("Iterating... ", element);
         const item: INavigationItem = {
           id: element.id,
           type: element.type,
@@ -409,11 +408,11 @@ export function parseNavigationCategory(data: any): INavigationCategory {
         validate(item, "INavigationItem");
         items.push(item);
       } catch (err1) {
-        console.log(err1);
+        logWarn("Failed to parse NavigationItem from: ", element);
       }
     });
   } catch (error) {
-    console.log(error);
+    logWarn("Failed to parse NavigationItems from: ", data);
   }
 
   // parse navigation category
