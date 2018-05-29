@@ -137,3 +137,20 @@ export interface IGuide {
   images: IImageUrls;
   contentObjects: IContentObject[];
 }
+
+export enum NavigationItemType {
+  GUIDE = "guide",
+  GUIDE_GROUP = "guidegroup",
+}
+
+export interface INavigationItem {
+  id: number;
+  type: NavigationItemType;
+}
+
+export interface INavigationCategory {
+  id: number;
+  name: string;
+  slug: string;
+  items: INavigationItem[];
+}

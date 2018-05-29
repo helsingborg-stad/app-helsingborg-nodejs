@@ -5,10 +5,12 @@ import {
   IContentObject,
   IGuide,
   IImageUrls,
+  INavigationCategory,
+  INavigationItem,
   IOpeningHourException,
   PostStatus,
 } from "../types/typings";
-import { validate } from "./jsonValidator";
+import jsonValidator, { validate } from "./jsonValidator";
 
 const logWarn = debug("warn");
 
@@ -165,7 +167,7 @@ function parseMediaContent(data: any) {
     title: String(data.title),
     url: new URL(data.url),
   };
-  validate(media, "mediaContent");
+  validate(media, "IMediaContent");
   return media;
 }
 
@@ -183,7 +185,7 @@ function parseLinks(data: any[]) {
     try {
       if (item) {
         const link = parseLink(item);
-        validate(link, "link");
+        validate(link, "ILink");
         links.push(link);
       }
     } catch (error) {
@@ -271,22 +273,26 @@ function parseContentObject(
   }
 
   try {
-  const beaconAndLocation = parseBeaconAndLocation(obj.id, beacons, locations);
-  try {
-    validate(beaconAndLocation.beacon, "beacon");
-    obj.beacon = beaconAndLocation.beacon;
-  } catch (error) {
-    // logWarn("validation failed for beacon in contentobject");
-  }
+    const beaconAndLocation = parseBeaconAndLocation(
+      obj.id,
+      beacons,
+      locations,
+    );
+    try {
+      validate(beaconAndLocation.beacon, "IBeacon");
+      obj.beacon = beaconAndLocation.beacon;
+    } catch (error) {
+      // logWarn("validation failed for beacon in contentobject");
+    }
 
-  try {
-    validate(beaconAndLocation.location, "location");
-    obj.location = beaconAndLocation.location;
-  } catch (error) {
-    logWarn("validation failed for location in contentobject");
-  }
+    try {
+      validate(beaconAndLocation.location, "ILocation");
+      obj.location = beaconAndLocation.location;
+    } catch (error) {
+      logWarn("validation failed for location in contentobject");
+    }
 
-  validate(obj, "contentObject");
+    validate(obj, "IContentObject");
   } catch (error) {
     // logWarn("validation failed for contentobject");
   }
@@ -385,4 +391,39 @@ export function parseGuide(item: any): IGuide {
   }
 
   return guide;
+}
+
+export function parseNavigationCategory(data: any): INavigationCategory {
+  // parse navigation items
+  const items: INavigationItem[] = [];
+  try {
+    const itemsData = data.object_list;
+    itemsData.forEach((element: any) => {
+      try {
+        const item: INavigationItem = {
+          id: element.id,
+          type: element.type,
+        };
+        // TODO validate
+        validate(item, "INavigationItem");
+        items.push(item);
+      } catch (err1) {
+        logWarn("Failed to parse NavigationItem from: ", element);
+      }
+    });
+  } catch (error) {
+    logWarn("Failed to parse NavigationItems from: ", data);
+  }
+
+  // parse navigation category
+  const category: INavigationCategory = {
+    id: Number(data.id),
+    items,
+    name: data.name,
+    slug: data.slug,
+  };
+
+  validate(category, "INavigationCategory");
+
+  return category;
 }

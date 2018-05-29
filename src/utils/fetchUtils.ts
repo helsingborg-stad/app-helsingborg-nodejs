@@ -1,12 +1,13 @@
 import debug from "debug";
 import fetch from "node-fetch";
 import { URL } from "url";
-import { IGuide, IPointProperty } from "../types/typings";
+import { IGuide, INavigationCategory, IPointProperty } from "../types/typings";
 import { validate } from "./jsonValidator";
-import { parseGuide, parseGuideGroup } from "./parsingUtils";
+import { parseGuide, parseGuideGroup, parseNavigationCategory } from "./parsingUtils";
 import {
   buildGuideGroupUrl,
   buildGuideUrl,
+  buildNavigationUrl,
   buildPropertyUrl,
 } from "./urlUtils";
 
@@ -43,7 +44,7 @@ async function fetchProperties(
     }
 
     try {
-      validate(prop, "pointProperty");
+      validate(prop, "IPointProperty");
       props.push(prop);
     } catch (err) {
       logWarn("Invalid property, discarding", err);
@@ -81,7 +82,7 @@ export async function fetchAllGuideGroups(lang?: string) {
         ...parseGuideGroup(item),
         pointProperties: props,
       };
-      validate(guideGroup, "guideGroup");
+      validate(guideGroup, "IGuideGroup");
 
       resultArray.push(guideGroup);
     } catch (err) {
@@ -125,7 +126,7 @@ export async function fetchAllGuides(lang: string): Promise<IGuide[]> {
   guidesJson.forEach((item: any) => {
     try {
       const guide = parseGuide(item);
-      validate(guide, "guide");
+      validate(guide, "IGuide");
       guides.push(guide);
     } catch (err) {
       // Discard item
@@ -136,4 +137,36 @@ export async function fetchAllGuides(lang: string): Promise<IGuide[]> {
   logApp("Guides parsing complete");
 
   return guides;
+}
+
+export async function fetchNavigationCategories(
+  lang?: string,
+): Promise<INavigationCategory[]> {
+
+  const url = buildNavigationUrl(lang);
+  logApp(`sending fetch request to: ${url}`);
+
+  const response = await fetch(url);
+  logApp(`received fetching response from:${url}`);
+  if (!response.ok) {
+    throw new Error("Malformed request");
+  }
+
+  const navigationJson = await response.json();
+
+  const navigationCategories: INavigationCategory[] = [];
+  navigationJson.forEach((item: any) => {
+    try {
+      const category = parseNavigationCategory(item);
+      validate(category, "INavigationCategory");
+      navigationCategories.push(category);
+    } catch (err) {
+      // Discard item
+      logWarn("Failed to parse navigation category from: ", item);
+      logWarn("Validation error: ", err);
+    }
+  });
+  logApp("Navigation parsing complete");
+
+  return navigationCategories;
 }
