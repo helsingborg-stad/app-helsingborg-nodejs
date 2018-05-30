@@ -1,11 +1,9 @@
 /* tslint:disable jsdoc-format */
-import { Url } from "url";
-
 export interface IPointProperty {
   id: number;
   name: string;
   slug: string;
-  icon?: Url | null;
+  icon?: string | null;
 }
 
 export interface IOpeningHours {
@@ -26,8 +24,7 @@ export interface ILocation {
   id: number;
   // TODO use Position interface
   latitude: number;
-  // TODO use Link interface
-  links: Url[] | null;
+  links: ILink[] | null;
   longitude: number;
   streetAddress: string|null;
   openingHours?: IOpeningHours[];
@@ -45,15 +42,15 @@ export enum LinkType {
 }
 
 export interface ILink {
-  url: Url;
+  url: string;
   title?: string;
   type?: LinkType;
 }
 
 export interface IImageUrls {
-  large?: Url | null;
-  medium?: Url | null;
-  thumbnail?: Url | null;
+  large?: string | null;
+  medium?: string | null;
+  thumbnail?: string | null;
 }
 
 export interface IGuideGroup {
@@ -81,7 +78,7 @@ export interface IMediaContent {
   created: string;
   /** @format date-time*/
   modified: string;
-  url: Url;
+  url: string;
 }
 
 export interface IPosition {
