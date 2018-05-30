@@ -5,6 +5,9 @@ import {
   IContentObject,
   IGuide,
   IImageUrls,
+  ILink,
+  ILocation,
+  IMediaContent,
   INavigationCategory,
   INavigationItem,
   IOpeningHourException,
@@ -27,7 +30,7 @@ function parseOpeningHour(item: any) {
   return oh;
 }
 
-function parseLocation(item: any) {
+function parseLocation(item: any): ILocation {
   const {
     id,
     street_address: streetAddress,
@@ -85,13 +88,13 @@ function parseLocation(item: any) {
   return location;
 }
 
-function parseUrl(urlString?: string): URL | null {
+function parseUrl(urlString?: string): string | null {
   if (urlString === null || urlString === undefined) {
     return null;
   }
 
   try {
-    return new URL(urlString);
+    return new URL(urlString).toString();
   } catch (error) {
     logWarn("Not a well formatted url, discarding: " + urlString);
   }
@@ -153,7 +156,7 @@ function parseImageUrls(data: any): IImageUrls[] {
   return images;
 }
 
-function parseMediaContent(data: any) {
+function parseMediaContent(data: any): IMediaContent {
   if (!(data instanceof Object)) {
     throw new Error("Failed to parse media content from data: " + data);
   }
@@ -165,17 +168,17 @@ function parseMediaContent(data: any) {
     id: Number(data.id),
     modified: parseDate(data.modified),
     title: String(data.title),
-    url: new URL(data.url),
+    url: new URL(data.url).toString(),
   };
   validate(media, "IMediaContent");
   return media;
 }
 
-function parseLink(data: any): any {
+function parseLink(data: any): ILink {
   return {
     title: data.title,
     type: data.service,
-    url: new URL(data.link),
+    url: new URL(data.link).toString(),
   };
 }
 

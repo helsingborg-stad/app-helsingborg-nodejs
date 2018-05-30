@@ -36,7 +36,7 @@ async function fetchProperties(
 
     if (json.icon !== null) {
       try {
-        prop.icon = new URL(json.icon);
+        prop.icon = new URL(json.icon).toString();
       } catch (e) {
         // not a well formatted url, discarding
         logWarn("Not a well formatted url", e);
