@@ -27,10 +27,25 @@ export function buildPropertyUrl(id: number, lang?: string): string {
   return url;
 }
 
-export function buildGuideGroupUrl(lang?: string): string {
+export function buildGuideGroupUrl(
+  include: string[] | undefined,
+  lang?: string,
+): string {
   let url = `${API_HOST_URL}/guidegroup?_embed`;
   if (lang) {
     url += `&lang=${lang}`;
+  }
+
+  if (include && include.length > 0) {
+    url +=
+      "&include=" +
+      include.reduce((previousValue, currentValue, currentIndex) => {
+        if (currentIndex === 0) {
+          return currentValue;
+        } else {
+          return previousValue + "," + currentValue;
+        }
+      }, "");
   }
 
   /* count limit */
