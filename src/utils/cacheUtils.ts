@@ -49,7 +49,7 @@ async function get(key: string): Promise<any> {
 
 function set(key: string, data: any): void {
   if (!isReady) {
-    throw new Error("Redis client not connected.");
+    return;
   }
 
   logApp("CACHE UPDATE DATA: ", key);

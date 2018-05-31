@@ -3,7 +3,11 @@ import fetch from "node-fetch";
 import { URL } from "url";
 import { IGuide, INavigationCategory, IPointProperty } from "../types/typings";
 import { validate } from "./jsonValidator";
-import { parseGuide, parseGuideGroup, parseNavigationCategory } from "./parsingUtils";
+import {
+  parseGuide,
+  parseGuideGroup,
+  parseNavigationCategory,
+} from "./parsingUtils";
 import {
   buildGuideGroupUrl,
   buildGuideUrl,
@@ -54,8 +58,11 @@ async function fetchProperties(
   return props;
 }
 
-export async function fetchAllGuideGroups(lang?: string) {
-  const url = buildGuideGroupUrl(lang);
+export async function fetchAllGuideGroups(
+  include: string[] | undefined,
+  lang?: string,
+) {
+  const url = buildGuideGroupUrl(include, lang);
   logApp(`fetching from:${url}`);
 
   const response = await fetch(url);
@@ -95,8 +102,8 @@ export async function fetchAllGuideGroups(lang?: string) {
   return resultArray;
 }
 
-export async function fetchGuide(lang: string, id: string): Promise<IGuide> {
-  const url = buildGuideUrl(lang, id);
+export async function fetchGuide(id: string, lang?: string): Promise<IGuide> {
+  const url = buildGuideUrl(undefined, lang, id);
   logApp(`sent fetching request to: ${url}`);
 
   const response = await fetch(url);
@@ -110,8 +117,11 @@ export async function fetchGuide(lang: string, id: string): Promise<IGuide> {
   return parseGuide(guideJson);
 }
 
-export async function fetchAllGuides(lang: string): Promise<IGuide[]> {
-  const url = buildGuideUrl(lang);
+export async function fetchAllGuides(
+  include: string[] | undefined,
+  lang?: string,
+): Promise<IGuide[]> {
+  const url = buildGuideUrl(include, lang);
   logApp(`sent fetching request to: ${url}`);
 
   const response = await fetch(url);
@@ -142,7 +152,6 @@ export async function fetchAllGuides(lang: string): Promise<IGuide[]> {
 export async function fetchNavigationCategories(
   lang?: string,
 ): Promise<INavigationCategory[]> {
-
   const url = buildNavigationUrl(lang);
   logApp(`sending fetch request to: ${url}`);
 
