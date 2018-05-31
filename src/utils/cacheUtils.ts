@@ -48,6 +48,10 @@ async function get(key: string): Promise<any> {
 }
 
 function set(key: string, data: any): void {
+  if (!isReady) {
+    throw new Error("Redis client not connected.");
+  }
+
   logApp("CACHE UPDATE DATA: ", key);
   const stringData = JSON.stringify(data);
   client.set(key, stringData, "EX", CACHE_EXPIRATION_TIME, redis.print);
