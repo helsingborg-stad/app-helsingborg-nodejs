@@ -1,9 +1,18 @@
 import { check, ValidationChain } from "express-validator/check";
 
 export function validateLanguageParam(): ValidationChain {
-  return check("lang")
+  return check("lang", "lang should be a string")
     .isString()
     .not()
     .isInt()
+    .optional();
+}
+
+export function validateIncludeParam(): ValidationChain {
+  return check("include", "include param should be an array")
+    .customSanitizer((value) => {
+        return value.split(",");
+    })
+    .isArray()
     .optional();
 }
