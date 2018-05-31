@@ -1,11 +1,8 @@
-import debug from "debug";
 import express, { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator/check";
 import { cache } from "../middleware/cache";
 import { fetchNavigationCategories } from "../utils/fetchUtils";
 import { validateLanguageParam } from "../utils/validateParamsUtils";
-
-const logApp = debug("app");
 
 const router = express.Router();
 
