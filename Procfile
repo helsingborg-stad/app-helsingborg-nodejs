@@ -1,1 +1,1 @@
-web: node dist/app.js
+web: DEBUG=app,warn node dist/app.js
