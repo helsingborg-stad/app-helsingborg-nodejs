@@ -13,6 +13,9 @@ export function buildGuideUrl(lang?: string, id?: string): string {
     url += `&lang=${lang}`;
   }
   url += `&_embed`;
+
+  /* count limit */
+  url += `&per_page=${50}`;
   return url;
 }
 
