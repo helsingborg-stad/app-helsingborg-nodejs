@@ -32,6 +32,10 @@ export function buildGuideGroupUrl(lang?: string): string {
   if (lang) {
     url += `&lang=${lang}`;
   }
+
+  /* count limit */
+  url += `&per_page=${50}`;
+
   return url;
 }
 
