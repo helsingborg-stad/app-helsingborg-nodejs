@@ -2,20 +2,24 @@ import express, { NextFunction, Request, Response } from "express";
 import { param, validationResult } from "express-validator/check";
 import { cache } from "../middleware/cache";
 import { fetchAllGuides, fetchGuide } from "../utils/fetchUtils";
-import { validateLanguageParam } from "../utils/validateParamsUtils";
+import {
+  validateIncludeParam,
+  validateLanguageParam,
+} from "../utils/validateParamsUtils";
 
 const router = express.Router();
 router.use(cache);
 
 router.get(
   "",
-  [validateLanguageParam()],
+  [validateLanguageParam(), validateIncludeParam()],
   (req: Request, res: Response, next: NextFunction) => {
     validationResult(req).throw();
 
-    const { lang } = req.query;
+    const lang: string | undefined = req.query.lang;
+    const include: string[] | undefined = req.query.include;
 
-    fetchAllGuides(lang)
+    fetchAllGuides(include, lang)
       .then((guideGroups) => res.send(guideGroups))
       .catch((err) => next(err));
   },
@@ -27,10 +31,10 @@ router.get(
   (req: Request, res: Response, next: NextFunction) => {
     validationResult(req).throw();
 
-    const { lang } = req.query;
-    const { id } = req.params;
+    const lang: string | undefined = req.query.lang;
+    const id: string = req.params.id;
 
-    fetchGuide(lang, id)
+    fetchGuide(id, lang)
       .then((guide) => res.send(guide))
       .catch((err) => next(err));
   },

@@ -102,8 +102,8 @@ export async function fetchAllGuideGroups(
   return resultArray;
 }
 
-export async function fetchGuide(lang: string, id: string): Promise<IGuide> {
-  const url = buildGuideUrl(lang, id);
+export async function fetchGuide(id: string, lang?: string): Promise<IGuide> {
+  const url = buildGuideUrl(undefined, lang, id);
   logApp(`sent fetching request to: ${url}`);
 
   const response = await fetch(url);
@@ -117,8 +117,11 @@ export async function fetchGuide(lang: string, id: string): Promise<IGuide> {
   return parseGuide(guideJson);
 }
 
-export async function fetchAllGuides(lang: string): Promise<IGuide[]> {
-  const url = buildGuideUrl(lang);
+export async function fetchAllGuides(
+  include: string[] | undefined,
+  lang?: string,
+): Promise<IGuide[]> {
+  const url = buildGuideUrl(include, lang);
   logApp(`sent fetching request to: ${url}`);
 
   const response = await fetch(url);

@@ -1,7 +1,27 @@
 // TODO move to .env
 const API_HOST_URL = "https://api.helsingborg.se/event/json/wp/v2";
 
-export function buildGuideUrl(lang?: string, id?: string): string {
+function buildIncludePart(include: string[] | undefined): string {
+  if (include && include.length > 0) {
+    return (
+      "&include=" +
+      include.reduce((previousValue, currentValue, currentIndex) => {
+        if (currentIndex === 0) {
+          return currentValue;
+        } else {
+          return previousValue + "," + currentValue;
+        }
+      }, "")
+    );
+  }
+  return "";
+}
+
+export function buildGuideUrl(
+  include: string[] | undefined,
+  lang?: string,
+  id?: string,
+): string {
   let url = `${API_HOST_URL}/guide`;
   if (id) {
     url += `/${id}`;
@@ -16,6 +36,8 @@ export function buildGuideUrl(lang?: string, id?: string): string {
 
   /* count limit */
   url += `&per_page=${50}`;
+
+  url += buildIncludePart(include);
   return url;
 }
 
@@ -36,17 +58,7 @@ export function buildGuideGroupUrl(
     url += `&lang=${lang}`;
   }
 
-  if (include && include.length > 0) {
-    url +=
-      "&include=" +
-      include.reduce((previousValue, currentValue, currentIndex) => {
-        if (currentIndex === 0) {
-          return currentValue;
-        } else {
-          return previousValue + "," + currentValue;
-        }
-      }, "");
-  }
+  url += buildIncludePart(include);
 
   /* count limit */
   url += `&per_page=${50}`;
