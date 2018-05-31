@@ -26,7 +26,7 @@ const errorHandler: ErrorRequestHandler = (
   if (instanceOfResult(err)) {
     res.status(422).send({ errors: (err as Result).mapped() });
   } else {
-    res.status(500).send({ error: "Something failed." });
+    res.status(500).send({ error: err.message });
   }
 };
 
