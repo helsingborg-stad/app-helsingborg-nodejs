@@ -13,3 +13,20 @@ export function normalizePort(val: string): any {
 
   return false;
 }
+
+export function readNumber(
+  value: string | undefined,
+  defaultValue: number,
+): number {
+  if (value) {
+    try {
+      const parsed = Number(value);
+      if (!isNaN(parsed)) {
+        return parsed;
+      }
+    } catch (error) {
+      // don't care
+    }
+  }
+  return defaultValue;
+}

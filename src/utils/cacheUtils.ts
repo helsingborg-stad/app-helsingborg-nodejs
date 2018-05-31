@@ -1,16 +1,14 @@
 import debug from "debug";
 import redis from "redis";
 import { promisify } from "util";
+import { readNumber } from "./serverUtils";
 
 const logApp = debug("app");
 
-// TODO set max MEMORY to 20-25 MB
-// TODO read from ENVIRONMENT VARIABLES
-const DEFAULT_EXPIRATION_TIME: number = 10;
+const CACHE_EXPIRATION_TIME = readNumber(process.env.CACHE_EXPIRATION_TIME, 10);
 
-// TODO make cacheUtils into a middleware
-
-const client = redis.createClient();
+const REDIS_URL = process.env.REDIS_URL || "";
+const client = redis.createClient(REDIS_URL);
 const getAsync = promisify(client.get).bind(client);
 
 let isReady: boolean = false;
@@ -52,7 +50,7 @@ async function get(key: string): Promise<any> {
 function set(key: string, data: any): void {
   logApp("CACHE UPDATE DATA: ", key);
   const stringData = JSON.stringify(data);
-  client.set(key, stringData, "EX", DEFAULT_EXPIRATION_TIME, redis.print);
+  client.set(key, stringData, "EX", CACHE_EXPIRATION_TIME, redis.print);
 }
 
 export default { get, set };
