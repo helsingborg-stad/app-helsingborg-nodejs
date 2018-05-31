@@ -4,6 +4,7 @@ import { promisify } from "util";
 
 const logApp = debug("app");
 
+// TODO set max MEMORY to 20-25 MB
 // TODO read from ENVIRONMENT VARIABLES
 const DEFAULT_EXPIRATION_TIME: number = 10;
 
@@ -49,7 +50,7 @@ async function get(key: string): Promise<any> {
 }
 
 function set(key: string, data: any): void {
-  logApp("Cache.set: ", key);
+  logApp("CACHE UPDATE DATA: ", key);
   const stringData = JSON.stringify(data);
   client.set(key, stringData, "EX", DEFAULT_EXPIRATION_TIME, redis.print);
 }
