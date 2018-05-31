@@ -25,6 +25,7 @@
     "express-validator": "5.1.2",
     "morgan": "1.9.0",
     "node-fetch": "2.1.2",
+    "redis": "2.8.0",
     "typescript": "2.8.3"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "@types/morgan": "1.7.35",
     "@types/node": "8.9.0",
     "@types/node-fetch": "1.6.9",
+    "@types/redis": "2.8.6",
     "concurrently": "3.5.1",
     "eslint": "4.19.1",
     "eslint-config-airbnb-base": "12.1.0",
