@@ -420,6 +420,7 @@ export function parseNavigationCategory(data: any): INavigationCategory {
 
   // parse navigation category
   const category: INavigationCategory = {
+    description: data.description,
     id: Number(data.id),
     items,
     name: data.name,
