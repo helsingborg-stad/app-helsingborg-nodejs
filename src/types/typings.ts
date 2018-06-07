@@ -147,6 +147,7 @@ export interface INavigationItem {
 
 export interface INavigationCategory {
   id: number;
+  description: string;
   name: string;
   slug: string;
   items: INavigationItem[];

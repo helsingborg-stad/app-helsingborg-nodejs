@@ -25,6 +25,9 @@
         }
     },
     "properties": {
+        "description": {
+            "type": "string"
+        },
         "id": {
             "type": "number"
         },
@@ -42,6 +45,7 @@
         }
     },
     "required": [
+        "description",
         "id",
         "items",
         "name",
