@@ -133,6 +133,7 @@ export interface IGuide {
   childFriendly: boolean;
   images: IImageUrls;
   contentObjects: IContentObject[];
+  location?: ILocation;
 }
 
 export enum NavigationItemType {

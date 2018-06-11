@@ -371,6 +371,20 @@ export function parseGuide(item: any): IGuide {
     locationData = embeddedData.location;
   }
 
+  // parse guide location
+  const { guide_location: locationId } = item;
+  if (locationId && locationData && locationData instanceof Array) {
+    const foundLoc = locationData.find((loc) => loc.id === locationId);
+    if (foundLoc) {
+      try {
+        guide.location = parseLocation(foundLoc);
+      } catch (e) {
+        // ignoring location from this guide
+      }
+    }
+  }
+
+  // content objects
   if (contentObjects && contentObjects instanceof Object) {
     guide.contentObjects = parseContentObjects(
       contentObjects,
