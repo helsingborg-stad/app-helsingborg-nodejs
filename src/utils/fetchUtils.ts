@@ -120,8 +120,9 @@ export async function fetchGuide(id: string, lang?: string): Promise<IGuide> {
 export async function fetchAllGuides(
   include: string[] | undefined,
   lang?: string,
+  guideGroupId?: number,
 ): Promise<IGuide[]> {
-  const url = buildGuideUrl(include, lang);
+  const url = buildGuideUrl(include, lang, undefined, guideGroupId);
   logApp(`sent fetching request to: ${url}`);
 
   const response = await fetch(url);

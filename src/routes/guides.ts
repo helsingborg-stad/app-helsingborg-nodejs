@@ -3,6 +3,7 @@ import { param, validationResult } from "express-validator/check";
 import { cache } from "../middleware/cache";
 import { fetchAllGuides, fetchGuide } from "../utils/fetchUtils";
 import {
+  validateGuideGroupIdParam,
   validateIncludeParam,
   validateLanguageParam,
 } from "../utils/validateParamsUtils";
@@ -12,14 +13,20 @@ router.use(cache);
 
 router.get(
   "",
-  [validateLanguageParam(), validateIncludeParam()],
+  [
+    validateLanguageParam(),
+    validateGuideGroupIdParam(),
+    validateIncludeParam(),
+  ],
   (req: Request, res: Response, next: NextFunction) => {
     validationResult(req).throw();
 
     const lang: string | undefined = req.query.lang;
     const include: string[] | undefined = req.query.include;
 
-    fetchAllGuides(include, lang)
+    const guideGroupId: number | undefined = req.query.guideGroupId;
+
+    fetchAllGuides(include, lang, guideGroupId)
       .then((guideGroups) => res.send(guideGroups))
       .catch((err) => next(err));
   },

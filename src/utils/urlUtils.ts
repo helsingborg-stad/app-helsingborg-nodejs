@@ -21,6 +21,7 @@ export function buildGuideUrl(
   include: string[] | undefined,
   lang?: string,
   id?: string,
+  guideGroupId?: number,
 ): string {
   let url = `${API_HOST_URL}/guide`;
   if (id) {
@@ -30,12 +31,14 @@ export function buildGuideUrl(
 
   /* query params */
   if (lang) {
-    url += `&lang=${lang}`;
+    url += `lang=${lang}`;
   }
-  url += `&_embed`;
 
-  /* count limit */
-  url += `&per_page=${50}`;
+  if (guideGroupId) {
+    url += "&guidegroup=" + guideGroupId;
+  }
+
+  url += `&_embed`;
 
   url += buildIncludePart(include);
   return url;
@@ -59,9 +62,6 @@ export function buildGuideGroupUrl(
   }
 
   url += buildIncludePart(include);
-
-  /* count limit */
-  url += `&per_page=${50}`;
 
   return url;
 }
