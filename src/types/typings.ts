@@ -62,6 +62,7 @@ export interface IGuideGroup {
   name: string;
   slug: string;
   pointProperties: IPointProperty[];
+  guidesCount: number;
 }
 
 export enum ContentType {

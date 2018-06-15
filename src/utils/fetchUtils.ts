@@ -77,6 +77,7 @@ export async function fetchAllGuideGroups(
   for (const item of guideGroupArray) {
     let guideGroup = null;
     try {
+      // fetch belonging point properties
       const locationId = item._embedded.location[0].id;
       let props: IPointProperty[] = [];
       try {
@@ -85,8 +86,19 @@ export async function fetchAllGuideGroups(
         // discarding the properties
       }
 
+      // fetch belonging guides
+      let guidesCount;
+      try {
+        const guides = await fetchAllGuides(undefined, lang, item.id);
+        guidesCount = guides.length;
+      } catch (error) {
+        // using default value
+        guidesCount = 0;
+      }
+
       guideGroup = {
         ...parseGuideGroup(item),
+        guidesCount,
         pointProperties: props,
       };
       validate(guideGroup, "IGuideGroup");
