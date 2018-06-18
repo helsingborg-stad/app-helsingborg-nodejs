@@ -5,6 +5,7 @@ import {
   IContentObject,
   IGuide,
   IImageUrls,
+  ILanguage,
   ILink,
   ILocation,
   IMediaContent,
@@ -444,4 +445,9 @@ export function parseNavigationCategory(data: any): INavigationCategory {
   validate(category, "INavigationCategory");
 
   return category;
+}
+
+export function parseLanguage(data: any): ILanguage {
+  validate(data, "ILanguage");
+  return data;
 }

@@ -154,3 +154,9 @@ export interface INavigationCategory {
   slug: string;
   items: INavigationItem[];
 }
+
+export interface ILanguage {
+  name: string;
+  slug: string;
+  locale: string;
+}
