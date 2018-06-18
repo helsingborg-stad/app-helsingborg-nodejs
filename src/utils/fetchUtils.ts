@@ -1,16 +1,23 @@
 import debug from "debug";
 import fetch from "node-fetch";
 import { URL } from "url";
-import { IGuide, INavigationCategory, IPointProperty } from "../types/typings";
+import {
+  IGuide,
+  ILanguage,
+  INavigationCategory,
+  IPointProperty,
+} from "../types/typings";
 import { validate } from "./jsonValidator";
 import {
   parseGuide,
   parseGuideGroup,
+  parseLanguage,
   parseNavigationCategory,
 } from "./parsingUtils";
 import {
   buildGuideGroupUrl,
   buildGuideUrl,
+  buildLanguagesUrl,
   buildNavigationUrl,
   buildPropertyUrl,
 } from "./urlUtils";
@@ -191,4 +198,28 @@ export async function fetchNavigationCategories(
   logApp("Navigation parsing complete");
 
   return navigationCategories;
+}
+
+export async function fetchLanguages(): Promise<ILanguage[]> {
+  const url = buildLanguagesUrl();
+  logApp(`sending fetch request to: ${url}`);
+
+  const response = await fetch(url);
+  logApp(`received fetching response from:${url}`);
+  if (!response.ok) {
+    throw new Error("Malformed request");
+  }
+
+  const languages: ILanguage[] = [];
+  const languagesJson = await response.json();
+  languagesJson.forEach((data: any) => {
+    logApp(data);
+    try {
+      const lang = parseLanguage(data);
+      languages.push(lang);
+    } catch (error) {
+      // discarding faulty language
+    }
+  });
+  return languages;
 }

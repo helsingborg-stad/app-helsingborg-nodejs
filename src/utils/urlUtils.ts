@@ -1,5 +1,6 @@
 // TODO move to .env
 const API_HOST_URL = "https://api.helsingborg.se/event/json/wp/v2";
+const LANG_URL = "https://api.helsingborg.se/event/json/pll/v1/languages";
 
 function buildIncludePart(include: string[] | undefined): string {
   if (include && include.length > 0) {
@@ -72,4 +73,8 @@ export function buildNavigationUrl(lang?: string): string {
     url += `?lang=${lang}`;
   }
   return url;
+}
+
+export function buildLanguagesUrl(): string {
+  return LANG_URL;
 }

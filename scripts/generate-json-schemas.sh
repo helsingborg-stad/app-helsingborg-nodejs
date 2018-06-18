@@ -9,6 +9,7 @@ TYPES=(
     "IGuide"
     "INavigationItem"
     "INavigationCategory"
+    "ILanguage"
     "ILink"
     "ILocation"
     "IMediaContent"
