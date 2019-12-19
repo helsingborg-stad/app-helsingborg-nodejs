@@ -50,3 +50,8 @@ The [cache middleware](src/middleware/cache.ts) is attached to a router. For eve
 All JSON data that is returned from this app has been validated with [JSON schema](http://json-schema.org/). The schemas are located [here](json-schemas/) and can (and should) be distributed to consumers (such as the mobile app client).
 
 Remember to generate new schemas whenever you change (or add new) types. To simplify development you can run this script `npm run regenerate-json-schemas`. Make sure you keep the [script](scripts/generate-json-schemas.sh) up to date.
+
+
+## Notes
+
+The parameter "group-id" is used as a selector for location and can be used to filter content for different guide apps.

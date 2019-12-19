@@ -121,8 +121,8 @@ export async function fetchAllGuideGroups(
   return resultArray;
 }
 
-export async function fetchGuide(id: string, lang?: string): Promise<IGuide> {
-  const url = buildGuideUrl(undefined, lang, id);
+export async function fetchGuide(id: string, lang?: string, userGroupId?: number): Promise<IGuide> {
+  const url = buildGuideUrl(undefined, lang, userGroupId, id);
   logApp(`sent fetching request to: ${url}`);
 
   const response = await fetch(url);
@@ -139,9 +139,10 @@ export async function fetchGuide(id: string, lang?: string): Promise<IGuide> {
 export async function fetchAllGuides(
   include: string[] | undefined,
   lang?: string,
+  userGroupId?: number,
   guideGroupId?: number,
 ): Promise<IGuide[]> {
-  const url = buildGuideUrl(include, lang, undefined, guideGroupId);
+  const url = buildGuideUrl(include, lang, userGroupId, undefined, guideGroupId);
   logApp(`sent fetching request to: ${url}`);
 
   const response = await fetch(url);
@@ -171,8 +172,9 @@ export async function fetchAllGuides(
 
 export async function fetchNavigationCategories(
   lang?: string,
+  userGroupId?: number,
 ): Promise<INavigationCategory[]> {
-  const url = buildNavigationUrl(lang);
+  const url = buildNavigationUrl(lang, userGroupId);
   logApp(`sending fetch request to: ${url}`);
 
   const response = await fetch(url);
@@ -195,6 +197,7 @@ export async function fetchNavigationCategories(
       logWarn("Validation error: ", err);
     }
   });
+
   logApp("Navigation parsing complete");
 
   return navigationCategories;

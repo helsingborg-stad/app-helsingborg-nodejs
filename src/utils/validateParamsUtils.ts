@@ -22,3 +22,9 @@ export function validateGuideGroupIdParam(): ValidationChain {
     .isNumeric()
     .optional();
 }
+
+export function validateUserGroupIdParam(): ValidationChain {
+  return check("group-id", "group-id should be an integer")
+    .isNumeric()
+    .optional();
+}
