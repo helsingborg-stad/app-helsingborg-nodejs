@@ -61,4 +61,4 @@ Remember to generate new schemas whenever you change (or add new) types. To simp
 
 ## Notes
 
-The parameter "group-id" is used as a selector for location and can be used to filter content for different guide apps.
+The parameter `userGroupId` ("group-id" in Event api) is used as a selector for location and can be used to filter content for different guide apps.

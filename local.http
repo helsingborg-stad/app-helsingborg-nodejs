@@ -4,7 +4,7 @@
 ### Navigation
 @lang = sv
 @userGroupId = 26
-GET {{host}}/navigation?lang={{lang}}&userGroupId={{userGroupId}}
+GET {{host}}/navigation?lang={{lang}}
 
 
 ### Guidegroup
