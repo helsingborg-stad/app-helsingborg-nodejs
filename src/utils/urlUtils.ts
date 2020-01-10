@@ -22,7 +22,6 @@ const buildURL = (url: string, parameters: Array<string>) => `${url}?${parameter
 export function buildGuideUrl(
   include: string[] | undefined,
   lang?: string,
-  userGroupId?: number,
   id?: string,
   guideGroupId?: number,
 ): string {
@@ -39,10 +38,6 @@ export function buildGuideUrl(
     parameters.push(`lang=${lang}`);
   }
 
-  if (userGroupId) {
-    parameters.push(`group-id=${userGroupId}`);
-  }
-
   if (guideGroupId) {
     parameters.push(`guidegroup=${guideGroupId}`);
   }
@@ -54,9 +49,9 @@ export function buildGuideUrl(
 }
 
 export function buildPropertyUrl(id: number, lang?: string): string {
-  let url = `${API_HOST_URL}/property`
+  const url = `${API_HOST_URL}/property`
 
-  const parameters=[`post=${id}`];
+  const parameters = [`post=${id}`];
 
   if (lang) {
     parameters.push(`lang=${lang}`);
@@ -69,7 +64,7 @@ export function buildGuideGroupUrl(
   include: string[] | undefined,
   lang?: string,
 ): string {
-  let url = `${API_HOST_URL}/guidegroup`;
+  const url = `${API_HOST_URL}/guidegroup`;
 
   const parameters = ["_embed"];
 
@@ -82,17 +77,15 @@ export function buildGuideGroupUrl(
   return buildURL(url, parameters);
 }
 
-export function buildNavigationUrl(lang?: string, userGroupId?: number): string {
-  let url = `${API_HOST_URL}/navigation`;
+export function buildNavigationUrl(userGroupId: number, lang?: string): string {
+  const url = `${API_HOST_URL}/navigation`;
 
   const parameters = [];
 
+  parameters.push(`group-id=${userGroupId}`);
+
   if (lang) {
     parameters.push(`lang=${lang}`);
-  }
-
-  if (userGroupId) {
-    parameters.push(`group-id=${userGroupId}`);
   }
 
   return buildURL(url, parameters);

@@ -3,20 +3,19 @@
 
 ### Navigation
 @lang = sv
-GET {{host}}/navigation?lang={{lang}}&group-id=26
+@userGroupId = 26
+GET {{host}}/navigation?lang={{lang}}&userGroupId={{userGroupId}}
 
 
 ### Guidegroup
-GET {{host}}/guidegroup
+GET {{host}}/guidegroup?lang={{lang}}&include=221,222,223,279,5080
 
 ### Guide
-@guideGroupId = 221
-GET {{host}}/guide?guideGroupId={{guideGroupId}}
+@guideId = 267
+GET {{host}}/guide?lang={{lang}}&include={{guideId}}
 
-@guideId =
+### Guide
 GET {{host}}/guide/{{guideId}}
-
 
 ### Languages
 GET {{host}}/languages
-

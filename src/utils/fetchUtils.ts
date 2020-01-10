@@ -121,8 +121,8 @@ export async function fetchAllGuideGroups(
   return resultArray;
 }
 
-export async function fetchGuide(id: string, lang?: string, userGroupId?: number): Promise<IGuide> {
-  const url = buildGuideUrl(undefined, lang, userGroupId, id);
+export async function fetchGuide(id: string, lang?: string): Promise<IGuide> {
+  const url = buildGuideUrl(undefined, lang, id);
   logApp(`sent fetching request to: ${url}`);
 
   const response = await fetch(url);
@@ -139,10 +139,9 @@ export async function fetchGuide(id: string, lang?: string, userGroupId?: number
 export async function fetchAllGuides(
   include: string[] | undefined,
   lang?: string,
-  userGroupId?: number,
   guideGroupId?: number,
 ): Promise<IGuide[]> {
-  const url = buildGuideUrl(include, lang, userGroupId, undefined, guideGroupId);
+  const url = buildGuideUrl(include, lang, undefined, guideGroupId);
   logApp(`sent fetching request to: ${url}`);
 
   const response = await fetch(url);
@@ -171,10 +170,10 @@ export async function fetchAllGuides(
 }
 
 export async function fetchNavigationCategories(
+  userGroupId: number,
   lang?: string,
-  userGroupId?: number,
 ): Promise<INavigationCategory[]> {
-  const url = buildNavigationUrl(lang, userGroupId);
+  const url = buildNavigationUrl(userGroupId, lang);
   logApp(`sending fetch request to: ${url}`);
 
   const response = await fetch(url);
@@ -216,7 +215,6 @@ export async function fetchLanguages(): Promise<ILanguage[]> {
   const languages: ILanguage[] = [];
   const languagesJson = await response.json();
   languagesJson.forEach((data: any) => {
-    logApp(data);
     try {
       const lang = parseLanguage(data);
       languages.push(lang);
