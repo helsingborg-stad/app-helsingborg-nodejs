@@ -1,6 +1,5 @@
-// TODO move to .env
-const API_HOST_URL = "https://api.helsingborg.se/event/json/wp/v2";
-const LANG_URL = "https://api.helsingborg.se/event/json/pll/v1/languages";
+const API_HOST_URL = process.env.API_HOST_URL;
+const LANG_URL = process.env.LANG_URL || "";
 
 function buildIncludePart(include: string[] | undefined): string {
   if (include && include.length > 0) {
