@@ -1,4 +1,5 @@
-require("dotenv").config();
+import * as dotenv from "dotenv";
+dotenv.config()
 import debug from "debug";
 import express, { ErrorRequestHandler, Response } from "express";
 import { Result } from "express-validator/check";
@@ -23,7 +24,7 @@ const errorHandler: ErrorRequestHandler = (
   err: Error,
   {},
   res: Response,
-  {}
+  {},
 ) => {
   if (instanceOfResult(err)) {
     res.status(422).send({ errors: (err as Result).mapped() });
