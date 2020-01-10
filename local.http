@@ -1,0 +1,22 @@
+# NOTE remember to choose a rest-client environment in the bottom of VS Code
+# For more info: https://marketplace.visualstudio.com/items?itemName=humao.rest-client#environments
+
+### Navigation
+@lang = sv
+GET {{host}}/navigation?lang={{lang}}&group-id=26
+
+
+### Guidegroup
+GET {{host}}/guidegroup
+
+### Guide
+@guideGroupId = 221
+GET {{host}}/guide?guideGroupId={{guideGroupId}}
+
+@guideId =
+GET {{host}}/guide/{{guideId}}
+
+
+### Languages
+GET {{host}}/languages
+
