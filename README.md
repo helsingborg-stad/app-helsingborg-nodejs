@@ -19,7 +19,11 @@ Basically it:
 
 ### Enable local cache
 
-Setup and start a local [redis](https://redis.io/) server.
+Setup and start a local [redis](https://redis.io/) server or run with [Docker](https://docs.docker.com/install/).
+
+```
+docker-compose up -d
+```
 
 ## Deployment
 
