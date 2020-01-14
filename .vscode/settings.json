@@ -1,3 +1,12 @@
 {
-  "tslint.autoFixOnSave": true
+  "tslint.autoFixOnSave": true,
+
+  "rest-client.environmentVariables": {
+    "LOCAL": {
+      "host": "http://localhost:5000"
+    },
+    "HEROKU": {
+      "host": "https://hbg-guide.herokuapp.com"
+    }
+  }
 }

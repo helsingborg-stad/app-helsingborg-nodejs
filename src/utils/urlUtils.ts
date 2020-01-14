@@ -1,11 +1,10 @@
-// TODO move to .env
-const API_HOST_URL = "https://api.helsingborg.se/event/json/wp/v2";
-const LANG_URL = "https://api.helsingborg.se/event/json/pll/v1/languages";
+const API_HOST_URL = process.env.API_HOST_URL;
+const LANG_URL = process.env.LANG_URL || "";
 
 function buildIncludePart(include: string[] | undefined): string {
   if (include && include.length > 0) {
     return (
-      "&include=" +
+      "include=" +
       include.reduce((previousValue, currentValue, currentIndex) => {
         if (currentIndex === 0) {
           return currentValue;
@@ -18,6 +17,8 @@ function buildIncludePart(include: string[] | undefined): string {
   return "";
 }
 
+const buildURL = (url: string, parameters: Array<string>) => `${url}?${parameters.filter(s => s && s !== "").join("&")}`;
+
 export function buildGuideUrl(
   include: string[] | undefined,
   lang?: string,
@@ -25,54 +26,69 @@ export function buildGuideUrl(
   guideGroupId?: number,
 ): string {
   let url = `${API_HOST_URL}/guide`;
+
   if (id) {
     url += `/${id}`;
   }
-  url += "?";
+
+  const parameters = [];
 
   /* query params */
   if (lang) {
-    url += `lang=${lang}`;
+    parameters.push(`lang=${lang}`);
   }
 
   if (guideGroupId) {
-    url += "&guidegroup=" + guideGroupId;
+    parameters.push(`guidegroup=${guideGroupId}`);
   }
 
-  url += `&_embed`;
+  parameters.push("_embed");
+  parameters.push(buildIncludePart(include));
 
-  url += buildIncludePart(include);
-  return url;
+  return buildURL(url, parameters);
 }
 
 export function buildPropertyUrl(id: number, lang?: string): string {
-  let url = `${API_HOST_URL}/property?post=${id}`;
+  const url = `${API_HOST_URL}/property`
+
+  const parameters = [`post=${id}`];
+
   if (lang) {
-    url += `&lang=${lang}`;
+    parameters.push(`lang=${lang}`);
   }
-  return url;
+
+  return buildURL(url, parameters);
 }
 
 export function buildGuideGroupUrl(
   include: string[] | undefined,
   lang?: string,
 ): string {
-  let url = `${API_HOST_URL}/guidegroup?_embed`;
+  const url = `${API_HOST_URL}/guidegroup`;
+
+  const parameters = ["_embed"];
+
   if (lang) {
-    url += `&lang=${lang}`;
+    parameters.push(`lang=${lang}`);
   }
 
-  url += buildIncludePart(include);
+  parameters.push(buildIncludePart(include));
 
-  return url;
+  return buildURL(url, parameters);
 }
 
-export function buildNavigationUrl(lang?: string): string {
-  let url = `${API_HOST_URL}/navigation`;
+export function buildNavigationUrl(userGroupId: number, lang?: string): string {
+  const url = `${API_HOST_URL}/navigation`;
+
+  const parameters = [];
+
+  parameters.push(`group-id=${userGroupId}`);
+
   if (lang) {
-    url += `?lang=${lang}`;
+    parameters.push(`lang=${lang}`);
   }
-  return url;
+
+  return buildURL(url, parameters);
 }
 
 export function buildLanguagesUrl(): string {

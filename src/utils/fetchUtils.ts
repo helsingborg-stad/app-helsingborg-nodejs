@@ -170,9 +170,10 @@ export async function fetchAllGuides(
 }
 
 export async function fetchNavigationCategories(
+  userGroupId: number,
   lang?: string,
 ): Promise<INavigationCategory[]> {
-  const url = buildNavigationUrl(lang);
+  const url = buildNavigationUrl(userGroupId, lang);
   logApp(`sending fetch request to: ${url}`);
 
   const response = await fetch(url);
@@ -195,6 +196,7 @@ export async function fetchNavigationCategories(
       logWarn("Validation error: ", err);
     }
   });
+
   logApp("Navigation parsing complete");
 
   return navigationCategories;
@@ -213,7 +215,6 @@ export async function fetchLanguages(): Promise<ILanguage[]> {
   const languages: ILanguage[] = [];
   const languagesJson = await response.json();
   languagesJson.forEach((data: any) => {
-    logApp(data);
     try {
       const lang = parseLanguage(data);
       languages.push(lang);
