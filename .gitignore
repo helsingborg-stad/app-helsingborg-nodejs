@@ -61,3 +61,6 @@ typings/
 .next
 
 dist/**
+
+# docker volume output
+tmp/docker

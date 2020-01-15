@@ -1,3 +1,5 @@
+import * as dotenv from "dotenv";
+dotenv.config();
 import debug from "debug";
 import express, { ErrorRequestHandler, Response } from "express";
 import { Result } from "express-validator/check";
@@ -7,7 +9,10 @@ import guideGroupRouter from "./routes/guidegroup";
 import guidesRouter from "./routes/guides";
 import languagesRouter from "./routes/languages";
 import navigationRouter from "./routes/navigation";
+import { checkRequiredKeys } from "./utils/envUtils";
 import { normalizePort } from "./utils/serverUtils";
+
+checkRequiredKeys();
 
 const app = express();
 const logApp = debug("app");
@@ -20,9 +25,9 @@ function instanceOfResult(object: any): object is Result {
 
 const errorHandler: ErrorRequestHandler = (
   err: Error,
-  {},
+  { },
   res: Response,
-  {},
+  { },
 ) => {
   if (instanceOfResult(err)) {
     res.status(422).send({ errors: (err as Result).mapped() });
