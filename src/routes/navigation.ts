@@ -20,7 +20,7 @@ router.get(
     validationResult(req).throw();
 
     const lang: string | undefined = req.query.lang;
-    const userGroupId: number = req.query["userGroupId"] || getEnvAsInt(HBG_GROUP_ID);
+    const userGroupId: number = req.query.userGroupId || getEnvAsInt(HBG_GROUP_ID);
 
     fetchNavigationCategories(userGroupId, lang)
       .then((navigationCategories) => {

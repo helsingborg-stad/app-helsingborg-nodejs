@@ -17,7 +17,7 @@ function buildIncludePart(include: string[] | undefined): string {
   return "";
 }
 
-const buildURL = (url: string, parameters: Array<string>) => `${url}?${parameters.filter(s => s && s !== "").join("&")}`;
+const buildURL = (url: string, parameters: string[]) => `${url}?${parameters.filter((s) => s && s !== "").join("&")}`;
 
 export function buildGuideUrl(
   include: string[] | undefined,
@@ -49,7 +49,7 @@ export function buildGuideUrl(
 }
 
 export function buildPropertyUrl(id: number, lang?: string): string {
-  const url = `${API_HOST_URL}/property`
+  const url = `${API_HOST_URL}/property`;
 
   const parameters = [`post=${id}`];
 

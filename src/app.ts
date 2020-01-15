@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-dotenv.config()
+dotenv.config();
 import debug from "debug";
 import express, { ErrorRequestHandler, Response } from "express";
 import { Result } from "express-validator/check";
