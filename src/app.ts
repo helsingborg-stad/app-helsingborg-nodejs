@@ -5,6 +5,7 @@ import express, { ErrorRequestHandler, Response } from "express";
 import { Result } from "express-validator/check";
 import http from "http";
 import logger from "morgan";
+import eventsRouter from "./routes/events";
 import guideGroupRouter from "./routes/guidegroup";
 import guidesRouter from "./routes/guides";
 import languagesRouter from "./routes/languages";
@@ -43,6 +44,7 @@ app.use(express.urlencoded({ extended: false }));
 /**
  * ROUTES
  */
+app.use("/events", eventsRouter);
 app.use("/guidegroup", guideGroupRouter);
 app.use("/guide", guidesRouter);
 app.use("/navigation", navigationRouter);

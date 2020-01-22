@@ -24,9 +24,10 @@ export interface ILocation {
   id: number;
   // TODO use Position interface
   latitude: number;
-  links: ILink[] | null;
+  links?: ILink[] | null;
   longitude: number;
-  streetAddress: string|null;
+  streetAddress: string | null;
+  title: string | null;
   openingHours?: IOpeningHours[];
   openingHourExceptions?: IOpeningHourException[];
 }
@@ -159,4 +160,18 @@ export interface ILanguage {
   name: string;
   slug: string;
   locale: string;
+}
+
+// eventId is the APIs original id but since we split events on multiple occasions
+// we generate a new ID for each occasion
+export interface IEvent {
+  id: string;
+  eventId: number;
+  description: string;
+  name: string;
+  slug: string;
+  location: ILocation;
+  imageUrl: string;
+  dateStart: Date;
+  dateEnd: Date;
 }

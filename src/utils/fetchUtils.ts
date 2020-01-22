@@ -2,6 +2,7 @@ import debug from "debug";
 import fetch from "node-fetch";
 import { URL } from "url";
 import {
+  IEvent,
   IGuide,
   ILanguage,
   INavigationCategory,
@@ -9,12 +10,14 @@ import {
 } from "../types/typings";
 import { validate } from "./jsonValidator";
 import {
+  parseEvent,
   parseGuide,
   parseGuideGroup,
   parseLanguage,
   parseNavigationCategory,
 } from "./parsingUtils";
 import {
+  buildEventsUrl,
   buildGuideGroupUrl,
   buildGuideUrl,
   buildLanguagesUrl,
@@ -223,4 +226,45 @@ export async function fetchLanguages(): Promise<ILanguage[]> {
     }
   });
   return languages;
+}
+
+function sortByHourAndMin(a: IEvent, b: IEvent) {
+  const aStart = a.dateStart;
+  const bStart = b.dateStart;
+  if (aStart.getHours() - bStart.getHours() === 0) {
+    return aStart.getMinutes() - bStart.getMinutes();
+  }
+  return aStart.getHours() - bStart.getHours();
+}
+
+export async function fetchEvents(
+  userGroupId: number,
+  lang?: string,
+  dateStart?: string,
+  dateEnd?: string,
+): Promise<IEvent[]> {
+  const url = buildEventsUrl(userGroupId, lang, dateStart, dateEnd);
+  logApp(`sending fetch request to: ${url}`);
+
+  const response = await fetch(url);
+  logApp(`received fetching response from: ${url}`);
+  if (!response.ok) {
+    throw new Error("Malformed request");
+  }
+
+  const events: IEvent[] = [];
+  const eventsJson = await response.json();
+  eventsJson.forEach((data: any) => {
+    try {
+      const parsedEvents = parseEvent(data);
+      events.push(...parsedEvents);
+    } catch (error) {
+      // Discard item
+      logWarn("Failed to parse Event: ", data);
+      logWarn("Validation error: ", error);
+    }
+  });
+  // sort ascending by hours
+  const sortedEvents = events.sort(sortByHourAndMin);
+  return sortedEvents;
 }
