@@ -2,6 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import cacheUtils from "../utils/cacheUtils";
 
 async function asyncCache(req: Request, res: Response, next: NextFunction) {
+  if (process.env.CACHE_DISABLED === "1") {
+    return next();
+  }
   const key = req.originalUrl;
   let jsonBody: any = null;
 
