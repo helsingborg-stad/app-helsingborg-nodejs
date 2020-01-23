@@ -1,3 +1,5 @@
+import { endOfDay, startOfDay } from "date-fns";
+import { zonedTimeToUtc } from "date-fns-tz";
 import debug from "debug";
 import fetch from "node-fetch";
 import { URL } from "url";
@@ -24,6 +26,8 @@ import {
   buildNavigationUrl,
   buildPropertyUrl,
 } from "./urlUtils";
+
+const TZ = process.env.TZ || "Europe/Stockholm";
 
 const logApp = debug("app");
 const logWarn = debug("warn");
@@ -237,6 +241,19 @@ function sortByHourAndMin(a: IEvent, b: IEvent) {
   return aStart.getHours() - bStart.getHours();
 }
 
+// Since some dates in API have actual hours and others are always at 00:00
+// (meaning entire days presumably), we compare by start and end of day
+function isIncludedInDateRange(start: string, end: string) {
+  const rangeStartDate = startOfDay(new Date(start));
+  const rangeEndDate = endOfDay(new Date(end));
+  return (item: IEvent) => {
+    const { dateStart, dateEnd } = item;
+    const zonedStart = startOfDay(zonedTimeToUtc(dateStart, TZ));
+    const zonedEnd = endOfDay(zonedTimeToUtc(dateEnd, TZ));
+    return zonedStart <= rangeStartDate && zonedEnd >= rangeEndDate;
+  };
+}
+
 export async function fetchEvents(
   userGroupId: number,
   lang?: string,
@@ -246,13 +263,14 @@ export async function fetchEvents(
   const url = buildEventsUrl(userGroupId, lang, dateStart, dateEnd);
   logApp(`sending fetch request to: ${url}`);
 
+  // TODO: refactor this?
   const response = await fetch(url);
   logApp(`received fetching response from: ${url}`);
   if (!response.ok) {
     throw new Error("Malformed request");
   }
 
-  const events: IEvent[] = [];
+  let events: IEvent[] = [];
   const eventsJson = await response.json();
   eventsJson.forEach((data: any) => {
     try {
@@ -264,7 +282,11 @@ export async function fetchEvents(
       logWarn("Validation error: ", error);
     }
   });
-  // sort ascending by hours
+  if (dateStart && dateEnd) {
+    const filterFn = isIncludedInDateRange(dateStart, dateEnd);
+    const filteredEvents = events.filter(filterFn);
+    events = filteredEvents;
+  }
   const sortedEvents = events.sort(sortByHourAndMin);
   return sortedEvents;
 }

@@ -462,8 +462,12 @@ export function parseLanguage(data: any): ILanguage {
 }
 
 export function parseEvent(item: any): IEvent[] {
-  const events: IEvent[] = [];
   const { content, id, featured_media, occasions, slug, title } = item;
+  // If given a Date in the past, occasions are empty in the API
+  if (!occasions) {
+    return [];
+  }
+  const events: IEvent[] = [];
   const baseEvent: any = {
     description: content.plain_text,
     eventId: Number(id),
@@ -471,7 +475,6 @@ export function parseEvent(item: any): IEvent[] {
     name: title.plain_text,
     slug,
   };
-
   occasions.forEach((occasion: any) => {
     const event: IEvent = { ...baseEvent };
     event.dateStart = new Date(occasion.start_date);

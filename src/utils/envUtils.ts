@@ -2,8 +2,9 @@
 export const API_HOST_URL = "API_HOST_URL";
 export const HBG_GROUP_ID = "HBG_GROUP_ID";
 export const LANG_URL = "LANG_URL";
+export const TZ = "TZ";
 
-const REQUIRED_KEYS = [API_HOST_URL, HBG_GROUP_ID, LANG_URL];
+const REQUIRED_KEYS = [API_HOST_URL, HBG_GROUP_ID, LANG_URL, TZ];
 
 export function checkRequiredKeys(): void {
 
