@@ -20,7 +20,9 @@ router.get(
     validationResult(req).throw();
 
     const userGroupId: number = req.query.userGroupId;
-    const lang: string | undefined = req.query.lang;
+    // Right now the API doesn't support anything other than 'sv'
+    // const lang: string | undefined = req.query.lang;
+    const lang = "sv";
     const dateStart: string | undefined = req.query.dateStart;
     const dateEnd: string | undefined = req.query.dateEnd;
 
