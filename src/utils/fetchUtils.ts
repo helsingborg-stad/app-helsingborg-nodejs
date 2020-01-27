@@ -10,6 +10,7 @@ import {
   INavigationCategory,
   IPointProperty,
 } from "../types/typings";
+import { TZ } from "./envUtils";
 import { validate } from "./jsonValidator";
 import {
   parseEvent,
@@ -27,7 +28,7 @@ import {
   buildPropertyUrl,
 } from "./urlUtils";
 
-const TZ = process.env.TZ || "Europe/Stockholm";
+const TIMEZONE = process.env[TZ] || "Europe/Stockholm";
 
 const logApp = debug("app");
 const logWarn = debug("warn");
@@ -249,8 +250,8 @@ function isIncludedInDateRange(startDate: string, endDate: string): (item: IEven
   const rangeEndDate = endOfDay(new Date(endDate));
   return (item: IEvent) => {
     const { dateStart, dateEnd } = item;
-    const zonedStart = startOfDay(zonedTimeToUtc(dateStart, TZ));
-    const zonedEnd = endOfDay(zonedTimeToUtc(dateEnd, TZ));
+    const zonedStart = startOfDay(zonedTimeToUtc(dateStart, TIMEZONE));
+    const zonedEnd = endOfDay(zonedTimeToUtc(dateEnd, TIMEZONE));
     return zonedStart <= rangeStartDate && zonedEnd >= rangeEndDate;
   };
 }
