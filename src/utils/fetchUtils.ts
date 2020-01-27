@@ -232,9 +232,10 @@ export async function fetchLanguages(): Promise<ILanguage[]> {
   return languages;
 }
 
-function sortByHourAndMin(a: IEvent, b: IEvent) {
-  const aStart = a.dateStart;
-  const bStart = b.dateStart;
+function sortByHourAndMin(
+  { dateStart: aStart }: { dateStart: Date },
+  { dateStart: bStart }: { dateStart: Date },
+) {
   if (aStart.getHours() - bStart.getHours() === 0) {
     return aStart.getMinutes() - bStart.getMinutes();
   }
@@ -243,9 +244,9 @@ function sortByHourAndMin(a: IEvent, b: IEvent) {
 
 // Since some dates in API have actual hours and others are always at 00:00
 // (meaning entire days presumably), we compare by start and end of day
-function isIncludedInDateRange(start: string, end: string) {
-  const rangeStartDate = startOfDay(new Date(start));
-  const rangeEndDate = endOfDay(new Date(end));
+function isIncludedInDateRange(startDate: string, endDate: string): (item: IEvent) => boolean {
+  const rangeStartDate = startOfDay(new Date(startDate));
+  const rangeEndDate = endOfDay(new Date(endDate));
   return (item: IEvent) => {
     const { dateStart, dateEnd } = item;
     const zonedStart = startOfDay(zonedTimeToUtc(dateStart, TZ));
@@ -284,8 +285,7 @@ export async function fetchEvents(
   });
   if (dateStart && dateEnd) {
     const filterFn = isIncludedInDateRange(dateStart, dateEnd);
-    const filteredEvents = events.filter(filterFn);
-    events = filteredEvents;
+    events = events.filter(filterFn);
   }
   const sortedEvents = events.sort(sortByHourAndMin);
   return sortedEvents;

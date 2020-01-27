@@ -482,11 +482,7 @@ export function parseEvent(item: any): IEvent[] {
     event.id = hash(id + event.dateStart.toISOString());
 
     try {
-      if (occasion.location) {
-        event.location = parseLocation(occasion.location);
-      } else {
-        event.location = parseLocation(item.location);
-      }
+      event.location = parseLocation(occasion.location || item.location);
     } catch (e) {
       logApp(`Ignoring item ${event.name} because missing location`);
     }
