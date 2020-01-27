@@ -94,3 +94,23 @@ export function buildNavigationUrl(userGroupId: number, lang?: string): string {
 export function buildLanguagesUrl(): string {
   return LANG_URL;
 }
+
+export function buildEventsUrl(userGroupId: number, lang?: string, dateStart?: string, dateEnd?: string): string {
+  const url = `${API_HOST_URL}/event/time`;
+
+  const parameters = [];
+
+  parameters.push(`group-id=${userGroupId}`);
+
+  if (lang) {
+    parameters.push(`lang=${lang}`);
+  }
+  if (dateStart) {
+    parameters.push(`start=${dateStart}`);
+  }
+  if (dateEnd) {
+    parameters.push(`end=${dateEnd}`);
+  }
+
+  return buildURL(url, parameters);
+}

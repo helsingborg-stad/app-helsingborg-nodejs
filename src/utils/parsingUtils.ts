@@ -1,8 +1,10 @@
+import crypto from "crypto";
 import debug from "debug";
 import { URL } from "url";
 import {
   GuideType,
   IContentObject,
+  IEvent,
   IGuide,
   IImageUrls,
   ILanguage,
@@ -16,7 +18,12 @@ import {
 } from "../types/typings";
 import { validate } from "./jsonValidator";
 
+const logApp = debug("app");
 const logWarn = debug("warn");
+
+function hash(str: string) {
+  return crypto.createHash("md5").update(str).digest("hex");
+}
 
 function parseOpeningHour(item: any) {
   const { weekday, closed, opening, closing, day_number: dayNumber } = item;
@@ -37,6 +44,7 @@ function parseLocation(item: any): ILocation {
     street_address: streetAddress,
     latitude,
     longitude,
+    title,
     open_hours: openingHoursInput,
     open_hour_exceptions: openHoursException,
     links,
@@ -48,6 +56,7 @@ function parseLocation(item: any): ILocation {
     links,
     longitude: Number(longitude),
     streetAddress,
+    title,
   };
 
   const openHours: any[] = [];
@@ -450,4 +459,37 @@ export function parseNavigationCategory(data: any): INavigationCategory {
 export function parseLanguage(data: any): ILanguage {
   validate(data, "ILanguage");
   return data;
+}
+
+export function parseEvent(item: any): IEvent[] {
+  const { content, id, featured_media, occasions, slug, title } = item;
+  // If given a Date in the past, occasions are empty in the API
+  if (!occasions) {
+    return [];
+  }
+  const events: IEvent[] = [];
+  const baseEvent: any = {
+    description: content.plain_text,
+    eventId: Number(id),
+    imageUrl: featured_media.source_url,
+    name: title.plain_text,
+    slug,
+  };
+  occasions.forEach((occasion: any) => {
+    const event: IEvent = { ...baseEvent };
+    event.dateStart = new Date(occasion.start_date);
+    event.dateEnd = new Date(occasion.end_date);
+    event.id = hash(id + event.dateStart.toISOString());
+
+    try {
+      event.location = parseLocation(occasion.location || item.location);
+    } catch (e) {
+      logApp(`Ignoring item ${event.name} because missing location`);
+    }
+    if (event.location) {
+      events.push(event);
+    }
+  });
+
+  return events;
 }

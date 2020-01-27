@@ -3,8 +3,8 @@
 
 ### Navigation
 @lang = sv
-@userGroupId = 25
-GET {{host}}/navigation?lang={{lang}}&userGroupId={{userGroupId}}
+@userGroupId = 312
+GET {{host}}/navigation?lang={{lang}}
 
 
 ### Guidegroup
@@ -19,3 +19,12 @@ GET {{host}}/guide/{{guideId}}
 
 ### Languages
 GET {{host}}/languages
+
+@dateStart = 2020-01-22
+@dateEnd = 2020-01-22
+### Raw Events
+GET https://api.helsingborg.se/event/json/wp/v2/event/time?group-id={{userGroupId}}&lang={{lang}}&start={{dateStart}}&end={{dateEnd}}
+
+### Events
+GET {{host}}/events?lang={{lang}}&dateStart={{dateStart}}&dateEnd={{dateEnd}}&userGroupId={{userGroupId}}
+
