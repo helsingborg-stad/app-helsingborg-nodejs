@@ -1,26 +1,34 @@
+import { endOfDay, startOfDay } from "date-fns";
+import { zonedTimeToUtc } from "date-fns-tz";
 import debug from "debug";
 import fetch from "node-fetch";
 import { URL } from "url";
 import {
+  IEvent,
   IGuide,
   ILanguage,
   INavigationCategory,
   IPointProperty,
 } from "../types/typings";
+import { TZ } from "./envUtils";
 import { validate } from "./jsonValidator";
 import {
+  parseEvent,
   parseGuide,
   parseGuideGroup,
   parseLanguage,
   parseNavigationCategory,
 } from "./parsingUtils";
 import {
+  buildEventsUrl,
   buildGuideGroupUrl,
   buildGuideUrl,
   buildLanguagesUrl,
   buildNavigationUrl,
   buildPropertyUrl,
 } from "./urlUtils";
+
+const TIMEZONE = process.env[TZ] || "Europe/Stockholm";
 
 const logApp = debug("app");
 const logWarn = debug("warn");
@@ -223,4 +231,63 @@ export async function fetchLanguages(): Promise<ILanguage[]> {
     }
   });
   return languages;
+}
+
+function sortByHourAndMin(
+  { dateStart: aStart }: { dateStart: Date },
+  { dateStart: bStart }: { dateStart: Date },
+) {
+  if (aStart.getHours() - bStart.getHours() === 0) {
+    return aStart.getMinutes() - bStart.getMinutes();
+  }
+  return aStart.getHours() - bStart.getHours();
+}
+
+// Since some dates in API have actual hours and others are always at 00:00
+// (meaning entire days presumably), we compare by start and end of day
+function isIncludedInDateRange(startDate: string, endDate: string): (item: IEvent) => boolean {
+  const rangeStartDate = startOfDay(new Date(startDate));
+  const rangeEndDate = endOfDay(new Date(endDate));
+  return (item: IEvent) => {
+    const { dateStart, dateEnd } = item;
+    const zonedStart = startOfDay(zonedTimeToUtc(dateStart, TIMEZONE));
+    const zonedEnd = endOfDay(zonedTimeToUtc(dateEnd, TIMEZONE));
+    return zonedStart <= rangeStartDate && zonedEnd >= rangeEndDate;
+  };
+}
+
+export async function fetchEvents(
+  userGroupId: number,
+  lang?: string,
+  dateStart?: string,
+  dateEnd?: string,
+): Promise<IEvent[]> {
+  const url = buildEventsUrl(userGroupId, lang, dateStart, dateEnd);
+  logApp(`sending fetch request to: ${url}`);
+
+  // TODO: refactor this?
+  const response = await fetch(url);
+  logApp(`received fetching response from: ${url}`);
+  if (!response.ok) {
+    throw new Error("Malformed request");
+  }
+
+  let events: IEvent[] = [];
+  const eventsJson = await response.json();
+  eventsJson.forEach((data: any) => {
+    try {
+      const parsedEvents = parseEvent(data);
+      events.push(...parsedEvents);
+    } catch (error) {
+      // Discard item
+      logWarn("Failed to parse Event: ", data);
+      logWarn("Validation error: ", error);
+    }
+  });
+  if (dateStart && dateEnd) {
+    const filterFn = isIncludedInDateRange(dateStart, dateEnd);
+    events = events.filter(filterFn);
+  }
+  const sortedEvents = events.sort(sortByHourAndMin);
+  return sortedEvents;
 }
