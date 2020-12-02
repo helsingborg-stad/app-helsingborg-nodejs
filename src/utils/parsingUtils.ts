@@ -7,6 +7,7 @@ import {
   IEvent,
   IGuide,
   IImageUrls,
+  IInteractiveGuide,
   ILanguage,
   ILink,
   ILocation,
@@ -418,6 +419,20 @@ export function parseGuide(item: any): IGuide {
   }
 
   return guide;
+}
+
+export function parseInteractiveGuide(data: any): IInteractiveGuide {
+  const interactiveGuide = {
+    id: data.id,
+    title: data.title.rendered,
+    guideGroupId: data.guidegroup[0].id,
+    image: data.featured_media.source_url,
+    steps: data.steps, // TODO skit i det vi inte behöver, kanske t ex räcker med bara image.url för bilder
+  };
+
+  validate(interactiveGuide, 'IInteractiveGuide');
+
+  return interactiveGuide;
 }
 
 export function parseNavigationCategory(data: any): INavigationCategory {

@@ -6,6 +6,7 @@ import { URL } from "url";
 import {
   IEvent,
   IGuide,
+  IInteractiveGuide,
   ILanguage,
   INavigationCategory,
   IPointProperty,
@@ -16,6 +17,7 @@ import {
   parseEvent,
   parseGuide,
   parseGuideGroup,
+  parseInteractiveGuide,
   parseLanguage,
   parseNavigationCategory,
 } from "./parsingUtils";
@@ -23,6 +25,7 @@ import {
   buildEventsUrl,
   buildGuideGroupUrl,
   buildGuideUrl,
+  buildInteractiveGuideUrl,
   buildLanguagesUrl,
   buildNavigationUrl,
   buildPropertyUrl,
@@ -175,6 +178,55 @@ export async function fetchAllGuides(
   logApp("Guides parsing complete");
 
   return guides;
+}
+
+
+export async function fetchInteractiveGuide(id: string, lang?: string): Promise<IInteractiveGuide> {
+  const url = buildInteractiveGuideUrl(undefined, lang, id);
+  logApp(`sent fetching request to: ${url}`);
+
+  const response = await fetch(url);
+  logApp(`received fetching response from:${url}`);
+  if (!response.ok) {
+    throw new Error("Malformed request");
+  }
+
+  const interactiveGuideJson = await response.json();
+
+  return parseInteractiveGuide(interactiveGuideJson);
+}
+
+export async function fetchAllInteractiveGuides(
+  include: string[] | undefined,
+  lang?: string,
+  guideGroupId?: number,
+): Promise<IInteractiveGuide[]> {
+  const url = buildInteractiveGuideUrl(include, lang, undefined, guideGroupId);
+  logApp(`sent fetching request to: ${url}`);
+
+  const response = await fetch(url);
+  logApp(`received fetching response from:${url}`);
+  if (!response.ok) {
+    throw new Error("Malformed request");
+  }
+
+  const interactiveGuidesJson = await response.json();
+
+  const interactiveGuides: IInteractiveGuide[] = [];
+  interactiveGuidesJson.forEach((item: any) => {
+    try {
+      const guide = parseInteractiveGuide(item);
+      validate(guide, "IInteractiveGuide");
+      interactiveGuides.push(guide);
+    } catch (err) {
+      // Discard item
+      logWarn("Failed to parse interactive guide from: ", item);
+      logWarn("Validation error: ", err);
+    }
+  });
+  logApp("Interactive guides parsing complete");
+
+  return interactiveGuides;
 }
 
 export async function fetchNavigationCategories(
