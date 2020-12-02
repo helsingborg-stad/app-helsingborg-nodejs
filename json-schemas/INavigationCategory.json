@@ -19,7 +19,8 @@
         "NavigationItemType": {
             "enum": [
                 "guide",
-                "guidegroup"
+                "guidegroup",
+                "interactive_guide"
             ],
             "type": "string"
         }
