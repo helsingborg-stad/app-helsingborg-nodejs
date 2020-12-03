@@ -421,13 +421,112 @@ export function parseGuide(item: any): IGuide {
   return guide;
 }
 
+function parseInteractiveGuideImage(image: any) {
+  const {
+    id,
+    url,
+    width,
+    height
+  } = image;
+
+  return {
+    id,
+    url,
+    aspectRatio: parseInt(width) / parseInt(height)
+  };
+}
+
+function parseInteractiveGuideSteps(steps: any[]): any[] {
+    const parseStartStep = (step: any) => {
+      const {
+        type,
+        start_guide_title: title,
+        introduction_text: text,
+        image
+      } = step;
+
+      return {
+        type,
+        title,
+        text,
+        image: parseInteractiveGuideImage(image)
+      };
+    };
+
+    const parseImageStep = (step: any) => {
+      const { type, image } = step;
+
+      if (!image) {
+        return null;
+      }
+
+      return {
+        type,
+        image: parseInteractiveGuideImage(image)
+      };
+    };
+
+    const parseDialogStep = (step: any) => {
+      return {
+        ...step,
+        alternatives: step.alternatives.map((alt: any, index: number) => ({
+          ...alt,
+          id: index
+        }))
+      };
+    };
+
+  return steps.map((step: any) => {
+    if (step.type === "start") {
+      return parseStartStep(step);
+    }
+
+    if (step.type === "image") {
+      return parseImageStep(step);
+    }
+
+    if (step.type === "dialog") {
+      return parseDialogStep(step);
+    }
+
+    return step;
+  }).filter(step => step);
+}
+
+function parseInteractiveGuideFinish(finishStep: any) {
+  if (!finishStep) {
+    return null;
+  }
+
+  const {
+    header_title: header,
+    content_area_title: title,
+    content_area_text: body,
+    display_share_result: displayShare,
+    share_title: shareTitle,
+    share_image: shareImage,
+    images,
+  } = finishStep;
+
+  return {
+    header,
+    title,
+    body,
+    displayShare,
+    shareTitle,
+    shareImage: parseInteractiveGuideImage(shareImage),
+    images: images.map((img: any) => parseInteractiveGuideImage(img.image))
+  };
+}
+
 export function parseInteractiveGuide(data: any): IInteractiveGuide {
   const interactiveGuide = {
     id: data.id,
     title: data.title.rendered,
     guideGroupId: data.guidegroup[0].id,
     image: data.featured_media.source_url,
-    steps: data.steps, // TODO skit i det vi inte behöver, kanske t ex räcker med bara image.url för bilder
+    steps: parseInteractiveGuideSteps(data.steps.filter((step: any) => step.type !== "finish")),
+    finish: parseInteractiveGuideFinish(data.steps.find((step: any) => step.type === "finish")),
   };
 
   validate(interactiveGuide, 'IInteractiveGuide');
