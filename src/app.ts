@@ -27,9 +27,9 @@ function instanceOfResult(object: any): object is Result {
 
 const errorHandler: ErrorRequestHandler = (
   err: Error,
-  { },
+  {},
   res: Response,
-  { },
+  {}
 ) => {
   if (instanceOfResult(err)) {
     res.status(422).send({ errors: (err as Result).mapped() });

@@ -16,7 +16,9 @@
     "clean": "rm -rf dist",
     "postinstall": "npm run build",
     "tslint": "tslint --project .",
-    "regenerate-json-schemas": "./scripts/generate-json-schemas.sh"
+    "regenerate-json-schemas": "./scripts/generate-json-schemas.sh",
+    "prettier:check": "npx prettier --check .",
+    "prettier:fix": "npx prettier --write ."
   },
   "dependencies": {
     "ajv": "6.4.0",
@@ -41,6 +43,7 @@
     "concurrently": "3.5.1",
     "eslint": "4.19.1",
     "eslint-config-airbnb-base": "12.1.0",
+    "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-import": "2.10.0",
     "nodemon": "1.17.3",
     "tslint": "5.9.1",

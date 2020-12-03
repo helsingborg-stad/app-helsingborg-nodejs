@@ -27,9 +27,9 @@ router.get(
     const guideGroupId: number | undefined = req.query.guideGroupId;
 
     fetchAllGuides(include, lang, guideGroupId)
-      .then((guideGroups) => res.send(guideGroups))
-      .catch((err) => next(err));
-  },
+      .then(guideGroups => res.send(guideGroups))
+      .catch(err => next(err));
+  }
 );
 
 router.get(
@@ -42,9 +42,9 @@ router.get(
     const id: string = req.params.id;
 
     fetchGuide(id, lang)
-      .then((guide) => res.send(guide))
-      .catch((err) => next(err));
-  },
+      .then(guide => res.send(guide))
+      .catch(err => next(err));
+  }
 );
 
 export default router;
