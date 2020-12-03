@@ -1,20 +1,16 @@
 {
-    "$schema": "http://json-schema.org/draft-06/schema#",
-    "properties": {
-        "distance": {
-            "type": "number"
-        },
-        "id": {
-            "type": "string"
-        },
-        "nid": {
-            "type": "string"
-        }
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "properties": {
+    "distance": {
+      "type": "number"
     },
-    "required": [
-        "id",
-        "nid"
-    ],
-    "type": "object"
+    "id": {
+      "type": "string"
+    },
+    "nid": {
+      "type": "string"
+    }
+  },
+  "required": ["id", "nid"],
+  "type": "object"
 }
-

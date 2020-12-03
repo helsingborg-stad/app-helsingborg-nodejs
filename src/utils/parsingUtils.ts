@@ -212,9 +212,9 @@ function parseLinks(data: any[]) {
 function parseBeaconAndLocation(
   id: string,
   beacons: any[],
-  locations: any[],
+  locations: any[]
 ): { beacon: any; location: any } {
-  const bData = beacons.find((item) => {
+  const bData = beacons.find(item => {
     const { content } = item;
     return content instanceof Array && content.indexOf(id) > -1;
   });
@@ -229,7 +229,7 @@ function parseBeaconAndLocation(
   let location;
   try {
     const { location: locationId } = bData;
-    const locationData = locations.find((locData) => locData.id === locationId);
+    const locationData = locations.find(locData => locData.id === locationId);
     location = parseLocation(locationData);
   } catch (error) {
     // discarding faulty location data
@@ -242,7 +242,7 @@ function parseContentObject(
   key: string,
   data: any,
   beacons: any[],
-  locations: any[],
+  locations: any[]
 ) {
   if (typeof data.order !== "number") {
     throw new Error("Failed to parse order from " + data);
@@ -290,7 +290,7 @@ function parseContentObject(
     const beaconAndLocation = parseBeaconAndLocation(
       obj.id,
       beacons,
-      locations,
+      locations
     );
     try {
       validate(beaconAndLocation.beacon, "IBeacon");
@@ -317,7 +317,7 @@ function parseContentObject(
 function parseContentObjects(
   contentData: any,
   beaconData: any,
-  locationsData: any,
+  locationsData: any
 ): IContentObject[] {
   const keys: string[] = Object.keys(contentData);
 
@@ -385,7 +385,7 @@ export function parseGuide(item: any): IGuide {
   // parse guide location
   const { guide_location: locationId } = item;
   if (locationId && locationData && locationData instanceof Array) {
-    const foundLoc = locationData.find((loc) => loc.id === locationId);
+    const foundLoc = locationData.find(loc => loc.id === locationId);
     if (foundLoc) {
       try {
         guide.location = parseLocation(foundLoc);
@@ -400,7 +400,7 @@ export function parseGuide(item: any): IGuide {
     guide.contentObjects = parseContentObjects(
       contentObjects,
       beacons,
-      locationData,
+      locationData
     );
   }
 
@@ -422,75 +422,72 @@ export function parseGuide(item: any): IGuide {
 }
 
 function parseInteractiveGuideImage(image: any) {
-  const {
-    id,
-    url,
-    width,
-    height
-  } = image;
+  const { id, url, width, height } = image;
 
   return {
     id,
     url,
-    aspectRatio: parseInt(width) / parseInt(height)
+    aspectRatio: parseInt(width) / parseInt(height),
   };
 }
 
 function parseInteractiveGuideSteps(steps: any[]): any[] {
-    const parseStartStep = (step: any) => {
-      const {
-        type,
-        start_guide_title: title,
-        introduction_text: text,
-        image
-      } = step;
+  const parseStartStep = (step: any) => {
+    const {
+      type,
+      start_guide_title: title,
+      introduction_text: text,
+      image,
+    } = step;
 
-      return {
-        type,
-        title,
-        text,
-        image: parseInteractiveGuideImage(image)
-      };
+    return {
+      type,
+      title,
+      text,
+      image: parseInteractiveGuideImage(image),
     };
+  };
 
-    const parseImageStep = (step: any) => {
-      const { type, image } = step;
+  const parseImageStep = (step: any) => {
+    const { type, image } = step;
 
-      if (!image) {
-        return null;
+    if (!image) {
+      return null;
+    }
+
+    return {
+      type,
+      image: parseInteractiveGuideImage(image),
+    };
+  };
+
+  const parseDialogStep = (step: any) => {
+    return {
+      ...step,
+      alternatives: step.alternatives.map((alt: any, index: number) => ({
+        ...alt,
+        id: index,
+      })),
+    };
+  };
+
+  return steps
+    .map((step: any) => {
+      if (step.type === "start") {
+        return parseStartStep(step);
       }
 
-      return {
-        type,
-        image: parseInteractiveGuideImage(image)
-      };
-    };
+      if (step.type === "image") {
+        return parseImageStep(step);
+      }
 
-    const parseDialogStep = (step: any) => {
-      return {
-        ...step,
-        alternatives: step.alternatives.map((alt: any, index: number) => ({
-          ...alt,
-          id: index
-        }))
-      };
-    };
+      if (step.type === "dialog") {
+        return parseDialogStep(step);
+      }
 
-  return steps.map((step: any) => {
-    if (step.type === "start") {
-      return parseStartStep(step);
-    }
-
-    if (step.type === "image") {
-      return parseImageStep(step);
-    }
-
-    if (step.type === "dialog") {
-      return parseDialogStep(step);
-    }
-
-    return step;
-  }).filter(step => step);
+      return step;
+    })
+    .filter(step => step);
 }
 
 function parseInteractiveGuideFinish(finishStep: any) {
@@ -515,7 +512,7 @@ function parseInteractiveGuideFinish(finishStep: any) {
     displayShare,
     shareTitle,
     shareImage: parseInteractiveGuideImage(shareImage),
-    images: images.map((img: any) => parseInteractiveGuideImage(img.image))
+    images: images.map((img: any) => parseInteractiveGuideImage(img.image)),
   };
 }
 
@@ -525,11 +522,15 @@ export function parseInteractiveGuide(data: any): IInteractiveGuide {
     title: data.title.rendered,
     guideGroupId: data.guidegroup[0].id,
     image: data.featured_media.source_url,
-    steps: parseInteractiveGuideSteps(data.steps.filter((step: any) => step.type !== "finish")),
-    finish: parseInteractiveGuideFinish(data.steps.find((step: any) => step.type === "finish")),
+    steps: parseInteractiveGuideSteps(
+      data.steps.filter((step: any) => step.type !== "finish")
+    ),
+    finish: parseInteractiveGuideFinish(
+      data.steps.find((step: any) => step.type === "finish")
+    ),
   };
 
-  validate(interactiveGuide, 'IInteractiveGuide');
+  validate(interactiveGuide, "IInteractiveGuide");
 
   return interactiveGuide;
 }

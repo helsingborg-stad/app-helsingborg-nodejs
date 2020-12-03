@@ -3,18 +3,19 @@ const LANG_URL = process.env.LANG_URL || "";
 
 function buildIncludePart(include: string[] | undefined): string {
   if (include && include.length > 0) {
-    return `include=${include.join(',')}`;
+    return `include=${include.join(",")}`;
   }
   return "";
 }
 
-const buildURL = (url: string, parameters: string[]) => `${url}?${parameters.filter((s) => s && s !== "").join("&")}`;
+const buildURL = (url: string, parameters: string[]) =>
+  `${url}?${parameters.filter(s => s && s !== "").join("&")}`;
 
 export function buildGuideUrl(
   include: string[] | undefined,
   lang?: string,
   id?: string,
-  guideGroupId?: number,
+  guideGroupId?: number
 ): string {
   let url = `${API_HOST_URL}/guide`;
 
@@ -43,7 +44,7 @@ export function buildInteractiveGuideUrl(
   include: string[] | undefined,
   lang?: string,
   id?: string,
-  guideGroupId?: number,
+  guideGroupId?: number
 ): string {
   let url = `${API_HOST_URL}/interactive_guide`;
 
@@ -82,7 +83,7 @@ export function buildPropertyUrl(id: number, lang?: string): string {
 
 export function buildGuideGroupUrl(
   include: string[] | undefined,
-  lang?: string,
+  lang?: string
 ): string {
   const url = `${API_HOST_URL}/guidegroup`;
 
@@ -115,7 +116,12 @@ export function buildLanguagesUrl(): string {
   return LANG_URL;
 }
 
-export function buildEventsUrl(userGroupId: number, lang?: string, dateStart?: string, dateEnd?: string): string {
+export function buildEventsUrl(
+  userGroupId: number,
+  lang?: string,
+  dateStart?: string,
+  dateEnd?: string
+): string {
   const url = `${API_HOST_URL}/event/time`;
 
   const parameters = [];

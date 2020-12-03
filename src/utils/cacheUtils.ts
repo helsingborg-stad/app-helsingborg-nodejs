@@ -14,7 +14,7 @@ const getAsync = promisify(client.get).bind(client);
 let isReady: boolean = false;
 
 // Subscribe to client events
-client.on("error", (error) => {
+client.on("error", error => {
   logApp("redis: ERROR: ", error);
 });
 

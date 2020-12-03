@@ -150,7 +150,7 @@ export interface IInteractiveGuide {
 export enum NavigationItemType {
   GUIDE = "guide",
   GUIDE_GROUP = "guidegroup",
-  INTERACTIVE_GUIDE = 'interactive_guide',
+  INTERACTIVE_GUIDE = "interactive_guide",
 }
 
 export interface INavigationItem {

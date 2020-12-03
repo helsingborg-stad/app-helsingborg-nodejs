@@ -16,7 +16,7 @@ export function normalizePort(val: string): any {
 
 export function readNumber(
   value: string | undefined,
-  defaultValue: number,
+  defaultValue: number
 ): number {
   if (value) {
     try {

@@ -3,7 +3,10 @@ import { validationResult } from "express-validator/check";
 import { cache } from "../middleware/cache";
 import { getEnvAsInt, HBG_GROUP_ID } from "../utils/envUtils";
 import { fetchNavigationCategories } from "../utils/fetchUtils";
-import { validateLanguageParam, validateUserGroupIdParam } from "../utils/validateParamsUtils";
+import {
+  validateLanguageParam,
+  validateUserGroupIdParam,
+} from "../utils/validateParamsUtils";
 
 const router = express.Router();
 
@@ -20,14 +23,15 @@ router.get(
     validationResult(req).throw();
 
     const lang: string | undefined = req.query.lang;
-    const userGroupId: number = req.query.userGroupId || getEnvAsInt(HBG_GROUP_ID);
+    const userGroupId: number =
+      req.query.userGroupId || getEnvAsInt(HBG_GROUP_ID);
 
     fetchNavigationCategories(userGroupId, lang)
-      .then((navigationCategories) => {
+      .then(navigationCategories => {
         res.send(navigationCategories);
       })
-      .catch((error) => next(error));
-  },
+      .catch(error => next(error));
+  }
 );
 
 export default router;

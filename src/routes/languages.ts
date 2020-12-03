@@ -12,10 +12,10 @@ router.get("", (req: Request, res: Response, next: NextFunction) => {
   logApp(req.path);
 
   fetchLanguages()
-    .then((languages) => {
+    .then(languages => {
       res.send(languages);
     })
-    .catch((error) => next(error));
+    .catch(error => next(error));
 });
 
 export default router;

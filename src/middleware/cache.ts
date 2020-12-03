@@ -9,7 +9,7 @@ async function asyncCache(req: Request, res: Response, next: NextFunction) {
   let jsonBody: any = null;
 
   const old = res.json.bind(res);
-  res.json = (body) => {
+  res.json = body => {
     jsonBody = body;
     old(body);
     return res;
