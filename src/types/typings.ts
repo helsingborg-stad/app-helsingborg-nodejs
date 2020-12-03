@@ -144,6 +144,7 @@ export interface IInteractiveGuide {
   image: string;
   guideGroupId: number;
   steps: any[];
+  finish: any;
 }
 
 export enum NavigationItemType {

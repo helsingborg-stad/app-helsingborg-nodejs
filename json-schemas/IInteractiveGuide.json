@@ -1,6 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-06/schema#",
     "properties": {
+        "finish": {
+        },
         "guideGroupId": {
             "type": "number"
         },
@@ -20,6 +22,7 @@
         }
     },
     "required": [
+        "finish",
         "guideGroupId",
         "id",
         "image",
