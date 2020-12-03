@@ -8,6 +8,7 @@ import logger from "morgan";
 import eventsRouter from "./routes/events";
 import guideGroupRouter from "./routes/guidegroup";
 import guidesRouter from "./routes/guides";
+import interactiveGuidesRouter from "./routes/interactiveGuides";
 import languagesRouter from "./routes/languages";
 import navigationRouter from "./routes/navigation";
 import { checkRequiredKeys } from "./utils/envUtils";
@@ -47,6 +48,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/events", eventsRouter);
 app.use("/guidegroup", guideGroupRouter);
 app.use("/guide", guidesRouter);
+app.use("/interactive_guide", interactiveGuidesRouter);
 app.use("/navigation", navigationRouter);
 app.use("/languages", languagesRouter);
 

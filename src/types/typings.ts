@@ -138,9 +138,19 @@ export interface IGuide {
   location?: ILocation;
 }
 
+export interface IInteractiveGuide {
+  id: number;
+  title: string;
+  image: string;
+  guideGroupId: number;
+  steps: any[];
+  finish: any;
+}
+
 export enum NavigationItemType {
   GUIDE = "guide",
   GUIDE_GROUP = "guidegroup",
+  INTERACTIVE_GUIDE = 'interactive_guide',
 }
 
 export interface INavigationItem {

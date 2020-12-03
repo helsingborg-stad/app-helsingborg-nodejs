@@ -3,16 +3,7 @@ const LANG_URL = process.env.LANG_URL || "";
 
 function buildIncludePart(include: string[] | undefined): string {
   if (include && include.length > 0) {
-    return (
-      "include=" +
-      include.reduce((previousValue, currentValue, currentIndex) => {
-        if (currentIndex === 0) {
-          return currentValue;
-        } else {
-          return previousValue + "," + currentValue;
-        }
-      }, "")
-    );
+    return `include=${include.join(',')}`;
   }
   return "";
 }
@@ -26,6 +17,35 @@ export function buildGuideUrl(
   guideGroupId?: number,
 ): string {
   let url = `${API_HOST_URL}/guide`;
+
+  if (id) {
+    url += `/${id}`;
+  }
+
+  const parameters = [];
+
+  /* query params */
+  if (lang) {
+    parameters.push(`lang=${lang}`);
+  }
+
+  if (guideGroupId) {
+    parameters.push(`guidegroup=${guideGroupId}`);
+  }
+
+  parameters.push("_embed");
+  parameters.push(buildIncludePart(include));
+
+  return buildURL(url, parameters);
+}
+
+export function buildInteractiveGuideUrl(
+  include: string[] | undefined,
+  lang?: string,
+  id?: string,
+  guideGroupId?: number,
+): string {
+  let url = `${API_HOST_URL}/interactive_guide`;
 
   if (id) {
     url += `/${id}`;
