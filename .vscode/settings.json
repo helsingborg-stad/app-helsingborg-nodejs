@@ -1,6 +1,7 @@
 {
   "tslint.autoFixOnSave": true,
-
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
   "rest-client.environmentVariables": {
     "LOCAL": {
       "host": "http://localhost:5000"
