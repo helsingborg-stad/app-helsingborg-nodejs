@@ -432,7 +432,7 @@ function parseInteractiveGuideImage(image: any) {
 }
 
 function parseInteractiveGuideSteps(steps: any[]): any[] {
-  const parseStartStep = (step: any) => {
+  const parseStartStep = (step: any, index: number) => {
     const {
       type,
       start_guide_title: title,
@@ -441,6 +441,7 @@ function parseInteractiveGuideSteps(steps: any[]): any[] {
     } = step;
 
     return {
+      id: `${type}${index}`,
       type,
       title,
       text,
@@ -448,7 +449,7 @@ function parseInteractiveGuideSteps(steps: any[]): any[] {
     };
   };
 
-  const parseImageStep = (step: any) => {
+  const parseImageStep = (step: any, index: number) => {
     const { type, image } = step;
 
     if (!image) {
@@ -456,14 +457,16 @@ function parseInteractiveGuideSteps(steps: any[]): any[] {
     }
 
     return {
+      id: `${type}${index}`,
       type,
       image: parseInteractiveGuideImage(image),
     };
   };
 
-  const parseDialogStep = (step: any) => {
+  const parseDialogStep = (step: any, index: number) => {
     return {
       ...step,
+      id: `${step.type}${index}`,
       alternatives: step.alternatives.map((alt: any, index: number) => ({
         ...alt,
         id: index,
@@ -472,17 +475,17 @@ function parseInteractiveGuideSteps(steps: any[]): any[] {
   };
 
   return steps
-    .map((step: any) => {
+    .map((step: any, index: number) => {
       if (step.type === "start") {
-        return parseStartStep(step);
+        return parseStartStep(step, index);
       }
 
       if (step.type === "image") {
-        return parseImageStep(step);
+        return parseImageStep(step, index);
       }
 
       if (step.type === "dialog") {
-        return parseDialogStep(step);
+        return parseDialogStep(step, index);
       }
 
       return step;
