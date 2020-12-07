@@ -7,6 +7,7 @@ import {
   IEvent,
   IGuide,
   IImageUrls,
+  IInteractiveGuide,
   ILanguage,
   ILink,
   ILocation,
@@ -211,9 +212,9 @@ function parseLinks(data: any[]) {
 function parseBeaconAndLocation(
   id: string,
   beacons: any[],
-  locations: any[],
+  locations: any[]
 ): { beacon: any; location: any } {
-  const bData = beacons.find((item) => {
+  const bData = beacons.find(item => {
     const { content } = item;
     return content instanceof Array && content.indexOf(id) > -1;
   });
@@ -228,7 +229,7 @@ function parseBeaconAndLocation(
   let location;
   try {
     const { location: locationId } = bData;
-    const locationData = locations.find((locData) => locData.id === locationId);
+    const locationData = locations.find(locData => locData.id === locationId);
     location = parseLocation(locationData);
   } catch (error) {
     // discarding faulty location data
@@ -241,7 +242,7 @@ function parseContentObject(
   key: string,
   data: any,
   beacons: any[],
-  locations: any[],
+  locations: any[]
 ) {
   if (typeof data.order !== "number") {
     throw new Error("Failed to parse order from " + data);
@@ -289,7 +290,7 @@ function parseContentObject(
     const beaconAndLocation = parseBeaconAndLocation(
       obj.id,
       beacons,
-      locations,
+      locations
     );
     try {
       validate(beaconAndLocation.beacon, "IBeacon");
@@ -316,7 +317,7 @@ function parseContentObject(
 function parseContentObjects(
   contentData: any,
   beaconData: any,
-  locationsData: any,
+  locationsData: any
 ): IContentObject[] {
   const keys: string[] = Object.keys(contentData);
 
@@ -384,7 +385,7 @@ export function parseGuide(item: any): IGuide {
   // parse guide location
   const { guide_location: locationId } = item;
   if (locationId && locationData && locationData instanceof Array) {
-    const foundLoc = locationData.find((loc) => loc.id === locationId);
+    const foundLoc = locationData.find(loc => loc.id === locationId);
     if (foundLoc) {
       try {
         guide.location = parseLocation(foundLoc);
@@ -399,7 +400,7 @@ export function parseGuide(item: any): IGuide {
     guide.contentObjects = parseContentObjects(
       contentObjects,
       beacons,
-      locationData,
+      locationData
     );
   }
 
@@ -418,6 +419,123 @@ export function parseGuide(item: any): IGuide {
   }
 
   return guide;
+}
+
+function parseInteractiveGuideImage(image: any) {
+  const { id, url, width, height } = image;
+
+  return {
+    id,
+    url,
+    aspectRatio: parseInt(width) / parseInt(height),
+  };
+}
+
+function parseInteractiveGuideSteps(steps: any[]): any[] {
+  const parseStartStep = (step: any, index: number) => {
+    const {
+      type,
+      start_guide_title: title,
+      introduction_text: text,
+      image,
+    } = step;
+
+    return {
+      id: `${type}${index}`,
+      type,
+      title,
+      text,
+      image: parseInteractiveGuideImage(image),
+    };
+  };
+
+  const parseImageStep = (step: any, index: number) => {
+    const { type, image } = step;
+
+    if (!image) {
+      return null;
+    }
+
+    return {
+      id: `${type}${index}`,
+      type,
+      image: parseInteractiveGuideImage(image),
+    };
+  };
+
+  const parseDialogStep = (step: any, index: number) => {
+    return {
+      ...step,
+      id: `${step.type}${index}`,
+      alternatives: step.alternatives.map((alt: any, index: number) => ({
+        ...alt,
+        id: index,
+      })),
+    };
+  };
+
+  return steps
+    .map((step: any, index: number) => {
+      if (step.type === "start") {
+        return parseStartStep(step, index);
+      }
+
+      if (step.type === "image") {
+        return parseImageStep(step, index);
+      }
+
+      if (step.type === "dialog") {
+        return parseDialogStep(step, index);
+      }
+
+      return step;
+    })
+    .filter(step => step);
+}
+
+function parseInteractiveGuideFinish(finishStep: any) {
+  if (!finishStep) {
+    return null;
+  }
+
+  const {
+    header_title: header,
+    content_area_title: title,
+    content_area_text: body,
+    display_share_result: displayShare,
+    share_title: shareTitle,
+    share_image: shareImage,
+    images,
+  } = finishStep;
+
+  return {
+    header,
+    title,
+    body,
+    displayShare,
+    shareTitle,
+    shareImage: parseInteractiveGuideImage(shareImage),
+    images: images.map((img: any) => parseInteractiveGuideImage(img.image)),
+  };
+}
+
+export function parseInteractiveGuide(data: any): IInteractiveGuide {
+  const interactiveGuide = {
+    id: data.id,
+    title: data.title.rendered,
+    guideGroupId: data.guidegroup[0].id,
+    image: data.featured_media.source_url,
+    steps: parseInteractiveGuideSteps(
+      data.steps.filter((step: any) => step.type !== "finish")
+    ),
+    finish: parseInteractiveGuideFinish(
+      data.steps.find((step: any) => step.type === "finish")
+    ),
+  };
+
+  validate(interactiveGuide, "IInteractiveGuide");
+
+  return interactiveGuide;
 }
 
 export function parseNavigationCategory(data: any): INavigationCategory {

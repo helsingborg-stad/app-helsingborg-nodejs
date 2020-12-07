@@ -6,6 +6,7 @@ import { URL } from "url";
 import {
   IEvent,
   IGuide,
+  IInteractiveGuide,
   ILanguage,
   INavigationCategory,
   IPointProperty,
@@ -16,6 +17,7 @@ import {
   parseEvent,
   parseGuide,
   parseGuideGroup,
+  parseInteractiveGuide,
   parseLanguage,
   parseNavigationCategory,
 } from "./parsingUtils";
@@ -23,6 +25,7 @@ import {
   buildEventsUrl,
   buildGuideGroupUrl,
   buildGuideUrl,
+  buildInteractiveGuideUrl,
   buildLanguagesUrl,
   buildNavigationUrl,
   buildPropertyUrl,
@@ -35,7 +38,7 @@ const logWarn = debug("warn");
 
 async function fetchProperties(
   id: number,
-  lang?: string,
+  lang?: string
 ): Promise<IPointProperty[]> {
   const url = buildPropertyUrl(id, lang);
   const response = await fetch(url);
@@ -45,7 +48,7 @@ async function fetchProperties(
   const jsonArray: any[] = await response.json();
   const props: IPointProperty[] = [];
 
-  jsonArray.forEach((json) => {
+  jsonArray.forEach(json => {
     // TODO move into parsingUtils
     const prop: IPointProperty = {
       id: json.id,
@@ -75,7 +78,7 @@ async function fetchProperties(
 
 export async function fetchAllGuideGroups(
   include: string[] | undefined,
-  lang?: string,
+  lang?: string
 ) {
   const url = buildGuideGroupUrl(include, lang);
   logApp(`fetching from:${url}`);
@@ -147,7 +150,7 @@ export async function fetchGuide(id: string, lang?: string): Promise<IGuide> {
 export async function fetchAllGuides(
   include: string[] | undefined,
   lang?: string,
-  guideGroupId?: number,
+  guideGroupId?: number
 ): Promise<IGuide[]> {
   const url = buildGuideUrl(include, lang, undefined, guideGroupId);
   logApp(`sent fetching request to: ${url}`);
@@ -177,9 +180,60 @@ export async function fetchAllGuides(
   return guides;
 }
 
+export async function fetchInteractiveGuide(
+  id: string,
+  lang?: string
+): Promise<IInteractiveGuide> {
+  const url = buildInteractiveGuideUrl(undefined, lang, id);
+  logApp(`sent fetching request to: ${url}`);
+
+  const response = await fetch(url);
+  logApp(`received fetching response from:${url}`);
+  if (!response.ok) {
+    throw new Error("Malformed request");
+  }
+
+  const interactiveGuideJson = await response.json();
+
+  return parseInteractiveGuide(interactiveGuideJson);
+}
+
+export async function fetchAllInteractiveGuides(
+  include: string[] | undefined,
+  lang?: string,
+  guideGroupId?: number
+): Promise<IInteractiveGuide[]> {
+  const url = buildInteractiveGuideUrl(include, lang, undefined, guideGroupId);
+  logApp(`sent fetching request to: ${url}`);
+
+  const response = await fetch(url);
+  logApp(`received fetching response from:${url}`);
+  if (!response.ok) {
+    throw new Error("Malformed request");
+  }
+
+  const interactiveGuidesJson = await response.json();
+
+  const interactiveGuides: IInteractiveGuide[] = [];
+  interactiveGuidesJson.forEach((item: any) => {
+    try {
+      const guide = parseInteractiveGuide(item);
+      validate(guide, "IInteractiveGuide");
+      interactiveGuides.push(guide);
+    } catch (err) {
+      // Discard item
+      logWarn("Failed to parse interactive guide from: ", item);
+      logWarn("Validation error: ", err);
+    }
+  });
+  logApp("Interactive guides parsing complete");
+
+  return interactiveGuides;
+}
+
 export async function fetchNavigationCategories(
   userGroupId: number,
-  lang?: string,
+  lang?: string
 ): Promise<INavigationCategory[]> {
   const url = buildNavigationUrl(userGroupId, lang);
   logApp(`sending fetch request to: ${url}`);
@@ -235,7 +289,7 @@ export async function fetchLanguages(): Promise<ILanguage[]> {
 
 function sortByHourAndMin(
   { dateStart: aStart }: { dateStart: Date },
-  { dateStart: bStart }: { dateStart: Date },
+  { dateStart: bStart }: { dateStart: Date }
 ) {
   if (aStart.getHours() - bStart.getHours() === 0) {
     return aStart.getMinutes() - bStart.getMinutes();
@@ -245,7 +299,10 @@ function sortByHourAndMin(
 
 // Since some dates in API have actual hours and others are always at 00:00
 // (meaning entire days presumably), we compare by start and end of day
-function isIncludedInDateRange(startDate: string, endDate: string): (item: IEvent) => boolean {
+function isIncludedInDateRange(
+  startDate: string,
+  endDate: string
+): (item: IEvent) => boolean {
   const rangeStartDate = startOfDay(new Date(startDate));
   const rangeEndDate = endOfDay(new Date(endDate));
   return (item: IEvent) => {
@@ -260,7 +317,7 @@ export async function fetchEvents(
   userGroupId: number,
   lang?: string,
   dateStart?: string,
-  dateEnd?: string,
+  dateEnd?: string
 ): Promise<IEvent[]> {
   const url = buildEventsUrl(userGroupId, lang, dateStart, dateEnd);
   logApp(`sending fetch request to: ${url}`);

@@ -12,10 +12,7 @@ router.use(cache);
 
 router.get(
   "",
-  [
-    validateLanguageParam(),
-    validateUserGroupIdParam(),
-  ],
+  [validateLanguageParam(), validateUserGroupIdParam()],
   (req: Request, res: Response, next: NextFunction) => {
     validationResult(req).throw();
 
@@ -27,9 +24,9 @@ router.get(
     const dateEnd: string | undefined = req.query.dateEnd;
 
     fetchEvents(userGroupId, lang, dateStart, dateEnd)
-      .then((events) => res.send(events))
-      .catch((err) => next(err));
-  },
+      .then(events => res.send(events))
+      .catch(err => next(err));
+  }
 );
 
 export default router;

@@ -24,9 +24,9 @@ router.get(
     const include: string[] | undefined = req.query.include;
 
     fetchAllGuideGroups(include, lang)
-      .then((guideGroups) => res.send(guideGroups))
-      .catch((err) => next(err));
-  },
+      .then(guideGroups => res.send(guideGroups))
+      .catch(err => next(err));
+  }
 );
 
 export default router;

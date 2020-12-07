@@ -1,7 +1,10 @@
 import express, { NextFunction, Request, Response } from "express";
 import { param, validationResult } from "express-validator/check";
 import { cache } from "../middleware/cache";
-import { fetchAllGuides, fetchGuide } from "../utils/fetchUtils";
+import {
+  fetchAllInteractiveGuides,
+  fetchInteractiveGuide,
+} from "../utils/fetchUtils";
 import {
   validateGuideGroupIdParam,
   validateIncludeParam,
@@ -26,7 +29,7 @@ router.get(
 
     const guideGroupId: number | undefined = req.query.guideGroupId;
 
-    fetchAllGuides(include, lang, guideGroupId)
+    fetchAllInteractiveGuides(include, lang, guideGroupId)
       .then(guideGroups => res.send(guideGroups))
       .catch(err => next(err));
   }
@@ -41,7 +44,7 @@ router.get(
     const lang: string | undefined = req.query.lang;
     const id: string = req.params.id;
 
-    fetchGuide(id, lang)
+    fetchInteractiveGuide(id, lang)
       .then(guide => res.send(guide))
       .catch(err => next(err));
   }

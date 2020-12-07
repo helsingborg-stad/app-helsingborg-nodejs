@@ -7,6 +7,7 @@ TYPES=(
     "IContentObject"
     "IGuideGroup"
     "IGuide"
+    "IInteractiveGuide"
     "INavigationItem"
     "INavigationCategory"
     "ILanguage"

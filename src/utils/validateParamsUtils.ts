@@ -14,7 +14,7 @@ export function validateLanguageParam(): ValidationChain {
 
 export function validateIncludeParam(): ValidationChain {
   return check("include", "include param should be an array")
-    .customSanitizer((value) => {
+    .customSanitizer(value => {
       return value.split(",");
     })
     .isArray()
