@@ -488,6 +488,13 @@ function parseInteractiveGuideSteps(steps: any[]): any[] {
         return parseDialogStep(step, index);
       }
 
+      if (!step.id) {
+        return {
+          ...step,
+          id: `${step.type}${index}`,
+        };
+      }
+
       return step;
     })
     .filter(step => step);
