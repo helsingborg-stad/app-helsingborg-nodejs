@@ -522,7 +522,9 @@ function parseInteractiveGuideFinish(finishStep: any) {
     displayShare,
     shareTitle,
     shareImage: parseInteractiveGuideImage(shareImage),
-    images: images.map((img: any) => parseInteractiveGuideImage(img.image)),
+    images: images ? 
+      images.map((img: any) => parseInteractiveGuideImage(img.image))
+      : [],
   };
 }
 
