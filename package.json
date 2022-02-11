@@ -21,7 +21,7 @@
     "prettier:fix": "npx prettier --write ."
   },
   "dependencies": {
-    "ajv": "6.4.0",
+    "ajv": "6.12.3",
     "date-fns": "^2.9.0",
     "date-fns-tz": "^1.0.9",
     "debug": "2.6.9",
