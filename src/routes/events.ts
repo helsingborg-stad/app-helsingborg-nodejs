@@ -22,8 +22,10 @@ router.get(
     const lang = "sv";
     const dateStart: string | undefined = req.query.dateStart;
     const dateEnd: string | undefined = req.query.dateEnd;
+    const page: string | undefined = req.query.page;
+    const perPage: string | undefined = req.query.perPage || "100";
 
-    fetchEvents(userGroupId, lang, dateStart, dateEnd)
+    fetchEvents(userGroupId, lang, dateStart, dateEnd, page, perPage)
       .then(events => res.send(events))
       .catch(err => next(err));
   }
