@@ -317,9 +317,11 @@ export async function fetchEvents(
   userGroupId: number,
   lang?: string,
   dateStart?: string,
-  dateEnd?: string
+  dateEnd?: string,
+  page?: string,
+  perPage?: string
 ): Promise<IEvent[]> {
-  const url = buildEventsUrl(userGroupId, lang, dateStart, dateEnd);
+  const url = buildEventsUrl(userGroupId, lang, dateStart, dateEnd, page, perPage);
   logApp(`sending fetch request to: ${url}`);
 
   // TODO: refactor this?

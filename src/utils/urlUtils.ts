@@ -120,7 +120,9 @@ export function buildEventsUrl(
   userGroupId: number,
   lang?: string,
   dateStart?: string,
-  dateEnd?: string
+  dateEnd?: string,
+  page?: string,
+  perPage?: string
 ): string {
   const url = `${API_HOST_URL}/event/time`;
 
@@ -136,6 +138,12 @@ export function buildEventsUrl(
   }
   if (dateEnd) {
     parameters.push(`end=${dateEnd}`);
+  }
+  if (page) {
+    parameters.push(`page=${page}`);
+  }
+  if (perPage) {
+    parameters.push(`per_page=${perPage}`);
   }
 
   return buildURL(url, parameters);
