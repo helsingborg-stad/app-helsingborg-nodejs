@@ -184,4 +184,17 @@ export interface IEvent {
   imageUrl: string;
   dateStart: Date;
   dateEnd: Date;
+  bookingLink: string | null;
+  eventLink: string | null;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  organizers: IOrganizer[];
+}
+
+export interface IOrganizer {
+  organizer: string;
+  organizerPhone: string | null;
+  organizerEmail: string | null;
+  organizerLink: string | null;
+  mainOrganizer: boolean;
 }

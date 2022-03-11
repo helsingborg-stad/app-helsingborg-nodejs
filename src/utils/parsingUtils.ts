@@ -16,6 +16,7 @@ import {
   INavigationItem,
   IOpeningHourException,
   PostStatus,
+  IOrganizer
 } from "../types/typings";
 import { validate } from "./jsonValidator";
 
@@ -49,6 +50,8 @@ function parseLocation(item: any): ILocation {
     open_hours: openingHoursInput,
     open_hour_exceptions: openHoursException,
     links,
+    city,
+    postal_code: postalCode,
   } = item;
 
   const location: any = {
@@ -58,6 +61,8 @@ function parseLocation(item: any): ILocation {
     longitude: Number(longitude),
     streetAddress,
     title,
+    city,
+    postalCode,
   };
 
   const openHours: any[] = [];
@@ -522,7 +527,7 @@ function parseInteractiveGuideFinish(finishStep: any) {
     displayShare,
     shareTitle,
     shareImage: parseInteractiveGuideImage(shareImage),
-    images: images ? 
+    images: images ?
       images.map((img: any) => parseInteractiveGuideImage(img.image))
       : [],
   };
@@ -545,6 +550,20 @@ export function parseInteractiveGuide(data: any): IInteractiveGuide {
   validate(interactiveGuide, "IInteractiveGuide");
 
   return interactiveGuide;
+}
+
+function parseOrganizers(organizers: any): IOrganizer[] {
+  if (!organizers) {
+    return [];
+  }
+
+  return organizers.map((organizer: any) => ({
+    organizer: organizer.organizer,
+    organizerLink: organizer.organizer_link,
+    organizerPhone: organizer.organizer_phone,
+    organizerEmail: organizer.organizer_email,
+    mainOrganizer: organizer.main_organizer,
+  }));
 }
 
 export function parseNavigationCategory(data: any): INavigationCategory {
@@ -588,8 +607,22 @@ export function parseLanguage(data: any): ILanguage {
   return data;
 }
 
+
+
 export function parseEvent(item: any): IEvent[] {
-  const { content, id, featured_media, occasions, slug, title } = item;
+  const {
+    content,
+    id,
+    featured_media,
+    occasions,
+    slug,
+    title,
+    booking_link,
+    event_link,
+    contact_phone,
+    contact_email,
+    organizers
+  } = item;
   // If given a Date in the past, occasions are empty in the API
   if (!occasions) {
     return [];
@@ -601,6 +634,11 @@ export function parseEvent(item: any): IEvent[] {
     imageUrl: featured_media.source_url,
     name: title.plain_text,
     slug,
+    bookingLink: booking_link,
+    eventLink: event_link,
+    contactPhone: contact_phone,
+    contactEmail: contact_email,
+    organizers: parseOrganizers(organizers),
   };
   occasions.forEach((occasion: any) => {
     const event: IEvent = { ...baseEvent };
