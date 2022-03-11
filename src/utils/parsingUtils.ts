@@ -558,10 +558,10 @@ function parseOrganizers(organizers: any): IOrganizer[] {
   }
 
   return organizers.map((organizer: any) => ({
-    name: organizer.organizer,
-    link: organizer.organizer_link,
-    phone: organizer.organizer_phone,
-    email: organizer.email,
+    organizer: organizer.organizer,
+    organizerLink: organizer.organizer_link,
+    organizerPhone: organizer.organizer_phone,
+    organizerEmail: organizer.organizer_email,
     mainOrganizer: organizer.main_organizer,
   }));
 }

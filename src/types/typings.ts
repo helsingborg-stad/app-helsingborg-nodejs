@@ -192,9 +192,9 @@ export interface IEvent {
 }
 
 export interface IOrganizer {
-  name: string;
-  phone: string | null;
-  email: string | null;
-  url: string | null;
+  organizer: string;
+  organizerPhone: string | null;
+  organizerEmail: string | null;
+  organizerLink: string | null;
   mainOrganizer: boolean;
 }
